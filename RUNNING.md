@@ -1,6 +1,7 @@
 # Running it — URLs, ports, credentials
 
-Everything runs on your own machine. There is no deployed URL yet; `make deploy` is a
+Everything below runs on your own machine. The public frontend (static snapshot, no backend)
+is at https://geotrade-priyanka.vercel.app; `make deploy` for the full stack is a
 Phase 0 task that has not been done.
 
 ## Start everything

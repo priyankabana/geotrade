@@ -1,6 +1,11 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "installCommand": "cd apps/web && npm ci",
   "buildCommand": "cd apps/web && VITE_PRODUCT_NAME=GeoTrade npm run build",
   "outputDirectory": "apps/web/dist",
-  "framework": null
+  "framework": null,
+  "headers": [
+    { "source": "/snapshot/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=3600" }] },
+    { "source": "/assets/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }] }
+  ]
 }

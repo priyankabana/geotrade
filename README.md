@@ -6,25 +6,92 @@ Final-year B.Tech (Computer Engineering) **team project** — *GeoTrade: Locatio
 
 > **Not a trading product.** It shows exposure and evidence; it never says what to buy or sell. See [COMPLIANCE.md](COMPLIANCE.md).
 
-## Screenshots
+**Live demo:** https://geotrade-priyanka.vercel.app (static build, no backend; see [Deployment](#deployment))
+**Repo:** https://github.com/priyankabana/geotrade
 
-![Demo](demo/atlas-demo.gif)
-
-> _TODO: add `docs/screenshots/globe.png`, `docs/screenshots/drilldown.png`, `docs/screenshots/replay.png`._
+![Globe view](docs/screenshots/globe.jpg)
 
 ## Why
 
-When a port closes or a factory burns down, the directly hit companies are obvious. The companies affected *next* — because they quietly depend on the ones that were hit — are hard to find. Public filings contain sentences like *"two customers accounted for 41% of our revenue."* GeoTrade's goal is to read those filings, build the dependency graph, put it on a map, and cite the source sentence for every edge. **If it can't show the sentence, it doesn't make the claim.**
+When something happens in the world (a port closes, a factory burns down, a country
+restricts an export), some companies are obviously affected and everyone already knows
+who they are. The companies affected next, because they quietly buy from the ones that
+were hit, are much harder to find.
+
+GeoTrade is our attempt to build that list. Listed companies have to disclose certain
+things, and buried in those filings are sentences like *"two customers accounted for 41%
+of our revenue."* The plan is to read those filings, work out who depends on whom, draw it
+on a globe, and attach the exact sentence that proves every connection. **If we cannot show
+the sentence, we do not make the claim.**
+
+## What we built so far
+
+Phase 0 is the reference layer: a clean, geolocated universe of listed companies that the
+extraction phase will resolve company names against. All numbers below were measured on
+the real (local) database, not estimated.
+
+| | Number | Where it comes from |
+|---|---|---|
+| Raw input rows | **29,442** | seven market files (US NYSE, US Nasdaq, India, UK, Germany, Canada, Australia) |
+| Companies after cleaning | **23,020** | one node per company, `SELECT count(*) FROM entity` |
+| Cross-listing duplicates collapsed | **6,059** | same security on several exchanges, merged by ISIN, giving 23,383 securities |
+| Share classes collapsed | **363** | several share classes of one issuer, merged by LEI, giving 23,020 companies |
+| Geolocated HQs | **23,018** | 65% to city precision, 35% to country centroid, 2 not at all |
+| HQ countries | **90** | country derived from the address text, not the listing market |
+| Name aliases | **82,756** generated, **82,751** loaded | legal, common, former and short forms |
+| Usable gazetteer aliases | **59,567** | aliases left after suppressing ambiguous ones like "Apple" or "Target" |
+| Sectors | **34** | our own supply-chain shaped taxonomy |
+| Schema | **25 tables** | PostGIS, row-level security on 3 tenant tables, 17 indexes |
+| Dependency edges | **0** | extraction is the next phase; the UI says so instead of faking it |
+
+API latency against the local Postgres + PostGIS database (200 sequential requests per
+endpoint, 20 for the full point dump; measured 2026-11-04):
+
+| Endpoint | p50 | p95 |
+|---|---|---|
+| `GET /v1/health` | 2.6 ms | 3.2 ms |
+| `GET /v1/countries/US/sectors` | 17 ms | 23 ms |
+| `GET /v1/countries/US/sectors/SEMI_EQUIP/companies` | 20 ms | 29 ms |
+| `GET /v1/companies/XNAS:AMAT` | 14 ms | 23 ms |
+| `GET /v1/globe/countries` | 53 ms | 57 ms |
+| `GET /v1/globe/points?limit=30000` | 376 ms | 526 ms |
+
+Every drill-down endpoint is well inside our 200 ms read budget. The full point dump is
+not, which is one reason the static demo ships the globe as pre-aggregated counts.
+
+![Drill-down: country to sector to company](docs/screenshots/drilldown.jpg)
 
 ## Status (honest)
 
 | Area | State |
 | --- | --- |
-| Reference layer | Built. Locally loaded with ~23k companies across US, India, UK, Germany, Canada, Australia (aliases, sectors, geocoded HQs). This repo ships a **41-company sample**; see [Data](#data). |
+| Reference layer | Built. Locally loaded with 23,020 companies across 90 HQ countries (aliases, sectors, geocoded HQs). This repo ships a **41-company sample**; the public demo ships aggregates plus a 300-company named sample. See [Data](#data). |
 | Schema | Built. 25 PostgreSQL/PostGIS tables + `edges_as_of()` point-in-time read function. Citation enforced in schema (`dependency_edge.chunk_id NOT NULL`). |
 | Read API | Built. FastAPI endpoints for globe points, country → sector → company drill-down, company detail. |
-| Frontend | Built. 3D globe (night earth, density bins, propagation arcs), Live / Replay / Simulate modes, drill-down panels, citation component. |
+| Frontend | Built. 3D globe (night earth, density bins, propagation arcs), Live / Replay / Simulate modes, drill-down panels, citation component, static-snapshot fallback. |
 | Dependency extraction (filings → edges) | **Not built yet.** There are zero real dependency edges; Replay/Simulate use a clearly-labelled **illustrative worked example** with real companies but placeholder quotes. |
+
+## Data cleaning
+
+`scripts/normalise_vendor_csv.py` turns the raw market files into the collection format the
+loader expects. The problems it fixes are the reason it exists:
+
+- **Cross-listings.** Apple appears as a Frankfurt line. Without merging, one company
+  becomes several graph nodes and the graph silently splits. Rows are collapsed by ISIN
+  (6,059 duplicates) with the home-market listing kept as primary, then share classes of
+  the same issuer are merged by LEI (363 more). Malformed ISINs are blanked first so they
+  cannot group unrelated companies.
+- **Country means market, not company.** Every German row said "Germany", including
+  Canadian and Japanese companies listed in Frankfurt. Country is derived from the
+  address text, then the ISIN prefix, then the geocoded city.
+- **Typos and codes.** Country spellings like "Unitedkingdom" are normalised; vendor
+  exchange codes are mapped to ISO 10383 MICs.
+- **Geocoding.** Cities are matched against GeoNames, scoped to the country so Springfield
+  lands in the right one. Precision is stored per row (`city` or `country`).
+- **Licensed columns.** SEDOL and CUSIP are dropped at the normaliser boundary. Vendor
+  classification codes are not stored; our sector is derived from plain-English text.
+- **Market cap is left empty** where the source gives local currency only and we have no
+  FX source with a verified licence. A converted number would be invented.
 
 ## Features
 
@@ -32,7 +99,7 @@ When a port closes or a factory burns down, the directly hit companies are obvio
 - **Drill-down:** country → sector → company, served by the read API.
 - **Live / Replay / Simulate** modes; Replay steps through a timeline reading the graph "as it stood" at each date.
 - **Citation component:** every edge renders its filer, document type, section, filing date and source URL.
-- **Offline mode:** the frontend detects when the API is down, shows "API offline" and falls back to the bundled worked example.
+- **Static snapshot fallback:** if the API cannot be reached, the frontend reads `apps/web/public/snapshot/` instead, so the deployed demo shows real coverage (23,018 companies in 90 countries as counts, 300 named companies) with no backend.
 - **Data pipeline scripts:** build a US universe from SEC EDGAR, normalise multi-market CSVs (cross-listing dedupe, ISO MIC mapping, country repair, GeoNames geocoding), validate collection CSVs, load into Postgres idempotently, and measure extraction cost against real filings.
 - **Licensing discipline:** licensed identifiers (SEDOL, CUSIP) and vendor classification codes are dropped at the normaliser boundary.
 
@@ -56,7 +123,9 @@ flowchart LR
     L --> PG[(PostgreSQL 16 + PostGIS<br/>25 tables, edges_as_of)]
     PG --> API[FastAPI read API<br/>apps/api]
     API --> WEB[React + TS + Vite<br/>3D globe · apps/web]
-    WEB -. API down .-> EX[bundled worked example]
+    API --> BS[scripts/build_snapshot.py]
+    BS --> SNAP[static snapshot<br/>apps/web/public/snapshot]
+    WEB -. API down .-> SNAP
 ```
 
 Planned (see [docs/ROADMAP.md](docs/ROADMAP.md)): filing ingestion → chunking → gazetteer match → LLM extraction of dependency claims → cited `dependency_edge` rows → exposure propagation. The LLM extracts and explains; it never produces a score.
@@ -91,7 +160,7 @@ make api        # http://localhost:8000  (docs at /docs, health at /v1/health)
 cd apps/web && npm ci && npm run dev    # http://localhost:5173
 ```
 
-Frontend only (no database): `cd apps/web && npm ci && npm run dev` — it runs in offline mode with the worked example.
+Frontend only (no database): `cd apps/web && npm ci && npm run dev` — the API probe fails and the app runs on the static snapshot (header shows `static demo`).
 
 `make help` lists every target; [RUNNING.md](RUNNING.md) has ports, the browser DB viewer (`make db-ui`) and troubleshooting.
 
@@ -104,6 +173,7 @@ Only small, redistributable data is committed:
 | `data/companies/sample.csv`, `data/aliases/sample.csv` | 41 companies / 136 aliases across 6 markets (names, tickers, MIC, ISIN/LEI, city, lat/lon). Descriptions, market caps and vendor codes removed. |
 | `data/reference/us_filer_gazetteer.csv`, `sectors.csv` | Derived from SEC EDGAR (public domain). |
 | `data/templates/*.csv` | Empty collection templates (column contracts). |
+| `apps/web/public/snapshot/` | Public demo snapshot: per-country and per-sector **counts** for all 23,020 companies, plus 300 named companies (name, ticker, CIK, country, city, lat/lon, sector). Rebuild with `python3 -I scripts/build_snapshot.py --api http://localhost:8000`. Policy: [docs/sources.md](docs/sources.md), "Public demo snapshot". |
 
 To build a full dataset:
 
@@ -137,12 +207,12 @@ Note: the Makefile does not auto-load `.env`; the defaults above work for local 
 ```
 apps/
   api/main.py              FastAPI read API (globe, drill-down, company detail)
-  web/                     React + TS + Vite frontend (globe, panels, timeline, citation)
+  web/                     React + TS + Vite frontend (globe, panels, timeline, citation; public/snapshot = static demo data)
 packages/shared/src/api.ts Shared API types (imported as @shared/*)
 infra/
   docker-compose.yml       Postgres+PostGIS, Redis, pgweb
   migrations/              0001_initial_schema.sql (25 tables, edges_as_of)
-scripts/                   build_us_universe · normalise_vendor_csv · validate_collection · load_csv
+scripts/                   build_us_universe · normalise_vendor_csv · validate_collection · load_csv · build_snapshot
                            measure_corpus · repair_geocode · narrate · record_demo
 data/                      sample + reference CSVs, collection templates
 docs/                      problem statement, architecture, data model, sources, roadmap, cost, ADRs
@@ -160,17 +230,22 @@ python3 -m compileall -q apps/api scripts
 
 There is no automated unit-test suite yet (planned with the extraction phase). CI (`.github/workflows/ci.yml`) runs the checks above.
 
-## Deployment notes
+## Deployment
 
-Not deployed yet. Intended free-tier setup:
+**Frontend → Vercel** (live at https://geotrade-priyanka.vercel.app). The root
+[`vercel.json`](vercel.json) installs and builds `apps/web` and serves `apps/web/dist`.
+Leave `VITE_API_URL` unset: the app probes `http://localhost:8000`, fails, and serves the
+static snapshot, so no backend or environment variables are needed.
 
-- **Frontend → Vercel** (or Netlify): root `apps/web`, build `npm run build`, output `dist`, env `VITE_API_URL=https://<api-host>`. Without an API it still works in offline/worked-example mode.
-- **API → Render / Railway / Fly.io**: root `apps/api`, start `uvicorn main:app --host 0.0.0.0 --port $PORT`, env `DATABASE_URL`, `CORS_ORIGINS=https://<your-vercel-domain>`.
-- **Database → Neon / Supabase / Railway Postgres** with the **PostGIS** extension enabled; run `infra/migrations/0001_initial_schema.sql`, then `DATABASE_URL=... python3 -I scripts/load_csv.py`.
+Full stack (optional, free tier):
 
-## Team project & my contributions
+- **API → Render / Railway / Fly.io**: root `apps/api`, start `uvicorn main:app --host 0.0.0.0 --port $PORT`, env `DATABASE_URL`, `CORS_ORIGINS=https://geotrade-priyanka.vercel.app`. Then set `VITE_API_URL` on Vercel and redeploy.
+- **Database → Neon / Supabase / Railway Postgres** with **PostGIS** enabled; run `infra/migrations/0001_initial_schema.sql`, then `DATABASE_URL=... python3 -I scripts/load_csv.py`.
 
-This was built by a team of five final-year students. Ownership areas are described in [docs/TEAM.md](docs/TEAM.md).
+## Team
+
+GeoTrade is a final-year B.Tech team project. Contributors: **Priyanka Bana** and
+**Krish Oswal**. How the team split ownership areas is described in [docs/TEAM.md](docs/TEAM.md).
 
 **My contributions** _(TODO — Priyanka to fill in)_:
 
@@ -190,7 +265,7 @@ This was built by a team of five final-year students. Ownership areas are descri
 
 ## Attribution
 
-Contains data from [GeoNames](https://www.geonames.org/), CC BY 4.0. Globe textures from [three-globe](https://github.com/vasturiano/three-globe) (MIT); imagery NASA Visible Earth (public domain) — see [apps/web/public/textures/SOURCE.md](apps/web/public/textures/SOURCE.md). Company reference data from [SEC EDGAR](https://www.sec.gov/edgar), public domain. US city coordinates from [US-Cities-Database](https://github.com/kelvins/US-Cities-Database), MIT.
+Contains data from [GeoNames](https://www.geonames.org/), CC BY 4.0. Globe textures from [three-globe](https://github.com/vasturiano/three-globe) (MIT); imagery NASA Visible Earth (public domain) — see [apps/web/public/textures/SOURCE.md](apps/web/public/textures/SOURCE.md). Company identity from [SEC EDGAR](https://www.sec.gov/edgar), public domain. US city coordinates from [US-Cities-Database](https://github.com/kelvins/US-Cities-Database), MIT.
 
 ## License
 
