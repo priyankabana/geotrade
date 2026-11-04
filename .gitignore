@@ -40,3 +40,5 @@ demo/narration/
 .vscode/
 .idea/
 *.log
+.vercel
+.env*

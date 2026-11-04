@@ -1,0 +1,6 @@
+{
+  "installCommand": "cd apps/web && npm ci",
+  "buildCommand": "cd apps/web && VITE_PRODUCT_NAME=GeoTrade npm run build",
+  "outputDirectory": "apps/web/dist",
+  "framework": null
+}
