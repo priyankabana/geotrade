@@ -1,0 +1,137 @@
+company_uid,alias,alias_type,language,script,valid_from,valid_to,is_ambiguous,ambiguity_note,source_id,source_url,collected_by,collected_on
+XNAS:MSFT,Microsoft Corporation,legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNAS:MSFT,Microsoft,common,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNAS:MSFT,MSFT,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XNAS:MU,"Micron Technology, Inc.",legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNAS:MU,Micron Technology,common,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNAS:MU,MU,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XNAS:INTC,Intel Corporation,legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNAS:INTC,Intel,common,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNAS:INTC,INTC,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XNAS:AMAT,"Applied Materials, Inc.",legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNAS:AMAT,Applied Materials,common,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNAS:AMAT,AMAT,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XNAS:TXN,Texas Instruments Incorporated,legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNAS:TXN,Texas Instruments,common,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNAS:TXN,TXN,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XNAS:KLAC,KLA Corporation,legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNAS:KLAC,KLA,common,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XNAS:KLAC,KLAC,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XNAS:KLAC,KLA-Tencor Corporation,former,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNAS:SWKS,"Skyworks Solutions, Inc.",legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNAS:SWKS,Skyworks Solutions,common,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNAS:SWKS,SWKS,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XNAS:AMKR,"Amkor Technology, Inc.",legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNAS:AMKR,Amkor Technology,common,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNAS:AMKR,AMKR,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XNAS:UCTT,"Ultra Clean Holdings, Inc.",legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNAS:UCTT,Ultra Clean Holdings,common,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNAS:UCTT,UCTT,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XNAS:ICHR,Ichor Holdings Ltd,legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNAS:ICHR,Ichor Holdings,common,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNAS:ICHR,ICHR,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XNAS:AAPL,Apple Inc.,legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNAS:AAPL,Apple,common,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XNAS:AAPL,AAPL,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XNAS:NVDA,NVIDIA Corporation,legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNAS:NVDA,NVIDIA,common,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNAS:NVDA,NVDA,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XNAS:LRCX,Lam Research Corporation,legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNAS:LRCX,Lam Research,common,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNAS:LRCX,LRCX,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XNYS:JPM,JPMorgan Chase & Co.,legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNYS:JPM,JPMorgan Chase,common,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNYS:JPM,JPM,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XNYS:CAT,Caterpillar Inc.,legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNYS:CAT,Caterpillar,common,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XNYS:CAT,CAT,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XNYS:BHE,"Benchmark Electronics, Inc.",legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNYS:BHE,Benchmark Electronics,common,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNYS:BHE,BHE,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XNYS:KO,The Coca-Cola Company,legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNYS:KO,Coca-Cola,common,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNYS:KO,KO,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XNSE:RELIANCE,Reliance Industries Ltd.,legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNSE:RELIANCE,Reliance Industries,common,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNSE:RELIANCE,RELIANCE,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XNSE:BHARTIARTL,Bharti Airtel Limited,legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNSE:BHARTIARTL,Bharti Airtel,common,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNSE:BHARTIARTL,BHARTIARTL,ticker,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNSE:TCS,Tata Consultancy Services Limited,legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNSE:TCS,TCS,common,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XNSE:TCS,TCS,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XNSE:INFY,Infosys Ltd.,legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNSE:INFY,Infosys,common,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNSE:INFY,INFY,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XNSE:INFY,Infosys Technologies Ltd.,former,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XNSE:INFY,INFOSYSTCH,ticker,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XLON:EMH,European Metals Holdings Ltd,legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XLON:EMH,European Metals Holdings,common,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XLON:EMH,EMH,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XLON:ATYM,Atalaya Mining PLC,legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XLON:ATYM,Atalaya Mining,common,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XLON:ATYM,ATYM,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XLON:ATYM,EMED Mining Public Ltd.,former,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XLON:ATYM,EMED,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XLON:SRB,Serabi Gold PLC,legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XLON:SRB,Serabi Gold,common,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XLON:SRB,SRB,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XLON:SRB,Serabi Mining Plc,former,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XLON:HZM,Horizonte Minerals PLC,legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XLON:HZM,Horizonte Minerals,common,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XLON:HZM,HZM,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XLON:HSBA,HSBC Holdings PLC,legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XLON:HSBA,HSBC,common,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XLON:HSBA,HSBA,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XFRA:2S1,Vard Holdings Ltd,legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XFRA:2S1,Vard Holdings,common,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XFRA:2S1,2S1,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XFRA:BU9,Boyuan Construction Group Inc,legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XFRA:BU9,Boyuan Construction Group,common,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XFRA:BU9,BU9,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XETR:SAP,SAP SE,legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XETR:SAP,SAP,common,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XETR:SAP,SAP,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XETR:SAP,SAP,former,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XETR:LIN,Linde PLC,legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XETR:LIN,Linde,common,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XETR:LIN,LIN,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XETR:SIE,Siemens AG,legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XETR:SIE,Siemens,common,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XETR:SIE,SIE,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XTSX:BZ,Benz Mining Corp.,legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XTSX:BZ,Benz Mining,common,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XTSX:BZ,BZ,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XTSX:BZ,Benz Capital Corporation,former,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XTSX:BZ,BZ.H,ticker,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XTSE:RY,Royal Bank of Canada,legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XTSE:RY,Royal Bank of Canada,common,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XTSE:RY,RY,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XTSE:TD,Toronto-Dominion Bank (The),legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XTSE:TD,Toronto-Dominion Bank,common,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XTSE:TD,TD,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XTSE:TD,Toronto-Dominion Bank,former,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XTSE:BMO,Bank of Montreal,legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XTSE:BMO,Bank of Montreal,common,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XTSE:BMO,BMO,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XTSE:BNS,Bank of Nova Scotia,legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XTSE:BNS,Bank of Nova Scotia,common,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XTSE:BNS,BNS,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XASX:CBA,Commonwealth Bank of Australia.,legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XASX:CBA,Commonwealth Bank,common,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XASX:CBA,CBA,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XASX:CBA,COMMONWEALTH BANK OF AUSTRALIA,former,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XASX:CBA,Commonwealth Bank of Australia,former,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XASX:NEM,Newmont Corporation,legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XASX:NEM,Newmont,common,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XASX:NEM,NEM,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XASX:AMC,Amcor Plc,legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XASX:AMC,Amcor,common,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XASX:AMC,AMC,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XASX:AMC,Amcor Limited,former,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XASX:NAB,National Australia Bank Limited,legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XASX:NAB,National Australia Bank,common,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XASX:NAB,NAB,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23
+XASX:WBC,Westpac Banking Corporation,legal,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XASX:WBC,Westpac Banking,common,en,latin,,,no,,sample-public-facts,,sample,2026-10-23
+XASX:WBC,WBC,ticker,en,latin,,,yes,single token that is also an ordinary English word,sample-public-facts,,sample,2026-10-23

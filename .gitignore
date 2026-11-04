@@ -1,0 +1,42 @@
+# Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Node / Vite
+node_modules/
+dist/
+build/
+*.tsbuildinfo
+coverage/
+
+# Data: only the committed samples/reference are tracked
+data/companies/*.csv
+data/aliases/*.csv
+!data/companies/sample.csv
+!data/aliases/sample.csv
+
+# Demo recording artifacts
+demo/raw/
+demo/frames/
+demo/narration/
+*.mp4
+*.mov
+*.wav
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+*.log

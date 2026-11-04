@@ -1,0 +1,43 @@
+# `docker compose up` from this folder gives any teammate the whole stack locally.
+# Credentials below are LOCAL-DEV defaults only; override via environment variables.
+# Getting this working in week 1 pays for itself ten times over.
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-atlas}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-atlas}
+      POSTGRES_DB: ${POSTGRES_DB:-atlas}
+    ports: ["5432:5432"]
+    volumes:
+      - atlas_pg:/var/lib/postgresql/data
+      - ./../infra/migrations:/migrations:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U atlas -d atlas"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    ports: ["6379:6379"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  # Browser-based database viewer, so nobody needs a Postgres client installed.
+  # http://localhost:8081 - browse tables, run SQL, export CSV.
+  dbui:
+    image: sosedoff/pgweb:0.14.3
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PGWEB_DATABASE_URL: postgres://${POSTGRES_USER:-atlas}:${POSTGRES_PASSWORD:-atlas}@db:5432/${POSTGRES_DB:-atlas}?sslmode=disable
+    ports: ["8081:8081"]
+    restart: unless-stopped
+
+volumes:
+  atlas_pg:
