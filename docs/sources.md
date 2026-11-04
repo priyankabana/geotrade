@@ -94,6 +94,33 @@ derived from it is published**, owner: whoever supplied it, due week 1:
 - 65% geocoded to city precision, 34% to country centroid, 3 rows not at all. Precision is
   recorded per row in `hq_geo_precision` rather than averaged away.
 
+### Public demo snapshot (`apps/web/public/snapshot/`) — decision 2026-11-05
+
+The deployed frontend has no backend, so it reads a static snapshot built by
+`scripts/build_snapshot.py`. Because `vendor-market-csv` above is **not cleared for
+publication**, the snapshot is restricted to what we can defend:
+
+| Ships | Does not ship |
+|---|---|
+| Company **count** per country (90 countries) and per sector per country | Any row-level vendor record for the remaining ~22,700 companies |
+| One weighted coverage point per country (mean HQ position, no names or ids) | Per-company coordinates or density cells for unnamed companies |
+| A **capped named sample of 300** well-known companies: legal name, display name, ticker, exchange, CIK (SEC only), country, HQ city, lat/lon, our own sector label | ISIN, LEI, FIGI, CUSIP, SEDOL, former names, market cap/band, descriptions, vendor classification codes |
+| | Provenance columns: `source_id`, `source_url`, `collected_by`, `collected_on`, `notes` (the raw files name teammates in `collected_by`) |
+
+The named sample is: the non-US rows of the committed `data/companies/sample.csv`, then
+SEC filers in `data/reference/us_filer_gazetteer.csv` rank order (SEC
+`company_tickers_exchange.json`, public domain) until the cap. Identity (legal name,
+ticker, exchange, CIK) comes from SEC; HQ city and coordinates are plain facts, geocoded
+with GeoNames (CC BY 4.0, credited in the UI).
+
+**Why not the larger snapshot.** An earlier build published ~4,800 company-level records
+(every SEC-matched company) plus anonymous HQ coordinates at 0.01 degree for the rest.
+The membership, HQ positions and sector labels of those records were still derived
+row-by-row from the vendor files, which amounts to republishing a large slice of them.
+Aggregates plus a capped sample keep the demo alive (all 23,018 companies visible as
+counts) while publishing nothing that would not survive the vendor's terms being "no".
+Revisit once question 1 above has a quoted answer.
+
 ---
 
 ## Candidates — no adapter until verified
