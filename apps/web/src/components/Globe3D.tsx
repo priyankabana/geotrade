@@ -10,7 +10,9 @@ import { feature } from 'topojson-client'
    reference/DO-NOT-SHIP.md. The idea that a globe is the right primary view is theirs;
    the implementation, palette and interaction model are ours. */
 
-export type Pt = { uid: string; name: string; sector: string; country: string; lat: number; lon: number }
+/** `w` is a count: the static snapshot ships companies outside the named sample as one
+    weighted, unnamed coordinate per country. Absent means 1. */
+export type Pt = { uid: string; name: string; sector: string; country: string; lat: number; lon: number; w?: number }
 export type ArcSpec = { startLat: number; startLng: number; endLat: number; endLng: number; surprising: boolean }
 export type RingSpec = { lat: number; lng: number }
 
@@ -78,7 +80,7 @@ export default function Globe3D({
   }, [focus?.lat, focus?.lon, focus?.altitude])
 
   const hexPoints = useMemo(
-    () => points.map(p => ({ lat: p.lat, lng: p.lon, uid: p.uid })), [points])
+    () => points.map(p => ({ lat: p.lat, lng: p.lon, uid: p.uid, w: p.w ?? 1 })), [points])
 
   const litPoints = useMemo(() => {
     if (!highlight?.size) return []
@@ -140,16 +142,17 @@ export default function Globe3D({
         hexBinPointsData={mode === 'coverage' ? hexPoints : []}
         hexBinPointLat={(d: object) => (d as { lat: number }).lat}
         hexBinPointLng={(d: object) => (d as { lng: number }).lng}
+        hexBinPointWeight={(d: object) => (d as { w: number }).w}
         hexBinResolution={4}
         hexMargin={0.18}
         hexAltitude={(d: object) =>
-          Math.min(0.085, Math.sqrt((d as { points: unknown[] }).points.length) * 0.0045)}
+          Math.min(0.085, Math.sqrt((d as { sumWeight: number }).sumWeight) * 0.0045)}
         /* Colour carries the density; height only hints at it. Tall spikes read as
            decoration and hide the map underneath. */
-        hexTopColor={(d: object) => ramp((d as { points: unknown[] }).points.length)}
-        hexSideColor={(d: object) => ramp((d as { points: unknown[] }).points.length)}
+        hexTopColor={(d: object) => ramp((d as { sumWeight: number }).sumWeight)}
+        hexSideColor={(d: object) => ramp((d as { sumWeight: number }).sumWeight)}
         hexLabel={(d: object) =>
-          `<div class="g-tip"><b>${(d as { points: unknown[] }).points.length}</b> companies</div>`}
+          `<div class="g-tip"><b>${(d as { sumWeight: number }).sumWeight.toLocaleString()}</b> companies</div>`}
 
         pointsData={litPoints}
         pointLat="lat" pointLng="lng"

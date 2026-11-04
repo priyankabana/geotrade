@@ -6,7 +6,8 @@ import { AS_OF, EVENT_AT, EVENT_CAMERA, EXPOSURE, TIMELINE } from './example'
 import * as api from './client'
 import type { CompanyDetail, CompanyRow, CountryTile, SectorMove } from '@shared/api'
 
-const PRODUCT = import.meta.env.VITE_PRODUCT_NAME ?? 'Atlas'
+const PRODUCT = import.meta.env.VITE_PRODUCT_NAME ?? 'GeoTrade'
+const EDGAR = (cik: string) => `https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=${cik}`
 
 type Surface = 'live' | 'replay' | 'simulate'
 type View =
@@ -18,6 +19,7 @@ type View =
 
 export default function App() {
   const [mode, setMode] = useState<api.Mode>('checking')
+  const [meta, setMeta] = useState<api.Meta | null>(null)
   const [surface, setSurface] = useState<Surface>('live')
   const [view, setView] = useState<View>({ k: 'home' })
   const [tab, setTab] = useState<'up' | 'down'>('up')
@@ -27,14 +29,17 @@ export default function App() {
   const [points, setPoints] = useState<Pt[]>([])
   const [sectors, setSectors] = useState<SectorMove[] | null>(null)
   const [companies, setCompanies] = useState<CompanyRow[] | null>(null)
-  const [detail, setDetail] = useState<CompanyDetail | null>(null)
+  const [detail, setDetail] = useState<CompanyDetail | null | undefined>(undefined)
 
-  useEffect(() => { api.probe().then(setMode) }, [])
+  const ready = mode === 'live' || mode === 'snapshot'
   useEffect(() => {
-    if (mode !== 'live') return
+    api.probe().then(m => { setMode(m); if (m === 'snapshot') api.getMeta().then(setMeta) })
+  }, [])
+  useEffect(() => {
+    if (!ready) return
     api.getCountries().then(setCountries)
     api.getPoints().then(setPoints)
-  }, [mode])
+  }, [ready])
 
   const iso = view.k === 'country' || view.k === 'sector' ? view.iso2 : null
   useEffect(() => { if (iso) { setSectors(null); api.getSectors(iso).then(setSectors) } }, [iso])
@@ -44,17 +49,19 @@ export default function App() {
   }, [view.k === 'sector' ? view.sector.atlasSector + view.iso2 : null])
   useEffect(() => {
     if (view.k !== 'company') return
-    setDetail(null); api.getCompany(view.uid).then(setDetail)
+    setDetail(undefined); api.getCompany(view.uid).then(setDetail)
   }, [view.k === 'company' ? view.uid : null])
 
   const byUid = useMemo(() => new Map(points.map(p => [p.uid, p])), [points])
   const showEvent = surface !== 'live' || view.k === 'event'
 
+  const located = points.reduce((a, p) => a + (p.w ?? 1), 0)
   const centroid = (iso2: string) => {
     const ps = points.filter(p => p.country === iso2)
-    if (!ps.length) return null
-    return { lat: ps.reduce((a, p) => a + p.lat, 0) / ps.length,
-             lon: ps.reduce((a, p) => a + p.lon, 0) / ps.length, altitude: 1.6 }
+    const w = ps.reduce((a, p) => a + (p.w ?? 1), 0)
+    if (!w) return null
+    return { lat: ps.reduce((a, p) => a + p.lat * (p.w ?? 1), 0) / w,
+             lon: ps.reduce((a, p) => a + p.lon * (p.w ?? 1), 0) / w, altitude: 1.6 }
   }
 
   const focus =
@@ -89,7 +96,7 @@ export default function App() {
       <header className="topbar">
         <span className="brand">{PRODUCT}</span>
         <span className="proto" title="Reference data is live. Dependency edges and events are illustrative.">
-          prototype
+          {mode === 'snapshot' ? 'static demo' : 'prototype'}
         </span>
         <nav className="surfaces">
           {(['live', 'replay', 'simulate'] as Surface[]).map(s => (
@@ -100,12 +107,15 @@ export default function App() {
           ))}
         </nav>
         <span className="status">
-          <i className={mode === 'live' ? 'ok' : 'bad'} />
-          {mode === 'live'
+          <i className={ready ? 'ok' : 'bad'} />
+          {ready
             ? `${countries.reduce((a, c) => a + c.companyCount, 0).toLocaleString()} companies · ${countries.length} countries`
-            : mode === 'checking' ? 'connecting…' : 'API offline'}
+            : mode === 'checking' ? 'connecting…' : 'data offline'}
         </span>
-        <span className="asof num">as of {(surface === 'replay' ? TIMELINE[tl].t : AS_OF.slice(0, 10))}</span>
+        <span className="asof num">
+          {surface === 'replay' ? `as of ${TIMELINE[tl].t}`
+            : meta ? `snapshot ${meta.generatedOn}` : `as of ${AS_OF.slice(0, 10)}`}
+        </span>
       </header>
 
       <div className={`main${surface === 'replay' ? ' with-timeline' : ''}`}>
@@ -128,6 +138,10 @@ export default function App() {
             </div>
           )}
           {surface === 'replay' && <Timeline idx={tl} onPick={setTl} />}
+          <div className="attrib">
+            Contains data from GeoNames, CC BY 4.0 · company identity from SEC EDGAR ·
+            imagery NASA · not investment advice
+          </div>
         </div>
 
         <aside className="panel">
@@ -146,7 +160,7 @@ export default function App() {
                 : (surface === 'replay' ? TIMELINE[tl].label : EXPOSURE.event.name)}
             </div>
             <div className="sub">
-              {view.k === 'home' ? `${points.length.toLocaleString()} headquarters on the globe`
+              {view.k === 'home' ? `${located.toLocaleString()} headquarters on the globe`
                 : view.k === 'country' ? `${countries.find(c => c.country === view.iso2)?.companyCount ?? 0} companies · ${countries.find(c => c.country === view.iso2)?.sectorCount ?? 0} sectors`
                 : view.k === 'sector' ? `${view.sector.companyCount} companies`
                 : view.k === 'company' ? view.uid
@@ -193,14 +207,22 @@ export default function App() {
                 : <SectorList sectors={sectors} onPick={s => go({ k: 'sector', iso2: view.iso2, sector: s })} />
             ) : view.k === 'sector' ? (
               companies === null ? <Empty title="Loading…" body="" />
-                : <CompanyList companies={companies} onPick={c => setView({ k: 'company', uid: c.companyUid, back: view })} />
-            ) : detail === null ? <Empty title="Loading…" body="" /> : (
+                : <CompanyList companies={companies} total={view.sector.companyCount} snapshot={mode === 'snapshot'}
+                               onPick={c => setView({ k: 'company', uid: c.companyUid, back: view })} />
+            ) : detail === undefined ? <Empty title="Loading…" body="" />
+              : detail === null ? <Empty title="Company not in this build" body={`${view.uid} has no company-level record here.`} /> : (
               <>
                 <dl className="kv">
                   <dt>Legal name</dt><dd>{detail.legalName}</dd>
                   <dt>Sector</dt><dd>{detail.atlasSector}</dd>
                   <dt>HQ</dt><dd>{detail.hq.city ?? '—'}, {detail.countryHq}</dd>
-                  <dt>Identifiers</dt><dd className="num">{detail.identifiers.map(i => `${i.scheme} ${i.value}`).join(' · ') || '—'}</dd>
+                  <dt>Listing</dt><dd className="num">{detail.listings.map(l => `${l.exchangeMic}:${l.ticker}`).join(' · ') || '—'}</dd>
+                  <dt>Identifiers</dt><dd className="num">
+                    {detail.identifiers.map(i => i.scheme === 'CIK'
+                      ? <a key={i.value} href={EDGAR(i.value)} target="_blank" rel="noreferrer">CIK {i.value} ↗</a>
+                      : <span key={i.value}>{i.scheme} {i.value} </span>)}
+                    {!detail.identifiers.length && '—'}
+                  </dd>
                   {detail.formerNames.length > 0 && <><dt>Formerly</dt><dd>{detail.formerNames.slice(0, 3).join('; ')}</dd></>}
                 </dl>
                 {tab === 'up' ? <EdgeList edges={detail.dependsOn} label="Depends on" />

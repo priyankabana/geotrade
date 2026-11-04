@@ -9,7 +9,7 @@ const BAND: Record<string, string> = {
    gives a target you can hit without aiming at a moving sphere. */
 export function CountryList({ tiles, onPick }:
   { tiles: CountryTile[]; onPick: (iso2: string) => void }) {
-  if (!tiles.length) return <Empty title="No coverage loaded" body="Start the API and reload." />
+  if (!tiles.length) return <Empty title="No coverage loaded" body="Neither the API nor the static snapshot could be loaded. Start the API or reload." />
   const max = Math.max(...tiles.map(t => t.companyCount))
   return <>{tiles.map(t => (
     <button key={t.country} className="row row-country" onClick={() => onPick(t.country)}>
@@ -48,19 +48,32 @@ function PriceNote() {
   </div>
 }
 
-export function CompanyList({ companies, onPick }:
-  { companies: CompanyRow[]; onPick: (c: CompanyRow) => void }) {
-  if (!companies.length) return <Empty title="No companies in this sector yet"
-    body="The universe is loaded but extraction has not run, so no dependency edges exist here." />
-  return <>{companies.map(c => (
-    <button key={c.companyUid} className="row row-company" onClick={() => onPick(c)}>
-      <span>{c.commonName}</span>
-      <span className="num muted">{BAND[c.marketCapBand]}</span>
-      <span className="num">{c.citedEdgeCount > 0
-        ? `${c.citedEdgeCount} cited`
-        : <span className="muted">no edges</span>}</span>
-    </button>
-  ))}</>
+export function CompanyList({ companies, total, snapshot, onPick }:
+  { companies: CompanyRow[]; total: number; snapshot: boolean; onPick: (c: CompanyRow) => void }) {
+  const hidden = total - companies.length
+  const note = snapshot && hidden > 0 && (
+    <div className="notice">
+      <strong>{companies.length ? `Showing ${companies.length} of ${total}.` : `${total} companies, counts only.`}</strong>
+      This public demo names only a capped sample of well-known companies. The other{' '}
+      {hidden.toLocaleString()} come from market files whose redistribution terms are not
+      cleared, so they appear here as counts only. The local build with the database lists
+      every one.
+    </div>
+  )
+  if (!companies.length) return <>{note || <Empty title="No companies in this sector yet"
+    body="The universe is loaded but extraction has not run, so no dependency edges exist here." />}</>
+  return <>
+    {note}
+    {companies.map(c => (
+      <button key={c.companyUid} className="row row-company" onClick={() => onPick(c)}>
+        <span>{c.commonName}</span>
+        <span className="num muted">{c.marketCapBand ? BAND[c.marketCapBand] : c.companyUid.split(':')[1]}</span>
+        <span className="num">{c.citedEdgeCount > 0
+          ? `${c.citedEdgeCount} cited`
+          : <span className="muted">no edges</span>}</span>
+      </button>
+    ))}
+  </>
 }
 
 export function EdgeList({ edges, label }: { edges: EdgeSummary[]; label: string }) {
