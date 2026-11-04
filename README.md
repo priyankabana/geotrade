@@ -6,7 +6,7 @@ Final-year B.Tech (Computer Engineering) **team project** — *GeoTrade: Locatio
 
 > **Not a trading product.** It shows exposure and evidence; it never says what to buy or sell. See [COMPLIANCE.md](COMPLIANCE.md).
 
-**Live demo:** https://geotrade-priyanka.vercel.app (static build, no backend; see [Deployment](#deployment))
+**Live demo:** https://geotrade-atlas.vercel.app (static build, no backend; see [Deployment](#deployment))
 **Repo:** https://github.com/priyankabana/geotrade
 
 ![Globe view](docs/screenshots/globe.jpg)
@@ -232,14 +232,14 @@ There is no automated unit-test suite yet (planned with the extraction phase). C
 
 ## Deployment
 
-**Frontend → Vercel** (live at https://geotrade-priyanka.vercel.app). The root
+**Frontend → Vercel** (live at https://geotrade-atlas.vercel.app). The root
 [`vercel.json`](vercel.json) installs and builds `apps/web` and serves `apps/web/dist`.
 Leave `VITE_API_URL` unset: the app probes `http://localhost:8000`, fails, and serves the
 static snapshot, so no backend or environment variables are needed.
 
 Full stack (optional, free tier):
 
-- **API → Render / Railway / Fly.io**: root `apps/api`, start `uvicorn main:app --host 0.0.0.0 --port $PORT`, env `DATABASE_URL`, `CORS_ORIGINS=https://geotrade-priyanka.vercel.app`. Then set `VITE_API_URL` on Vercel and redeploy.
+- **API → Render / Railway / Fly.io**: root `apps/api`, start `uvicorn main:app --host 0.0.0.0 --port $PORT`, env `DATABASE_URL`, `CORS_ORIGINS=https://geotrade-atlas.vercel.app`. Then set `VITE_API_URL` on Vercel and redeploy.
 - **Database → Neon / Supabase / Railway Postgres** with **PostGIS** enabled; run `infra/migrations/0001_initial_schema.sql`, then `DATABASE_URL=... python3 -I scripts/load_csv.py`.
 
 ## Team
