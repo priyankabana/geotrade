@@ -1,4 +1,4 @@
-.PHONY: help dev down db psql db-ui query migrate load link-cik ingest extract propagate pipeline gazetteer gazetteer-df sample audit eval stats validate measure universe api web narrate demo build test clean
+.PHONY: help dev down db psql db-ui query migrate load link-cik ingest extract propagate pipeline gazetteer gazetteer-df sample audit backtest alerts key keys eval stats validate measure universe api web narrate demo build test clean
 
 help:
 	@grep -E '^[a-z-]+:.*##' $(MAKEFILE_LIST) | sed 's/:.*## /\t/' | expand -t22
@@ -62,6 +62,18 @@ sample:                ## Draw a seeded sample of relationships to judge by hand
 
 audit:                 ## Dump every concentration-backed relationship for hand-judging
 	python3 -I scripts/eval_concentration.py
+
+backtest:              ## Replay the event benchmark and fail on regression
+	python3 -I scripts/backtest.py
+
+alerts:                ## The three alerts that would page someone
+	python3 -I scripts/alerts.py
+
+key:                   ## Mint an API key: make key NAME="my laptop"
+	python3 -I scripts/api_key.py new "$(or $(NAME),unnamed)"
+
+keys:                  ## List API keys
+	python3 -I scripts/api_key.py list
 
 eval:                  ## Print the measured state of the graph
 	@echo "see eval/README.md for how these were measured"

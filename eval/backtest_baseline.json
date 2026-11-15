@@ -1,0 +1,219 @@
+{
+  "events": {
+    "akm-fire-2020": {
+      "date": "2020-10-21",
+      "exposed": 0,
+      "max_hops": 0,
+      "mean_score": 0.0,
+      "name": "Asahi Kasei Nobeoka plant fire",
+      "surprising": 0
+    },
+    "asml-fire-2022": {
+      "date": "2022-01-03",
+      "exposed": 2,
+      "max_hops": 1,
+      "mean_score": 0.6,
+      "name": "Fire at ASML Berlin component plant",
+      "surprising": 0
+    },
+    "baltimore-2024": {
+      "date": "2024-03-26",
+      "exposed": 5,
+      "max_hops": 1,
+      "mean_score": 0.61,
+      "name": "Key Bridge collapse closes Baltimore port",
+      "surprising": 0
+    },
+    "colonial-2021": {
+      "date": "2021-05-08",
+      "exposed": 4,
+      "max_hops": 1,
+      "mean_score": 0.68,
+      "name": "Colonial Pipeline ransomware shutdown",
+      "surprising": 0
+    },
+    "ever-given": {
+      "date": "2021-03-23",
+      "exposed": 0,
+      "max_hops": 0,
+      "mean_score": 0.0,
+      "name": "Ever Given blocks the Suez Canal",
+      "surprising": 0
+    },
+    "freeport-lng-2022": {
+      "date": "2022-06-08",
+      "exposed": 17,
+      "max_hops": 1,
+      "mean_score": 0.64,
+      "name": "Freeport LNG terminal explosion",
+      "surprising": 0
+    },
+    "gallium-controls": {
+      "date": "2023-07-03",
+      "exposed": 4,
+      "max_hops": 2,
+      "mean_score": 0.5064,
+      "name": "China gallium and germanium export controls",
+      "surprising": 1
+    },
+    "hormuz-2026": {
+      "date": "2026-11-10",
+      "exposed": 107,
+      "max_hops": 2,
+      "mean_score": 0.4483,
+      "name": "Strait of Hormuz tanker insurance withdrawal",
+      "surprising": 51
+    },
+    "hualien-2024": {
+      "date": "2024-04-03",
+      "exposed": 2,
+      "max_hops": 1,
+      "mean_score": 0.75,
+      "name": "Hualien earthquake shakes Taiwanese fabs",
+      "surprising": 0
+    },
+    "ida-2021": {
+      "date": "2021-08-29",
+      "exposed": 0,
+      "max_hops": 0,
+      "mean_score": 0.0,
+      "name": "Hurricane Ida shuts Gulf petrochemical plants",
+      "surprising": 0
+    },
+    "japan-korea-2019": {
+      "date": "2019-07-01",
+      "exposed": 57,
+      "max_hops": 1,
+      "mean_score": 0.6,
+      "name": "Japan restricts three materials to South Korea",
+      "surprising": 0
+    },
+    "kojima-2022": {
+      "date": "2022-02-28",
+      "exposed": 35,
+      "max_hops": 1,
+      "mean_score": 0.62,
+      "name": "Kojima Industries cyberattack stops Toyota lines",
+      "surprising": 0
+    },
+    "kumamoto-2016": {
+      "date": "2016-04-16",
+      "exposed": 0,
+      "max_hops": 0,
+      "mean_score": 0.0,
+      "name": "Kumamoto earthquake halts image sensor output",
+      "surprising": 0
+    },
+    "noto-2024": {
+      "date": "2024-01-01",
+      "exposed": 0,
+      "max_hops": 0,
+      "mean_score": 0.0,
+      "name": "Noto Peninsula earthquake",
+      "surprising": 0
+    },
+    "notpetya-2017": {
+      "date": "2017-06-27",
+      "exposed": 18,
+      "max_hops": 1,
+      "mean_score": 0.72,
+      "name": "NotPetya cyberattack halts Maersk terminals",
+      "surprising": 0
+    },
+    "panama-drought-2023": {
+      "date": "2023-07-25",
+      "exposed": 1,
+      "max_hops": 1,
+      "mean_score": 0.58,
+      "name": "Panama Canal drought cuts daily transits",
+      "surprising": 0
+    },
+    "red-sea-2023": {
+      "date": "2023-12-15",
+      "exposed": 0,
+      "max_hops": 0,
+      "mean_score": 0.0,
+      "name": "Red Sea attacks divert shipping from Suez",
+      "surprising": 0
+    },
+    "renesas-fire": {
+      "date": "2021-03-19",
+      "exposed": 8,
+      "max_hops": 1,
+      "mean_score": 0.78,
+      "name": "Renesas Naka fab fire",
+      "surprising": 0
+    },
+    "shanghai-2022": {
+      "date": "2022-03-28",
+      "exposed": 16,
+      "max_hops": 1,
+      "mean_score": 0.82,
+      "name": "Shanghai lockdown halts port and factories",
+      "surprising": 0
+    },
+    "sichuan-2022": {
+      "date": "2022-08-15",
+      "exposed": 4,
+      "max_hops": 1,
+      "mean_score": 0.66,
+      "name": "Sichuan drought forces industrial power cuts",
+      "surprising": 0
+    },
+    "storm-uri": {
+      "date": "2021-02-16",
+      "exposed": 20,
+      "max_hops": 1,
+      "mean_score": 0.72,
+      "name": "Texas winter storm Uri shuts Austin fabs",
+      "surprising": 0
+    },
+    "taiwan-strait": {
+      "date": "2026-01-04",
+      "exposed": 5,
+      "max_hops": 2,
+      "mean_score": 0.6917,
+      "name": "Taiwan Strait shipping disruption",
+      "surprising": 1
+    },
+    "thai-floods-2011": {
+      "date": "2011-10-10",
+      "exposed": 2,
+      "max_hops": 1,
+      "mean_score": 0.8,
+      "name": "Thailand floods shut hard-disk plants",
+      "surprising": 0
+    },
+    "tohoku-2011": {
+      "date": "2011-03-11",
+      "exposed": 105,
+      "max_hops": 1,
+      "mean_score": 0.95,
+      "name": "Tohoku earthquake and tsunami",
+      "surprising": 0
+    },
+    "turkey-quake-2023": {
+      "date": "2023-02-06",
+      "exposed": 3,
+      "max_hops": 2,
+      "mean_score": 0.6206,
+      "name": "Turkiye and Syria earthquake",
+      "surprising": 1
+    },
+    "ukraine-2022": {
+      "date": "2022-02-24",
+      "exposed": 13,
+      "max_hops": 1,
+      "mean_score": 0.88,
+      "name": "Invasion of Ukraine disrupts neon and palladium",
+      "surprising": 0
+    }
+  },
+  "generated": "2026-11-15T13:44:13.556045+00:00",
+  "graph": {
+    "concentration_backed": 26,
+    "edges": 403,
+    "relationships": 196,
+    "uncited_edges": 0
+  }
+}

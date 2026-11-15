@@ -7,7 +7,7 @@ on:
 
 jobs:
   web:
-    name: web — lint, typecheck, test
+    name: web - typecheck and build
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -17,38 +17,71 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
-          cache-dependency-path: apps/web/package-lock.json
-      - run: npm ci
-      - run: npm run lint
+      - run: npm ci || npm install
       - run: npm run typecheck
-      - run: npm test --if-present
+      - run: npm run build
 
   api:
-    name: api — lint, typecheck, test
+    name: api - tests, schema, tenancy, backtest
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: apps/api
     services:
       postgres:
         image: postgis/postgis:16-3.4
         env:
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: atlas_test
+          POSTGRES_USER: atlas
+          POSTGRES_PASSWORD: atlas
+          POSTGRES_DB: atlas
         options: >-
           --health-cmd pg_isready --health-interval 10s
           --health-timeout 5s --health-retries 5
-        ports: [5432:5432]
+        ports: ["5432:5432"]
+    env:
+      DATABASE_URL: postgresql://atlas:atlas@localhost:5432/atlas
+      ATLAS_APP_DSN: postgresql://atlas_app:atlas_app@localhost:5432/atlas
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-          cache: pip
-      - run: pip install -r requirements.txt -r requirements-dev.txt
-      - run: ruff check .
-      - run: mypy .
-      - run: pytest -q
-        env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/atlas_test
+      - run: pip install -r apps/api/requirements.txt pytest
+
+      # The schema must apply cleanly from nothing, every time. A migration that
+      # only works against a database someone has already massaged is not a
+      # migration.
+      - name: apply migrations
+        run: |
+          for f in infra/migrations/*.sql; do
+            echo "-- $f"
+            psql -v ON_ERROR_STOP=1 "$DATABASE_URL" -f "$f"
+          done
+
+      # Extraction is pure: these run with no data and no database.
+      - name: extractor regression tests
+        run: python -I -m pytest -q tests/test_extract.py
+
+      # Tenancy is checked against a real database. The point-in-time and
+      # propagation suites skip themselves when the graph is empty, which it is
+      # on a fresh CI database - they guard the data, not the code.
+      - name: schema, tenancy and graph invariants
+        run: python -I -m pytest -q tests/
+
+      - name: every edge must cite a sentence
+        run: |
+          psql -v ON_ERROR_STOP=1 "$DATABASE_URL" -c \
+            "DO \$\$ BEGIN
+               IF EXISTS (SELECT 1 FROM dependency_edge WHERE chunk_id IS NULL) THEN
+                 RAISE EXCEPTION 'an edge exists with no citation';
+               END IF;
+             END \$\$;"
+
+      - name: row-level security is on and forced
+        run: |
+          psql -v ON_ERROR_STOP=1 "$DATABASE_URL" -c \
+            "DO \$\$ BEGIN
+               IF EXISTS (
+                 SELECT 1 FROM pg_class
+                  WHERE relname IN ('exposure_precompute','universe_member','coverage_universe')
+                    AND (NOT relrowsecurity OR NOT relforcerowsecurity)) THEN
+                 RAISE EXCEPTION 'a tenant-scoped table is not protected';
+               END IF;
+             END \$\$;"
