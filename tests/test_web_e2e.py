@@ -22,25 +22,43 @@ def _up(url):
 
 
 @pytest.fixture(scope="module")
-def page():
+def browser():
+    """One Playwright instance for the whole module. The sync API refuses to
+    nest, so every page in this file has to come from here."""
     pytest.importorskip("playwright.sync_api")
     if not _up(WEB):
         pytest.skip(f"web server not running at {WEB} - start it with: make web")
-    if not _up(API + "/v1/health"):
-        pytest.skip(f"API not running at {API} - start it with: make api")
     from playwright.sync_api import sync_playwright
     with sync_playwright() as pw:
-        browser = pw.chromium.launch()
-        pg = browser.new_page(viewport={"width": 1500, "height": 950})
-        errors = []
-        pg.on("pageerror", lambda e: errors.append(str(e)))
-        pg.on("console", lambda m: errors.append(f"console.{m.type}: {m.text}")
-              if m.type == "error" else None)
-        pg.goto(WEB, wait_until="networkidle")
-        pg.wait_for_timeout(3500)
-        pg.errors = errors
-        yield pg
-        browser.close()
+        b = pw.chromium.launch()
+        yield b
+        b.close()
+
+
+def _watched(browser, width=1500, height=950):
+    """Two lists, because they mean different things. `thrown` is an uncaught
+    exception in our own code - always a bug. `errors` also catches the
+    browser's own network complaints, which are expected when a test cuts the
+    backend off on purpose."""
+    pg = browser.new_page(viewport={"width": width, "height": height})
+    thrown, errors = [], []
+    pg.on("pageerror", lambda e: (thrown.append(str(e)), errors.append(str(e))))
+    pg.on("console", lambda m: errors.append(f"console.{m.type}: {m.text}")
+          if m.type == "error" else None)
+    pg.thrown = thrown
+    pg.errors = errors
+    return pg
+
+
+@pytest.fixture(scope="module")
+def page(browser):
+    if not _up(API + "/v1/health"):
+        pytest.skip(f"API not running at {API} - start it with: make api")
+    pg = _watched(browser)
+    pg.goto(WEB, wait_until="networkidle")
+    pg.wait_for_timeout(3500)
+    yield pg
+    pg.close()
 
 
 def test_the_app_loads_without_a_single_runtime_error(page):
@@ -143,3 +161,42 @@ def test_it_is_usable_at_phone_width(page):
         "document.documentElement.scrollWidth > document.documentElement.clientWidth + 1")
     page.set_viewport_size({"width": 1500, "height": 950})
     assert not overflow, "the page scrolls sideways on a phone"
+
+
+# --------------------------------------------------- what happens when it breaks
+
+@pytest.fixture(scope="module")
+def broken_api_page(browser):
+    """The same app with every API call failing, so we can see what a user is
+    told when the backend is down - without taking the backend down."""
+    pg = _watched(browser, 1400, 900)
+    pg.route("**/v1/**", lambda route: route.abort())
+    pg.goto(WEB, wait_until="domcontentloaded")
+    pg.wait_for_timeout(5000)
+    yield pg
+    pg.close()
+
+
+def test_a_dead_backend_says_so_instead_of_showing_nothing(broken_api_page):
+    """Silence is the worst failure mode: an empty graph looks like a real
+    answer. The banner has to say the API is unreachable."""
+    assert "offline" in broken_api_page.inner_text(".mockstrip").lower()
+
+
+def test_a_dead_backend_does_not_throw_at_the_user(broken_api_page):
+    """Failed requests are expected here - we aborted them. What must not happen
+    is an uncaught exception in our own code, which is what leaves a user
+    looking at a blank page with no explanation."""
+    assert broken_api_page.thrown == [], f"uncaught exceptions: {broken_api_page.thrown[:3]}"
+
+
+def test_a_dead_backend_never_invents_numbers(broken_api_page):
+    """With no data, the status line must not claim coverage it cannot have."""
+    import re
+    bar = broken_api_page.inner_text(".topbar")
+    assert not re.search(r"\b\d{1,3},\d{3}\b", bar), f"invented a figure: {bar!r}"
+
+
+def test_the_page_still_renders_its_shell_when_the_backend_is_gone(broken_api_page):
+    assert broken_api_page.locator(".topbar").count() == 1
+    assert broken_api_page.locator("aside").count() == 1
