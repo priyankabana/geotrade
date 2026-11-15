@@ -13,7 +13,7 @@ from collections import defaultdict
 import psycopg
 
 DSN = os.environ.get("DATABASE_URL", "postgresql://atlas:atlas@localhost:5432/atlas")
-SCORER = "walk-1.0"
+SCORER = "walk-1.1"
 MAX_HOPS = 3
 DECAY = 0.55          # each hop out, exposure is worth a little over half
 
@@ -97,13 +97,22 @@ def main():
     conn.commit()
     print(f"  {len(ids)} events seeded")
 
-    # ---- the graph, loaded once ---------------------------------------
-    cur.execute("""SELECT from_entity_id, to_entity_id, weight, confidence, valid_from
-                   FROM dependency_edge""")
-    out_edges = defaultdict(list)
-    for a, b, w, c, vf in cur.fetchall():
-        out_edges[b].append((a, float(w or 0.25), float(c or 0.5), vf))
-    print(f"  graph: {sum(len(v) for v in out_edges.values()):,} edges")
+    # ---- the graph ------------------------------------------------------
+    # Loaded per event through edges_as_of, which is the only sanctioned read.
+    # Loading the whole graph once and filtering in Python was the second path
+    # this project says it does not have, and it compared timestamps as strings
+    # and never looked at valid_to at all.
+    def graph_as_of(as_of):
+        cur.execute("""SELECT e.from_entity_id, e.to_entity_id, e.weight, e.confidence
+                       FROM edges_as_of(
+                            (SELECT array_agg(id) FROM entity), %s) e""", (as_of,))
+        out = defaultdict(list)
+        for a, b, w, c in cur.fetchall():
+            out[b].append((a, float(w or 0.25), float(c or 0.5)))
+        return out
+
+    cur.execute("SELECT count(*) FROM dependency_edge")
+    print(f"  graph: {cur.fetchone()[0]:,} edges, read as of each event's date")
 
     cur.execute("DELETE FROM exposure_precompute WHERE tenant_id=%s", (tenant,))
     conn.commit()
@@ -112,6 +121,7 @@ def main():
     for e in EVENTS:
         eid = ids[e["key"]]
         asof = e["public"]
+        out_edges = graph_as_of(asof)
 
         # Hop 1 is the hubs the event lands on: the companies that others in the
         # affected sectors have named as counterparties. Seeding the whole sector
@@ -119,18 +129,23 @@ def main():
         # is the opposite of what this product is for.
         cur.execute("""
             SELECT DISTINCT de.to_entity_id
-            FROM dependency_edge de
+            FROM edges_as_of((SELECT array_agg(id) FROM entity), %s) de
             JOIN entity f ON f.id = de.from_entity_id
             WHERE f.atlas_sector = ANY(%s)
-              AND de.valid_from <= %s
-        """, (e["sectors"], asof))
+        """, (asof, e["sectors"]))
         seeds = [r[0] for r in cur.fetchall()]
 
-        # plus anyone headquartered where the event physically is
+        # plus anyone headquartered inside the event's actual radius. Matching on
+        # country instead put every US semiconductor company in the blast radius
+        # of a storm in Austin, which is not a claim we can defend. The event
+        # carries a geography and a radius, so use them.
         cur.execute("""SELECT e2.id FROM entity e2
-                       JOIN entity_location l ON l.entity_id = e2.id AND l.role='hq'
-                       WHERE l.country = %s AND e2.atlas_sector = ANY(%s)""",
-                    (e["country"], e["sectors"]))
+                       JOIN entity_location l  ON l.entity_id = e2.id AND l.role='hq'
+                       JOIN event_location  el ON el.event_id = %s
+                       WHERE e2.atlas_sector = ANY(%s)
+                         AND ST_DWithin(l.geom, el.geom,
+                                        COALESCE(el.radius_km, 300) * 1000)""",
+                    (eid, e["sectors"]))
         seeds = list({*seeds, *[r[0] for r in cur.fetchall()]})
 
         best = {}
@@ -145,10 +160,7 @@ def main():
             for node, (sc, h, p) in list(best.items()):
                 if h != hop - 1:
                     continue
-                for dependant, w, conf, vf in out_edges.get(node, []):
-                    # point-in-time: an edge published after the event cannot be used
-                    if vf is not None and vf.isoformat() > asof:
-                        continue   # published after the event: cannot be used
+                for dependant, w, conf in out_edges.get(node, []):
                     new = sc * w * conf * DECAY
                     if new < 0.02:
                         continue

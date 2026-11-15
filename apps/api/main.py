@@ -4,29 +4,112 @@ Read path budget is p95 < 200ms. Nothing here computes exposure - that is precom
 by the propagation engine. These endpoints are the reference layer only; the evidence
 layer endpoints arrive with Phase 2.
 """
-import os
+import os, hashlib, time, json, logging
 from contextlib import contextmanager
-from fastapi import FastAPI, HTTPException
+from contextvars import ContextVar
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 import psycopg
 from psycopg.rows import dict_row
+from psycopg_pool import ConnectionPool
 
-DSN = os.environ.get("DATABASE_URL", "postgresql://atlas:atlas@localhost:5432/atlas")
+# The API connects as atlas_app, which owns nothing and is not a superuser, so
+# row-level security actually applies to it. Connecting as the owner - which is
+# what this did until migration 0002 - meant the policies never ran.
+DSN = os.environ.get("ATLAS_APP_DSN",
+      os.environ.get("DATABASE_URL", "postgresql://atlas_app:atlas_app@localhost:5432/atlas"))
 PRODUCT_NAME = os.environ.get("ATLAS_PRODUCT_NAME", "Atlas")
+# Open endpoints are the public demo. Set ATLAS_REQUIRE_KEY=1 to require a key.
+REQUIRE_KEY = os.environ.get("ATLAS_REQUIRE_KEY", "") not in ("", "0", "false")
 
-app = FastAPI(title=f"{PRODUCT_NAME} API", version="0.1.0")
+logging.basicConfig(level=logging.INFO, format="%(message)s")
+log = logging.getLogger("atlas")
+app = FastAPI(title=f"{PRODUCT_NAME} API", version="0.2.0")
 app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173"],
                    allow_methods=["GET"], allow_headers=["*"])
 
-_pool: psycopg.Connection | None = None
+_pool = ConnectionPool(DSN, min_size=1, max_size=8, open=False,
+                       kwargs={"row_factory": dict_row})
+_tenant: ContextVar[str | None] = ContextVar("tenant", default=None)
+
 
 @contextmanager
 def cur():
-    global _pool
-    if _pool is None or _pool.closed:
-        _pool = psycopg.connect(DSN, row_factory=dict_row, autocommit=True)
-    with _pool.cursor() as c:
-        yield c
+    """One connection per use, with the tenant set inside a transaction.
+
+    SET LOCAL is scoped to the transaction, so a connection returned to the pool
+    can never carry one request's tenant into the next request's query."""
+    if _pool.closed:
+        _pool.open()
+    with _pool.connection() as conn:
+        with conn.cursor() as c:
+            t = _tenant.get()
+            if t:
+                c.execute("SELECT set_config('atlas.tenant_id', %s, true)", (str(t),))
+            yield c
+
+
+def _hash(key: str) -> str:
+    return hashlib.sha256(key.encode()).hexdigest()
+
+
+def _tenant_for_key(key: str):
+    if _pool.closed:
+        _pool.open()
+    with _pool.connection() as conn, conn.cursor() as c:
+        c.execute("""SELECT tenant_id FROM api_key
+                     WHERE key_sha256 = %s AND revoked_at IS NULL""", (_hash(key),))
+        row = c.fetchone()
+        if row:
+            c.execute("UPDATE api_key SET last_used_at = now() WHERE key_sha256 = %s",
+                      (_hash(key),))
+        return row["tenant_id"] if row else None
+
+
+def _default_tenant():
+    if _pool.closed:
+        _pool.open()
+    with _pool.connection() as conn, conn.cursor() as c:
+        c.execute("SELECT id FROM tenant ORDER BY created_at LIMIT 1")
+        row = c.fetchone()
+        return row["id"] if row else None
+
+
+@app.middleware("http")
+async def authenticate_and_log(request: Request, call_next):
+    """Resolve the caller to a tenant, then emit one structured line per request.
+
+    Logs are JSON because the three alerts in the runbook are built on them and
+    grepping prose does not scale past one laptop."""
+    started = time.monotonic()
+    key = request.headers.get("x-api-key")
+    tenant = _tenant_for_key(key) if key else None
+    if key and tenant is None:
+        return _json_error(401, "unknown or revoked API key")
+    if tenant is None:
+        if REQUIRE_KEY and request.url.path not in ("/v1/health", "/docs", "/openapi.json"):
+            return _json_error(401, "X-API-Key required")
+        tenant = _default_tenant()
+
+    token = _tenant.set(tenant)
+    try:
+        response = await call_next(request)
+    finally:
+        _tenant.reset(token)
+    ms = (time.monotonic() - started) * 1000
+    log.info(json.dumps({
+        "event": "request", "path": request.url.path, "method": request.method,
+        "status": response.status_code, "ms": round(ms, 2),
+        "tenant": str(tenant) if tenant else None,
+        "authenticated": bool(key),
+    }))
+    response.headers["X-Response-Time-ms"] = f"{ms:.2f}"
+    return response
+
+
+def _json_error(status: int, detail: str):
+    from fastapi.responses import JSONResponse
+    return JSONResponse({"detail": detail}, status_code=status)
 
 COUNTRY_NAMES = {
     "US":"United States","CA":"Canada","GB":"United Kingdom","CN":"China","IE":"Ireland",
@@ -56,7 +139,13 @@ COUNTRY_NAMES = {
 def health():
     with cur() as c:
         c.execute("SELECT count(*) AS n FROM entity")
-        return {"ok": True, "entities": c.fetchone()["n"], "product": PRODUCT_NAME}
+        n = c.fetchone()["n"]
+        c.execute("SELECT count(*) AS n FROM dependency_edge")
+        edges = c.fetchone()["n"]
+        c.execute("SELECT count(*) AS n FROM exposure_precompute")
+        exposure = c.fetchone()["n"]
+    return {"ok": True, "entities": n, "edges": edges, "exposureRows": exposure,
+            "product": PRODUCT_NAME, "requiresKey": REQUIRE_KEY}
 
 @app.get("/v1/globe/countries")
 def countries():
