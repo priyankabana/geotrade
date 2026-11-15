@@ -190,3 +190,30 @@ def test_every_suppressed_alias_says_why(tx):
     assert one(tx, """SELECT count(*) FROM entity_alias
                       WHERE is_ambiguous AND (ambiguity_note IS NULL
                                               OR btrim(ambiguity_note) = '')""") == 0
+
+
+def test_extraction_is_reproducible_from_what_is_stored(tx):
+    """Determinism, checked against the record rather than by re-running.
+
+    Every claim names the extractor version that produced it and the exact
+    offsets it came from, so the same corpus and the same version must give the
+    same claim. Two claims from one sentence naming one company, differing in
+    what they assert, would mean the output depends on something we are not
+    recording - and the graph would stop being reproducible."""
+    tx.execute("""
+        SELECT count(*) FROM (
+          SELECT chunk_id, char_start, counterparty_entity_id, extractor_version
+          FROM dependency_claim
+          GROUP BY 1,2,3,4
+          HAVING count(DISTINCT direction || relationship_class
+                       || coalesce(materiality_pct::text,'-')) > 1
+        ) d
+    """)
+    assert tx.fetchone()[0] == 0, "one sentence produced contradictory claims"
+
+
+def test_one_extractor_version_produced_the_whole_graph(tx):
+    """A graph half-built by two versions cannot be reasoned about: half of it
+    has fixes the other half does not."""
+    tx.execute("SELECT count(DISTINCT extractor_version) FROM dependency_claim")
+    assert tx.fetchone()[0] <= 1, "run make extract to rebuild the graph in one version"

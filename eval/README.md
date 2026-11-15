@@ -233,10 +233,11 @@ evaluation you cannot inspect is an assertion.
 | `concentration_all.txt` | **Every** concentration-backed relationship with its citation. Exhaustive. Regenerate with `make audit` |
 | `narrative_sample.txt` | The 60 narrative relationships behind the 68.3% figure, seed 991103 |
 | `gazetteer_df.tsv` | Capitalisation and document-frequency evidence for every alias, with the keep/suppress verdict and why |
-| `pairs.txt` | The **first** audit, 80 relationships. This is the 62.5% baseline |
+| `pairs.txt` | The **first** audit, 80 relationships. This is the 62.5% baseline. Historical - nothing overwrites it |
 | `pairs_v2.txt` | The second audit, after the case and direction fixes |
 | `pairs_final.txt` | A 120-relationship draw kept for anyone who wants to judge more than we did |
 | `recall_candidates.txt` | The 60 disclosure-shaped sentences behind the recall figure, seed 4417 |
+| `sample_latest.txt` | Where `make sample` writes. Scratch - the files above are the record |
 | `backtest_baseline.json` | Reach and surprise per event; the baseline `make backtest` gates against |
 
 The earlier samples are from earlier extractor versions and do not describe the

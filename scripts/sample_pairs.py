@@ -45,7 +45,10 @@ def main():
     rnd.shuffle(sample)
 
     os.makedirs("eval", exist_ok=True)
-    out = os.environ.get("SAMPLE_OUT", "eval/pairs.txt")
+    # Never the historical audit files by default: eval/pairs.txt holds the
+    # first audit, the 62.5% baseline, and overwriting it would erase the only
+    # record of where the extractor started.
+    out = os.environ.get("SAMPLE_OUT", "eval/sample_latest.txt")
     with open(out, "w") as fh:
         fh.write(f"seed={SEED}  population={len(rows)} relationships "
                  f"({len(conc)} concentration / {len(narr)} narrative)  sample={len(sample)}\n")
