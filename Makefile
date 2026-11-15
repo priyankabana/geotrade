@@ -1,4 +1,4 @@
-.PHONY: help dev down db psql db-ui query migrate load link-cik ingest extract propagate pipeline gazetteer gazetteer-df sample audit backtest alerts recall key keys eval stats validate measure universe api web narrate demo build test clean
+.PHONY: help dev down db psql db-ui query migrate load link-cik ingest extract propagate pipeline gazetteer gazetteer-df sample audit backtest alerts recall review key keys eval stats validate measure universe api web narrate demo build test clean
 
 help:
 	@grep -E '^[a-z-]+:.*##' $(MAKEFILE_LIST) | sed 's/:.*## /\t/' | expand -t22
@@ -71,6 +71,9 @@ alerts:                ## The three alerts that would page someone
 
 recall:                ## Find disclosure-shaped sentences we did not extract from
 	python3 -I scripts/measure_recall.py
+
+review:                ## Ambiguous aliases awaiting a human decision
+	python3 -I scripts/review_aliases.py
 
 key:                   ## Mint an API key: make key NAME="my laptop"
 	python3 -I scripts/api_key.py new "$(or $(NAME),unnamed)"

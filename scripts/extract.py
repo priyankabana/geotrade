@@ -21,7 +21,7 @@ from collections import defaultdict
 import psycopg
 
 DSN = os.environ.get("DATABASE_URL", "postgresql://atlas:atlas@localhost:5432/atlas")
-EXTRACTOR_VERSION = "rules-3.0"
+EXTRACTOR_VERSION = "rules-3.1"
 SCORER_VERSION    = "deterministic-1.0"
 
 # ---------------------------------------------------------------- lexicon
@@ -370,8 +370,21 @@ def main():
     cur = conn.cursor()
 
     print("  loading gazetteer")
-    cur.execute("""SELECT alias_norm, entity_id, token_count FROM entity_alias
-                   WHERE NOT is_ambiguous AND length(alias_norm) >= 5""")
+    # An alias that resolves to several entities is a decision. Where a person
+    # has made one it is honoured; where nobody has, we still take the first row
+    # the database returns, which is a decision made by the query planner. The
+    # review queue (scripts/review_aliases.py) exists to shrink that second set.
+    cur.execute("""
+        SELECT a.alias_norm, a.entity_id, a.token_count
+        FROM entity_alias a
+        LEFT JOIN alias_decision d ON d.alias_norm = a.alias_norm
+        WHERE NOT a.is_ambiguous
+          AND length(a.alias_norm) >= 5
+          AND (d.decision IS NULL
+               OR d.decision = 'merge'
+               OR (d.decision = 'prefer' AND d.entity_id = a.entity_id))
+        ORDER BY (d.decision = 'prefer') DESC NULLS LAST
+    """)
     gaz = {}
     for norm, eid, ntok in cur.fetchall():
         gaz.setdefault(norm, (eid, ntok or len(norm.split())))

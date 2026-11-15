@@ -16,7 +16,7 @@ backed by a command you can run or a file you can read.
 |---|---|---|
 | **0 — Foundations** | done | 25-table schema, `make dev` from a cold machine, CI applies every migration to an empty database |
 | **1 — Documents in, chunks out** | done | 225 filings, 14,738 chunks with character offsets, `make ingest` |
-| **2 — The graph** | done, bar one item | 421 cited edges / 207 relationships; `edges_as_of` is now the only read path; 7 point-in-time tests including the one that proves the backtest cannot see the future |
+| **2 — The graph** | done | 421 cited edges / 207 relationships; `edges_as_of` is now the only read path; 7 point-in-time tests including the one that proves the backtest cannot see the future |
 | **3 — Events and propagation** | done | 26-event benchmark, bounded 3-hop walk, 10 property tests, exposure precomputed, surprise rate on `/v1/metrics` |
 | **4 — Replay and simulation** | done, bar one item | point-in-time boundary drawn on the scrubber, `make backtest` gates on regression against a committed baseline |
 | **5 — Hardening and release** | mostly done | tenancy proven by 13 tests, three alerts in `make alerts`, structured request logs, `docs/RUNBOOK.md`, API keys |
@@ -33,9 +33,12 @@ backed by a command you can run or a file you can read.
   one (`extract_sentence`, fixed input and output), and `eval/README.md` names
   the failure classes that need it. Measured ceiling: 68.3% on narrative
   evidence.
-- **The review queue for ambiguous entity merges** (Phase 2) does not exist.
-  Ambiguous aliases are suppressed by measurement instead, which trades recall
-  for precision without a human in the loop.
+- **The review queue exists but is only partly worked through.** 897 aliases
+  resolve to more than one entity; 80 of them actually occur in text we have
+  read. 50 were auto-resolved as one company under different legal spellings,
+  and 6 collisions have dated human decisions. The remaining ~24 still fall back
+  to whichever row the database returns first, which is a decision made by the
+  query planner. `make review` lists them.
 - **"Who actually reported an impact next quarter"** (Phase 4) needs ground
   truth we do not have. `make backtest` is therefore a regression harness, not
   a validation, and says so in its own docstring.

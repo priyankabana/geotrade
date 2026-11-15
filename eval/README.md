@@ -181,8 +181,11 @@ worth reading. Of the 19 narrative-tier failures:
 
 - **6 entity resolution** - the right relationship bound to the wrong legal
   entity. "Carraro S.p.A." resolving to Carraro India Limited; "ISTAR", a
-  military acronym, resolving to iStar Inc. Aliases that are genuinely ambiguous
-  between two real companies are the hard case here.
+  military acronym, resolving to iStar Inc. This class now has a review queue
+  (`make review`): of the 80 ambiguous aliases that actually occur in the
+  corpus, 50 were one company under different spellings and 6 collisions have
+  dated human decisions - which is what removed Cenntro's edge to Metro Inc.
+  Roughly 24 still fall back to whichever row the database returns first.
 - **6 not a dependency** - a company named in a sentence about something else,
   where no surface cue distinguishes it.
 - **4 competitor lists** - bulleted lists of competitors sitting directly above a
