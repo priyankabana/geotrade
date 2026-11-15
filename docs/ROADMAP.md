@@ -7,6 +7,45 @@ that runs and can be demoed.** No phase ends with "the backend is nearly done."
 
 ---
 
+## Where we actually are
+
+Checked against the repository, not from memory. Everything marked done is
+backed by a command you can run or a file you can read.
+
+| Phase | State | What backs the claim |
+|---|---|---|
+| **0 — Foundations** | done | 25-table schema, `make dev` from a cold machine, CI applies every migration to an empty database |
+| **1 — Documents in, chunks out** | done | 225 filings, 14,738 chunks with character offsets, `make ingest` |
+| **2 — The graph** | done, bar one item | 421 cited edges / 207 relationships; `edges_as_of` is now the only read path; 7 point-in-time tests including the one that proves the backtest cannot see the future |
+| **3 — Events and propagation** | done | 26-event benchmark, bounded 3-hop walk, 10 property tests, exposure precomputed, surprise rate on `/v1/metrics` |
+| **4 — Replay and simulation** | done, bar one item | point-in-time boundary drawn on the scrubber, `make backtest` gates on regression against a committed baseline |
+| **5 — Hardening and release** | mostly done | tenancy proven by 13 tests, three alerts in `make alerts`, structured request logs, `docs/RUNBOOK.md`, API keys |
+
+**Still open, named rather than quietly dropped:**
+
+- **Recall is measured but on a small base.** Of 60 disclosure-shaped sentences
+  read by hand, 48 name no company at all, 7 name a party outside our six
+  markets, and 5 name a company we cover - all 5 of which we captured. Five is
+  not many, and the interval around it is wide. The real finding is the first
+  number: **four fifths of concentration disclosures are anonymous**, which is a
+  ceiling on the method rather than a defect in the code.
+- **Stage two is deterministic rules, not a model.** The interface is built for
+  one (`extract_sentence`, fixed input and output), and `eval/README.md` names
+  the failure classes that need it. Measured ceiling: 68.3% on narrative
+  evidence.
+- **The review queue for ambiguous entity merges** (Phase 2) does not exist.
+  Ambiguous aliases are suppressed by measurement instead, which trades recall
+  for precision without a human in the loop.
+- **"Who actually reported an impact next quarter"** (Phase 4) needs ground
+  truth we do not have. `make backtest` is therefore a regression harness, not
+  a validation, and says so in its own docstring.
+- **Bring your own tier-1** (Phase 5) is not built. Graph density does not
+  support it yet: 207 relationships across 83 companies.
+- **Nobody outside the team has used it.** Zero customer conversations. This is
+  a risk, not an oversight — see [`../STARTUP/risks.md`](../STARTUP/risks.md).
+
+---
+
 ## Phase 0 — Foundations (weeks 1–2) · **largely done**
 
 The boring fortnight that decides whether the other eighteen work.

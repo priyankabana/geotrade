@@ -36,25 +36,69 @@ about Hyundai Motor Company) counts as wrong.
 
 ## Results
 
-Graph as measured: **403 cited edges, 196 distinct relationships, 80 companies.**
+Graph as measured: **421 cited edges, 207 distinct relationships, 83 companies.**
 
 | Tier | Population | Judged | Correct | Precision |
 |---|---|---|---|---|
-| Concentration-backed | 26 | 26 (all) | 26 | **100%** |
-| Narrative | 181 | 60 | 41 | **68.3%** (95% CI 56-79%) |
-| Overall | 207 | 86 | 67 | **~72%** |
+| Concentration-backed | 28 | 28 (all) | 28 | **100%** |
+| Narrative | 179 | 60 | 41 | **68.3%** (95% CI 56-79%) |
+| Overall | 207 | 88 | 69 | **~72%** |
 
 Percentages, within the concentration tier:
 
 | | Count |
 |---|---|
-| figure shown and correct | 20 |
+| figure shown and correct | 21 |
 | figure shown and wrong | 0 |
-| figure withheld as unattributable | 6 |
+| figure withheld as unattributable | 7 |
 
 **Every percentage we display is the right number for the right company**, and
-where the sentence does not let us tell, we show nothing rather than guess. Six
-of the twenty-six relationships are shown without a figure for that reason.
+where the sentence does not let us tell, we show nothing rather than guess.
+Seven of the twenty-eight relationships are shown without a figure for that
+reason.
+
+## Recall, and the ceiling it exposes
+
+Precision asks whether what we produced is true. Recall asks what we missed. We
+claimed no number for it until now. Here is the measurement, and what it found.
+
+**Method.** The candidate set cannot come from the extractor's own rules, or we
+would find no misses by construction. So `scripts/measure_recall.py` sweeps the
+whole corpus with a deliberately blunter pattern - a percentage near a customer
+or supplier word, in a sentence that also contains a capitalised multi-word
+name - and over-generates on purpose. It found **187 disclosure-shaped
+sentences**. Each is marked automatically with whether the extractor produced a
+claim at the same character offset, and a seeded sample of 60 was then read by
+hand, because only a human can say whether a given sentence really discloses
+anything.
+
+**What those 60 contain:**
+
+| | Count | Example |
+|---|---|---|
+| Name no company at all | **48** | "one customer accounted for 42.86% of total sales" |
+| Name a party outside our six markets | **7** | the US Department of Defense, WT Microelectronics (Taiwan), Chinese trading companies, a Singapore university |
+| Name a public company we cover | **5** | Daimler and PACCAR; Applied Materials, twice; the Cerence OEM list |
+
+**Recall on what is actually capturable: 5 of 5.** The sample is small, so the
+honest interval is wide - a 95% Wilson interval on 5/5 runs from roughly 57% to
+100% - and we would not quote the point estimate without that caveat.
+
+**The finding that matters is the first row.** Four fifths of the concentration
+disclosures in our corpus name nobody. The rule obliges a company to disclose
+*that* it depends on one customer; it does not oblige it to say *who*. "One
+customer accounted for 42.86% of total sales" satisfies the regulator completely
+and tells us nothing.
+
+That is a ceiling on the method, not a defect in the code, and no amount of
+better extraction moves it. It is also the answer to anyone who asks why the
+graph is small: the graph is not small because we read badly, it is small
+because most of what is disclosed is anonymous. On our corpus, roughly **one
+disclosure in twelve** names a counterparty we can resolve.
+
+It sharpens what expanding the corpus is worth, too. Going from 225 filings to
+5,000 is an overnight run and should yield relationships in proportion - but it
+will not change the fraction that is anonymised.
 
 ## Where it started
 
@@ -113,6 +157,13 @@ Each of these came from a specific misread edge, not from theory.
    sentence states a relationship; a 2,000-character financial table merely
    contains both names. Dana's edge to Stellantis was being cited by a
    geography-of-revenue table until we ordered on this.
+
+10. **A dictionary was still deleting real companies.** The older lexical filter
+    suppressed any two-word name whose words were both ordinary English. That
+    killed "Applied Materials" - a real company, disclosed by Benchmark
+    Electronics as 14% of its sales - along with 6,492 others including Intrepid
+    Potash and Parsley Energy. The recall measurement found it. Multi-word names
+    are now judged only by how the corpus writes them.
 
 Full history in the `EXTRACTOR_VERSION` string: `rules-1.0` -> `rules-3.0`.
 
@@ -182,6 +233,8 @@ evaluation you cannot inspect is an assertion.
 | `pairs.txt` | The **first** audit, 80 relationships. This is the 62.5% baseline |
 | `pairs_v2.txt` | The second audit, after the case and direction fixes |
 | `pairs_final.txt` | A 120-relationship draw kept for anyone who wants to judge more than we did |
+| `recall_candidates.txt` | The 60 disclosure-shaped sentences behind the recall figure, seed 4417 |
+| `backtest_baseline.json` | Reach and surprise per event; the baseline `make backtest` gates against |
 
 The earlier samples are from earlier extractor versions and do not describe the
 current graph. They are kept because the trajectory is part of the evidence.
@@ -194,7 +247,9 @@ make extract         # rebuild the graph from the chunks
 make audit           # dump the concentration tier in full -> eval/concentration_all.txt
 make sample          # draw a seeded sample of relationships to judge
 make eval            # print the graph's current size
-make test            # 30 regression tests, one per fix described above
+make recall          # disclosure-shaped sentences the extractor produced nothing from
+make backtest        # replay the 26-event benchmark, fail on regression
+make test            # 60 tests: extraction, point-in-time, propagation, tenancy
 ```
 
 Set `SAMPLE_SEED` and `SAMPLE_OUT` to draw a different sample:

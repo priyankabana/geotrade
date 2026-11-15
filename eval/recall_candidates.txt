@@ -1,0 +1,294 @@
+seed=4417  187 disclosure-shaped sentences found in the corpus, sample=60
+Judge each: does this sentence actually disclose a named counterparty?
+CAPTURED means the extractor produced a claim naming someone from it.
+
+[01] MISSED   filer: Aptiv PLC
+     Our ten largest customers accounted for approximately 56% of our total net sales for the
+     year ended December 31, 2025, which included approximately 10% to an individual Global OEM.
+
+[02] CAPTURED (Daimler, Paccar)   filer: Allison Transmission Holdings Inc.
+     Years ended December 31, % of net sales 2025 2024 2023 Daimler AG 18 % 20 % 18 % PACCAR
+     Inc. 11 % 13 % 11 % Traton SE 10 % 11 % 11 % Two customers accounted for 10% or more of the
+     Company's outstanding accounts receivable within the last two years presente d. % of
+     accounts receivable December 31, 2025 December 31, 2024 Daimler AG 14 % 20 % Traton SE 11
+
+[03] MISSED   filer: Axcelis Technologies, Inc.
+     See also Item 1A, “Risk Factors,” for information about risks attendant to our foreign
+     operations. ​ Customers ​ In 2025, according to TechInsights Inc., the top 20 semiconductor
+     chip manufacturers accounted for approximately 86.4% of total semiconductor capital
+     equipment spending, which decreased slightly from 87.6% in 2024.
+
+[04] MISSED   filer: AeroVironment, Inc.
+     The DoD, our principal U.S. government customer, accounted for approximately 63% of our
+     revenue for the fiscal year ended April 30, 2026.
+
+[05] CAPTURED (Applied Materials)   filer: Benchmark Electronics, Inc.
+     Sales to our largest customer, Applied Materials, Inc. and subsidiaries, represented 14% of
+     our total sales in both 2025 and 2024 and 12% of our total sales in 2023.
+
+[06] MISSED   filer: Alto Ingredients Inc
+     The Company sold to one customer representing 10% or more of the Company’s total net sales,
+     as follows.
+
+[07] MISSED   filer: Aurelion Inc. Class A
+     Note 7 CONCENTRATIONS Concentration risk of customers The following table sets forth a
+     summary of single customers who represent 10% or more of the Group’s total revenue: For the
+     years ended September 30, 2025 % 2024 % 2023 % Company A $ 1,785,000 99.97 $ * * $ * *
+     Company N * * * * 76,338 100.00 Company Q * * 250,192 94.88 * * $ 1,785,000 99.97 $ 259,192
+     94.88 $ 76,338 100.00 * represents the % is below 10% which is not presented.
+
+[08] MISSED   filer: ATI Inc.
+     Export Sales and Foreign Operations International sales represent approximately 42% of our
+     total annual sales, with direct export sales by our U.S.-based operations to customers in
+     foreign countries accounting for approximately 34% of our total sales.
+
+[09] MISSED   filer: Adeia Inc
+     The following table sets forth revenue generated from customers which comprise 10% or more
+     of total revenue for the periods indicated: 81 Years Ended December 31, 2025 2024 2023
+     Customer A 20 % * * Customer B 16 % 18 % 18 % Customer C * 10 % 11 % * denotes less than
+     10% of total revenue.
+
+[10] MISSED   filer: Amphenol Corporation
+     The Company’s sales to distributors represented approximately 19% and 18% of the Company’s
+     net sales in 2025 and 2024, respectively.
+
+[11] MISSED   filer: Acacia Research Corporation
+     No Deflecto supplier individually accounted for more than 10% of purchases during the year
+     ended December 31, 2025 and the period from October 18, 2024 through December 31, 2024.
+
+[12] MISSED   filer: Amtech Systems, Inc.
+     As of September 30, 2024 , one Thermal Processing Solutions customer represented 12 % of
+     accounts receivable.
+
+[13] MISSED   filer: Concorde International Group Ltd Class A
+     For the fiscal year ended December 31, 2023, our top two customers, Singapore University of
+     Technology and Design and People’s Association at OnePunggol accounted for approximately 8%
+     and 7% of our total revenue, respectively.
+
+[14] MISSED   filer: Canadian Solar Inc.
+     As of December 31, 2024, three individual suppliers accounted for more than 10% of total
+     advances to suppliers.
+
+[15] MISSED   filer: Amplitech Group Inc. 
+     As of December 31, 2025, there was one customer that accounted for approximately 42.86% of
+     total sales compared to one customer that accounted for approximately 13.97% of total sales
+     for the year ending December 31, 2024.
+
+[16] MISSED   filer: CN Energy Group Inc. 
+     Their top activated carbon customers for the fiscal year ended September 30, 2023 included
+     Ningbo Juming Youjia Trading Co., Ltd (“Ningbo Juming Youjia”), Zhoushan Yilong, Zhejiang
+     Shuyuan Supply Chain Co., Ltd (“Zhejiang Shuyuan”), Zhejiang Supai New Materials Technology
+     Co., Ltd, and Ningbo Guoning Zhonghao Technology Co., Ltd, which collectively accounted for
+     51% of their total activated carbon sales for that period.
+
+[17] MISSED   filer: American Vanguard Corporation
+     Shares of common stock purchased through the Plan in 2025, 2024 and 2023 were 148,197 ,
+     92,767 and 50,025 , respectively. (7) Major Customers In 2025, there were three customers
+     that accounted for 13 %, 12 % and 12 %, of the Company’s consolidated sales.
+
+[18] MISSED   filer: Codexis Inc.
+     As of December 31, 2025, three customers accounted for approximately 40%, 14% and 13% of
+     our accounts receivable balances.
+
+[19] MISSED   filer: CN Energy Group Inc. 
+     As of September 30, 2025, three suppliers accounted for approximately 51 %, 15 %, and 12 %
+     of the Company’s advance to suppliers balance, respectively.
+
+[20] MISSED   filer: Autozi Internet Technology (Global) Ltd
+     The following table sets forth a summary of single customers who represent 10% or more of
+     the Group’s total accounts receivable: Schedules of concentration of risk As of September
+     30, 2024 2025 Percentage of the Group’s accounts receivable Customer A - * 29 % Customer B
+     - * 25 % Customer C - * 11 % Customer D 35 % - * Customer E 25 % - * Customer F 15 % - * *
+     represent percentage less than 10% F- 36 There was no single supplier who represents 10% or
+     more of the Group’s total accounts payable.
+
+[21] MISSED   filer: Dorman Products, Inc.
+     As of December 31, 2025, our four largest customers represented 78% of total receivables.
+
+[22] MISSED   filer: American Battery Technology Company
+     As of June 30, 2026, there were four customers that comprised 81 % of the accounts
+     receivable on the consolidated balance sheet.
+
+[23] MISSED   filer: Belden Inc.
+     At December 31, 2025 and 2024, we had $ 26.0 million and $ 55.9 million in accounts
+     receivable outstanding from this customer, which represented approximately 6 % and 14 % of
+     our total accounts receivable balance as of December 31, 2025 and 2024, respectively.
+
+[24] MISSED   filer: ChargePoint Holdings Inc
+     As of January 31, 2026, one customer, a channel partner, individually accounted for 14 % of
+     accounts receivable, net.
+
+[25] MISSED   filer: BWX Technologies
+     In the years ended December 31, 2025, 2024 and 2023, sales to large utility customers
+     accounted for approximately 63 %, 71 % and 77 % of our Commercial Operations segment
+     revenues, respectively.
+
+[26] MISSED   filer: Blaize Holdings, Inc
+     The following table sets forth a summary of our revenue by customer for the years ended
+     December 31, 2025 and 2024: For the Year Ended December 31, (Amounts in thousands, except
+     for percentages) 2025 % 2024 % Customer A (1) $ — —% $ 1,193 76.8% Customer B (1) — —% 332
+     21.4% Customer C 10,444 27.0% — —% Customer D 23,750 61.5% — —% Others (2) (3) 4,438 11.5%
+     29 1.9% Total revenue $ 38,632 $ 1,554 (1) Customers A and B are both related parties. (2)
+     Each customer within “Others” comprised less than 10% of revenue each. (3) In 2025,
+     “Others” included $3.4 million in revenue from a related party.
+
+[27] MISSED   filer: Amphenol Corporation
+     Sales into the mobile devices market represented approximately 6% of the Company’s net
+     sales in 2025, with sales into the following primary end applications: ​ ​ ​ ​ ​ ​ ● ​
+     ​consumer electronics ​ ​ ​ ● ​ ​production-related products ● ​ ​mobile and smart phones,
+     including accessories ​ ● ​ ​wearable and hearable devices ● ​ ​mobile computing devices,
+     including laptops, tablets and e-readers ​ ​ ​ Customers and Geographies ​ The Company
+     manufactures and sells a broad portfolio of products on a global basis to customers in a
+     wide variety of industries.
+
+[28] MISSED   filer: Distribution Solutions Group, Inc
+     Gexpro Services maintains favorable and long-tenured relationships with approximately 3,300
+     suppliers, with the largest supplier representing 10 approximately 2% of Gexpro Services’
+     total product purchases in 2025 while the top 10 suppliers represented approximately 16%
+
+[29] MISSED   filer: AeroVironment, Inc.
+     The DoD, our principal U.S. government customer, accounted for approximately 63% of our
+     revenue for the fiscal year ended April 30, 2026.
+
+[30] MISSED   filer: Datavault AI Inc
+     As of December 31, 2025, the Company had two customers accounting for 65% and 32% of
+     accounts receivable.
+
+[31] MISSED   filer: Ambarella Inc.
+     In fiscal year 2026, the customer representing 10% or more of revenue was WT
+     Microelectronics Co., Ltd., formerly Wintech Microelectronics Co., Ltd., or WT, our non-
+     exclusive sales representative and fulfillment partner in Asia other than Japan, which
+     accounted for approximately 70% of total revenue.
+
+[32] MISSED   filer: CVD Equipment Corporation
+     As of December 31, 2025, the accounts receivable balance includes amounts from three
+     customers that represented 31.8 %, 19.8 % and 15.7 % of total accounts receivable, and as
+     of December 31, 2024, the accounts receivable balance includes amounts from three customers
+     that represented 28.6 %, 14.0 % and 11.9 % of total accounts receivable.
+
+[33] MISSED   filer: Data Storage Corp.
+     The Company’s Nexxis Subsidiary had three customers that individually accounted for 18 %,
+     15 % and 14 % of consolidated accounts receivable at December 31, 2024.
+
+[34] MISSED   filer: Algoma Steel Group Inc
+     We sell steel products to a diverse base of over 200 customers across multiple sectors in
+     North America with no single customer accounting for greater than 11% of revenues.
+
+[35] MISSED   filer: AIRO Group Holdings, Inc
+     As of December 31, 2025, two customers accounted for 82 % of accounts receivable.
+
+[36] MISSED   filer: CVD Equipment Corporation
+     Bookings During 2025, bookings of new orders from customers were approximately $13.0
+     million, representing a decrease of approximately 53.7% compared to 2024 bookings of $28.1
+     million.
+
+[37] MISSED   filer: ChipMOS Technologies Inc
+     Geography and Currency The majority of our revenue is generated from customers
+     headquartered in Taiwan, which represented 81%, 80% and 87% of our revenue in 2023, 2024
+     and 2025, respectively.
+
+[38] MISSED   filer: Acacia Research Corporation
+     Industrial Operations No single Printronix customer accounted for more than 10% of revenue
+     for the years ended December 31, 2025 and 2024.
+
+[39] MISSED   filer: BWX Technologies
+     No individual non-U.S. Government customer accounted for more than 10% of our consolidated
+     revenues in the years ended December 31, 2025, 2024 or 2023.
+
+[40] MISSED   filer: ChargePoint Holdings Inc
+     As of January 31, 2025, no customer individually accounted for 10% or more of accounts
+     receivable, net.
+
+[41] MISSED   filer: Codexis Inc.
+     As of December 31, 2024, four customers accounted for 56 % of our accounts receivable
+     balance.
+
+[42] MISSED   filer: Acacia Research Corporation
+     No Deflecto customers individually accounted for more than 10% of accounts receivable as of
+     December 31, 2025 and 2024.
+
+[43] MISSED   filer: CN Energy Group Inc. 
+     Their top activated carbon customers for the fiscal year ended September 30, 2024 included
+     Hangzhou Shihang New Material Technology Co., Ltd (“Hangzhou Shihang”), and Zhoushan Yilong
+     Information Technology Co., Ltd (“Zhoushan Yilong”), which collectively accounted for 52%
+     of their total activated carbon sales for that period.
+
+[44] MISSED   filer: American Vanguard Corporation
+     Shares of common stock purchased through the Plan in 2025, 2024 and 2023 were 148,197 ,
+     92,767 and 50,025 , respectively. (7) Major Customers In 2025, there were three customers
+     that accounted for 13 %, 12 % and 12 %, of the Company’s consolidated sales.
+
+[45] MISSED   filer: Aeye Inc
+     As of December 31, 2024 , the Company had four customers, each accounting for 10% or more
+     of AR and one vendor accounting for 10% or more of AP.
+
+[46] CAPTURED (General Motors, Great Wall Motor, Mercedes Benz)   filer: Cerence Inc
+     Our automobile manufacturer customers, commonly referred to as OEMs, include BMW, Mercedes-
+     Benz, the Volkswagen Group (Volkswagen, Audi, Porsche, and other brands), Stellantis,
+     Renault, Toyota, Ford, General Motors, BYD, Great Wall Motor, NIO, and many others and
+     represented approximately 50% of our revenue in fiscal year 2025.
+
+[47] MISSED   filer: Canadian Solar Inc.
+     MAJOR CUSTOMERS No customers accounted for 10% or more of total net revenues for the years
+     ended December 31, 2023, 2024 and 2025.
+
+[48] MISSED   filer: Art's-Way Manufacturing Co., Inc.
+     However, management believes the risk of loss to be low. (d) Customer Concentration During
+     the 2025 fiscal year, the Company had no customers accounting for more than 10% of
+     consolidated revenues, with the largest customer accounting for approximately 9% of
+     consolidated revenues, while in the 2024 fiscal year, one customer accounted for
+     approximately 17 % and another 15 % of consolidated revenues from continuing operations.
+     (e) Allowance for Credit Losses Since the beginning of the 2024 fiscal year, the Company
+     has been using aging categories to estimate expected credit losses on trade receivables.
+
+[49] MISSED   filer: Credit Acceptance Corporation
+     Major Customer Information We did not have any Dealers that provided 10% or more of our
+     revenue during 2025, 2024, or 2023.
+
+[50] CAPTURED (Applied Materials)   filer: Benchmark Electronics, Inc.
+     Sales to Applied Materials, Inc. and subsidiaries, our largest customer in 2025 and 2024
+     represented 14% of our total sales in both 2025 and 2024.
+
+[51] MISSED   filer: Cerence Inc
+     One customer accounted for 21.4 % of our Accounts receivable, net balance at September 30,
+     2024. (p) Foreign Currency Translation The functional currency of a foreign subsidiary is
+     generally the local currency.
+
+[52] MISSED   filer: CN Energy Group Inc. 
+     As of September 30, 2024, four major customers accounted for 34 %, 29 %, 22 %, and 12 % of
+     the Company’s accounts receivable balance, respectively.
+
+[53] CAPTURED (Daimler, Paccar)   filer: Allison Transmission Holdings Inc.
+     Our top three customers, Daimler AG, PACCAR Inc. and Traton SE, accounted for approximately
+     18%, 11% and 10%, respectively, of our net sales during 2025.
+
+[54] MISSED   filer: Big Tree Cloud Holdings Limited Class A
+     liers who represent 10% or more of the Group’s total accounts payable: As of June 30, 2026
+     2025 Amount % Amount % USD USD Supplier C * * 64,657 35 % Supplier A * * 53,686 29 %
+     Supplier B * * 18,333 10 % 23.
+
+[55] MISSED   filer: Axalta Coating Systems Ltd.
+     Our top ten customers accounted for approximately 61% of our Mobility Coatings net sales
+     during the year ended December 31, 2025.
+
+[56] MISSED   filer: Acacia Research Corporation
+     Three Benchmark customers individually accounted for 42 %, 15 % and 11 % of accounts
+     receivable as of December 31, 2025, and two customers individually accounted for 40 % and
+     21 % of accounts receivable as of December 31, 2024.
+
+[57] MISSED   filer: American Vanguard Corporation
+     Customers The Company’s largest three customers accounted for 13%, 12%, and 12% of the
+     Company's sales in 2025; 14%, 13%, and 11% in 2024; and 15%, 14% and 8% in 2023.
+
+[58] MISSED   filer: Carlisle Companies Incorporated
+     Market Factors CCM serves a large and diverse customer base; however, in 2025 CCM's two
+     largest customers represented 33% of the Company’s consolidated revenues.
+
+[59] MISSED   filer: Advanced Micro Devices, Inc.
+     One Client and Gaming segment customer accounted for 18 % of consolidated net revenue in
+     fiscal year 2023.
+
+[60] MISSED   filer: Advanced Energy Industries Inc.
+     As of December 31, 2025, the account receivable balance from three customers accounted for
+     26 %, 10 %, and 20 %, respectively, of our total accounts receivable.
+

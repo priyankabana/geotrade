@@ -8,7 +8,10 @@ appears in thousands of filings. Same for Service Corporation, Value-Holdings
 and dozens of others.
 
 Rule: a single-token alias_norm is usable only if it is not an English word and
-is at least four characters. Multi-token names are specific enough to keep.
+is at least four characters. Multi-token names are left to df_gazetteer.py,
+which decides from how the corpus actually writes them - a dictionary cannot
+tell "Applied Materials" from "financial institutions", because both are
+ordinary English.
 """
 import os, re
 import psycopg
@@ -66,9 +69,13 @@ def main():
             # "1 AUTOMOTIVE", which matches "Tier-1 automotive suppliers".
             elif toks and (toks[0].isdigit() or any(t.isdigit() and len(t) <= 2 for t in toks)):
                 bad.append(aid)
-            # every token generic -> matches ordinary prose
-            elif all(t in ENGLISH or t in EXTRA for t in toks) and len(toks) <= 2:
-                bad.append(aid)
+            # A multi-token name is NOT judged by dictionary any more. "Applied
+            # Materials" is two ordinary English words and a real company whose
+            # filings we read; this rule suppressed it, along with 6,492 others
+            # like Intrepid Potash and Parsley Energy. Whether a multi-word name
+            # is generic is settled empirically by df_gazetteer.py, which asks
+            # the corpus how the phrase is actually written rather than asking a
+            # dictionary what its words mean.
         print(f"  suppressing {len(bad):,} aliases that are ordinary words or phrases")
 
         for i in range(0, len(bad), 5000):

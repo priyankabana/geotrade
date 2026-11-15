@@ -55,20 +55,22 @@ reprints the graph figures; `eval/README.md` says how the quality ones were meas
 | **Reference layer** | **23,020 companies** across US, India, UK, Germany, Canada, Australia · 82,751 aliases · 51 sectors · 23,018 geolocated |
 | **Gazetteer** | 51,059 usable aliases, **31,750 distinct match keys**, after suppressing names the corpus shows are generic rather than specific |
 | **Schema** | 25 tables. Citation and tenancy enforced in the schema, not in review |
-| **Tests** | 30 extractor regression tests, each built from a real filing sentence that exposed a real bug |
+| **Tests** | **60 tests**: 30 extractor regressions from real filing sentences, 7 proving the backtest cannot see the future, 10 propagation properties, 13 proving tenant isolation |
+| **Operations** | `make alerts` (ingest stopped, precision dropped, read path over budget), `make backtest` gating on a committed baseline, structured request logs, API keys, [docs/RUNBOOK.md](docs/RUNBOOK.md) |
 | **API** | 5 ms median against a 200 ms budget. One relationship per row, with the number of citations that corroborate it |
 | **Frontend** | 3D globe (night earth, density bins, propagation arcs), Live / Replay / Simulate, country → sector → company drill-down, citation component, evidence tier shown on every edge |
-| **Evidence layer** | **225 real filings** from SEC EDGAR · 14,738 chunks with character offsets · 620 cited claims · **403 cited edges**, which are **196 distinct relationships** across 80 companies |
-| **Measured precision** | **26 of 26 correct** where the filing states a percentage (exhaustive) · **68.3%** on a random sample of 60 where it only names a counterparty · [`eval/README.md`](eval/README.md) |
-| **Measured attribution** | **Every displayed percentage (20 of 20) is the right number for the right company.** 6 further relationships are shown without a figure because the sentence does not permit safe attribution |
-| **Events & exposure** | 7 real disruptions seeded · bounded 3-hop deterministic walk · **472 precomputed exposure rows**, 52 of them more than one hop from the event |
+| **Evidence layer** | **225 real filings** from SEC EDGAR · 14,738 chunks with character offsets · 664 cited claims · **421 cited edges**, which are **207 distinct relationships** across 83 companies |
+| **Measured precision** | **28 of 28 correct** where the filing states a percentage (exhaustive) · **68.3%** on a random sample of 60 where it only names a counterparty · [`eval/README.md`](eval/README.md) |
+| **Measured attribution** | **Every displayed percentage (21 of 21) is the right number for the right company.** 7 further relationships are shown without a figure because the sentence does not permit safe attribution |
+| **Measured recall** | Of 60 disclosure-shaped sentences read by hand, 5 name a company in our markets and we captured all 5. **48 of the 60 name nobody at all** - the ceiling on the whole method, and the reason the graph is small |
+| **Events & exposure** | 7 real disruptions seeded · bounded 3-hop deterministic walk · **434 precomputed exposure rows** across a **26-event benchmark**, 54 of them more than one hop from the event |
 | **Demo** | [`demo/atlas-demo.mp4`](demo/atlas-demo.mp4) — 3 minutes, recorded against the real app and database |
-| **Not yet** | **Recall.** We have never measured how much we miss, and we do not claim a number. Stage two of extraction is deterministic rules, not an LLM — the interface is ready for one, and `eval/README.md` names the failures that need it |
+| **Not yet** | Stage two of extraction is deterministic rules, not an LLM — the interface is ready for one, and `eval/README.md` names the failures that need it. No customer conversations. See [docs/ROADMAP.md](docs/ROADMAP.md) for everything still open, named rather than quietly dropped |
 
 ### What the audit changed
 
 Reading the cited sentences by hand took the graph from **62.5% precision to the
-numbers above**, and it did so mostly by *removing* edges: 803 down to 196
+numbers above**, and it did so mostly by *removing* edges: 803 down to 207
 distinct relationships. The worst defect it found was percentage attribution —
 "our top five customers collectively accounted for 57%" was being copied onto
 every company named in that sentence. Only 20 of 36 displayed percentages were
@@ -86,6 +88,7 @@ right. That was invisible until somebody read the filings.
 | [TEAM/demo-script.md](TEAM/demo-script.md) | The demo, narrated — 90 seconds, five minutes, and what to say when it breaks |
 | [docs/coverage-universe.md](docs/coverage-universe.md) | Which companies, which market, which year — and why |
 | [eval/README.md](eval/README.md) | **How good the extraction is, how we measured it, and what is still wrong** |
+| [docs/RUNBOOK.md](docs/RUNBOOK.md) | The three alerts, what each means, and what to do when one fires |
 | [TEAM/faq.md](TEAM/faq.md) | Every question we expect at the viva, and the honest answer |
 | [TEAM/ownership.md](TEAM/ownership.md) | Who owns which area and what they must be able to do unaided |
 | [docs/validation-week3.md](docs/validation-week3.md) | The experiment that tests our core assumption before we build on it |

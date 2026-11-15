@@ -58,11 +58,11 @@
     },
     "hormuz-2026": {
       "date": "2026-11-10",
-      "exposed": 107,
+      "exposed": 113,
       "max_hops": 2,
-      "mean_score": 0.4483,
+      "mean_score": 0.4472,
       "name": "Strait of Hormuz tanker insurance withdrawal",
-      "surprising": 51
+      "surprising": 54
     },
     "hualien-2024": {
       "date": "2024-04-03",
@@ -209,11 +209,11 @@
       "surprising": 0
     }
   },
-  "generated": "2026-11-15T13:44:13.556045+00:00",
+  "generated": "2026-11-15T13:52:17.203897+00:00",
   "graph": {
-    "concentration_backed": 26,
-    "edges": 403,
-    "relationships": 196,
+    "concentration_backed": 28,
+    "edges": 421,
+    "relationships": 207,
     "uncited_edges": 0
   }
 }

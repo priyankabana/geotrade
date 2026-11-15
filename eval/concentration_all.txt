@@ -1,5 +1,5 @@
-ALL 26 concentration-backed relationships (exhaustive, not sampled)
-20 carry a percentage; 6 are shown without one because the sentence does not permit safe attribution.
+ALL 28 concentration-backed relationships (exhaustive, not sampled)
+21 carry a percentage; 7 are shown without one because the sentence does not permit safe attribution.
 
 [01] Albany International Corporation  -->  Safran SA
      pct=37.00  of AEC's Net revenues in 2025
@@ -68,7 +68,7 @@ ALL 26 concentration-backed relationships (exhaustive, not sampled)
      net sales.
 
 [12] Allison Transmission Holdings Inc.  -->  Mercedes Benz Group AG
-     pct=14.00
+     pct=18.00
      Years ended December 31, % of net sales 2025 2024 2023 Daimler AG 18 % 20 % 18 % PACCAR Inc. 11
      % 13 % 11 % Traton SE 10 % 11 % 11 % Two customers accounted for 10% or more of the Company's
      outstanding accounts receivable within the last two years presente d. % of accounts receivable
@@ -81,7 +81,12 @@ ALL 26 concentration-backed relationships (exhaustive, not sampled)
      outstanding accounts receivable within the last two years presente d. % of accounts receivable
      December 31, 2025 December 31, 2024 Daimler AG 14 % 20 % Traton SE 11
 
-[14] ChipMOS Technologies Inc  -->  Asahi Kasei Corp
+[14] Benchmark Electronics, Inc.  -->  Applied Materials, Inc.
+     pct=14.00  of our total sales in both 2025 and 2024 and 1
+     Sales to our largest customer, Applied Materials, Inc. and subsidiaries, represented 14% of our
+     total sales in both 2025 and 2024 and 12% of our total sales in 2023.
+
+[15] ChipMOS Technologies Inc  -->  Micron Technology, Inc.
      pct=None
      Our top 15 customers in terms of revenue in 2025 were (in alphabetical order): Asahi Kasei
      Microdevices Corporation Chipone Technology (Beijing) Co., Ltd. Elite Semiconductor
@@ -92,7 +97,7 @@ ALL 26 concentration-backed relationships (exhaustive, not sampled)
      Corporation In 2023, our top three customers accounted for approximately 25%, 13% and 9% of our
      revenue, respectively.
 
-[15] ChipMOS Technologies Inc  -->  Himax Technologies Inc.
+[16] ChipMOS Technologies Inc  -->  Asahi Kasei Corp
      pct=None
      Our top 15 customers in terms of revenue in 2025 were (in alphabetical order): Asahi Kasei
      Microdevices Corporation Chipone Technology (Beijing) Co., Ltd. Elite Semiconductor
@@ -103,7 +108,18 @@ ALL 26 concentration-backed relationships (exhaustive, not sampled)
      Corporation In 2023, our top three customers accounted for approximately 25%, 13% and 9% of our
      revenue, respectively.
 
-[16] Ducommun Incorporated  -->  Lockheed Martin Corporation
+[17] ChipMOS Technologies Inc  -->  Himax Technologies Inc.
+     pct=None
+     Our top 15 customers in terms of revenue in 2025 were (in alphabetical order): Asahi Kasei
+     Microdevices Corporation Chipone Technology (Beijing) Co., Ltd. Elite Semiconductor
+     Microelectronics Technology Inc. GigaDevice Semiconductor (HK) Limited Himax Technologies, Inc.
+     ILI Technology Corporation Integrated Circuit Solution Inc. Macronix International Co., Ltd.
+     MediaTek Inc. Micron Technology, Inc. Nanya Technology Corporation Novatek Microelectronics
+     Corp. Phison Electronics Corp. Raydium Semiconductor Corporation Winbond Electronics
+     Corporation In 2023, our top three customers accounted for approximately 25%, 13% and 9% of our
+     revenue, respectively.
+
+[18] Ducommun Incorporated  -->  Lockheed Martin Corporation
      pct=4.20
      Net Revenues by Major Customers A significant portion of our net revenues are from our top ten
      customers as follows: Years Ended December 31, 2025 2024 Boeing Company (1) 13.3 % 13.9 %
@@ -114,58 +130,58 @@ ALL 26 concentration-backed relationships (exhaustive, not sampled)
      TransDigm Group Inc. (“TransDigm”) completed its acquisition of the Simmonds Precision
      Products, Inc. business of Goodrich 
 
-[17] Ducommun Incorporated  -->  The Boeing Company
+[19] Ducommun Incorporated  -->  The Boeing Company
      pct=13.00
      For 2025, Boeing and RTX Corporation (f/k/a Raytheon Technologies Corporation) (“RTX”) were our
      largest customers, with Boeing generating 13% and RTX generating 18% of our 2025 net revenues.
 
-[18] Elite Express Holding Inc.  -->  FedEx Corporation
+[20] Elite Express Holding Inc.  -->  FedEx Corporation
      pct=100.00
      Concentration of Credit Risk The Company is exposed to a concentration of credit risk due to
      its reliance on a single customer, FedEx, which accounted for 100 % of the Company’s revenue
      for all periods presented in this report.
 
-[19] Applied Optoelectronics Inc.  -->  Microsoft Corporation
+[21] Applied Optoelectronics Inc.  -->  Microsoft Corporation
      pct=None
      In 2025, 2024 and 2023 , Microsoft accounted for 28.8%, 43.7% and 46.6% of our revenue,
      respectively, and in 2024, Oracle accounted for 12.4% of our revenue.
 
-[20] CTS Corporation  -->  Toyota Motor Corporation
+[22] CTS Corporation  -->  Toyota Motor Corporation
      pct=11.20
      Our net sales to significant customers as a percentage of total net sales were as follows: Year
      Ended December 31, 2025 2024 2023 Toyota Motor Corporation 11.2 % 12.2 % 12.5 % Cummins, Inc.
      8.4 % 11.7 % 15.0 % No other customer accounted for 10% or more of total net sales during these
      periods.
 
-[21] CTS Corporation  -->  Cummins Inc.
+[23] CTS Corporation  -->  Cummins Inc.
      pct=8.40  of total net sales
      Our net sales to significant customers as a percentage of total net sales were as follows: Year
      Ended December 31, 2025 2024 2023 Toyota Motor Corporation 11.2 % 12.2 % 12.5 % Cummins, Inc.
      8.4 % 11.7 % 15.0 % No other customer accounted for 10% or more of total net sales during these
      periods.
 
-[22] Dana Inc  -->  Stellantis N.V.
+[24] Dana Inc  -->  Stellantis N.V.
      pct=13.00
      Our sales to Stellantis (via a directed supply relationship) were approximately 13% in 2025,
      10% in 2024 and 12% in 2023.
 
-[23] Astronics Corporation  -->  The Boeing Company
+[25] Astronics Corporation  -->  The Boeing Company
      pct=10.40  of sales in 2025
      Sales to Boeing accounted for 10.4% of sales in 2025, 10.2% of sales in 2024, and 11.0% of
      sales in 2023.
 
-[24] Camping World Holdings, Inc. Class A  <--  Thor Industries, Inc.
+[26] Camping World Holdings, Inc. Class A  <--  Thor Industries, Inc.
      pct=None
      We have strategic relationships with leading RV manufacturers, including Thor Industries, Inc.
      and Forest River, Inc. As of December 31, 2025, Thor Industries and Forest River accounted for
      approximately 58.4% and 34.4%, respectively, of our new RV inventory.
 
-[25] Allegro MicroSystems, Inc  -->  Sanken Electric Co Ltd
+[27] Allegro MicroSystems, Inc  -->  Sanken Electric Co Ltd
      pct=0.60  of total net sales
      For the fiscal year ended March 29, 2024, Sanken Electric Co., Ltd. (“Sanken”) accounted for
      0.6 % of total net sales.
 
-[26] Amkor Technology, Inc.  -->  QUALCOMM, Inc.
+[28] Amkor Technology, Inc.  -->  QUALCOMM, Inc.
      pct=None
      Direct sales to Apple and Qualcomm accounted for 29.8% and 11.1% of our net sales,
      respectively, for the year ended December 31, 2025.

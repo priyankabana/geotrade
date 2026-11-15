@@ -1,4 +1,4 @@
-.PHONY: help dev down db psql db-ui query migrate load link-cik ingest extract propagate pipeline gazetteer gazetteer-df sample audit backtest alerts key keys eval stats validate measure universe api web narrate demo build test clean
+.PHONY: help dev down db psql db-ui query migrate load link-cik ingest extract propagate pipeline gazetteer gazetteer-df sample audit backtest alerts recall key keys eval stats validate measure universe api web narrate demo build test clean
 
 help:
 	@grep -E '^[a-z-]+:.*##' $(MAKEFILE_LIST) | sed 's/:.*## /\t/' | expand -t22
@@ -68,6 +68,9 @@ backtest:              ## Replay the event benchmark and fail on regression
 
 alerts:                ## The three alerts that would page someone
 	python3 -I scripts/alerts.py
+
+recall:                ## Find disclosure-shaped sentences we did not extract from
+	python3 -I scripts/measure_recall.py
 
 key:                   ## Mint an API key: make key NAME="my laptop"
 	python3 -I scripts/api_key.py new "$(or $(NAME),unnamed)"
