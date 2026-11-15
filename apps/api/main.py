@@ -380,6 +380,53 @@ def _edge(r):
     }
 
 
+@app.get("/v1/metrics")
+def metrics():
+    """What the team looks at weekly, and what the timeline draws its boundary from.
+
+    The surprise rate is the product's reason to exist: the share of exposed
+    companies that are more than one hop from the event, which is the share a
+    user could not have listed themselves."""
+    with cur() as c:
+        c.execute("""SELECT count(*) AS edges,
+                            count(*) FILTER (WHERE evidence_type='named_concentration')
+                              AS concentration,
+                            count(DISTINCT from_entity_id) AS companies
+                     FROM dependency_edge""")
+        g = c.fetchone()
+        c.execute("""SELECT count(*) FROM (SELECT DISTINCT from_entity_id, to_entity_id,
+                     edge_type FROM dependency_edge) t""")
+        rels = c.fetchone()["count"]
+        c.execute("""SELECT min(filed_at_utc) AS first, max(filed_at_utc) AS last,
+                            count(*) AS n FROM document""")
+        d = c.fetchone()
+        c.execute("""SELECT count(*) AS total,
+                            count(*) FILTER (WHERE is_surprising) AS surprising
+                     FROM exposure_precompute""")
+        e = c.fetchone()
+        c.execute("SELECT count(*) AS n FROM event")
+        events = c.fetchone()["n"]
+
+    total = e["total"] or 0
+    return {
+        "graph": {"citedEdges": g["edges"], "relationships": rels,
+                  "concentrationBacked": g["concentration"],
+                  "companiesWithEdges": g["companies"]},
+        "corpus": {"documents": d["n"],
+                   # Before this date the graph is empty, and any event earlier
+                   # than it must return nothing. The UI draws this.
+                   "earliestFiling": d["first"].isoformat() if d["first"] else None,
+                   "latestFiling": d["last"].isoformat() if d["last"] else None},
+        "exposure": {"events": events, "rows": total, "surprising": e["surprising"] or 0,
+                     "surpriseRate": round((e["surprising"] or 0) / total, 4) if total else 0.0},
+        # Hand-judged, not computed. See eval/README.md.
+        "measuredPrecision": {
+            "concentrationTier": {"judged": 26, "correct": 26, "method": "exhaustive"},
+            "narrativeTier": {"judged": 60, "correct": 41, "method": "seeded random sample"},
+        },
+    }
+
+
 @app.get("/v1/events")
 def events():
     with cur() as c:

@@ -30,11 +30,13 @@ export default function App() {
   const [events, setEvents] = useState<api.EventRow[]>([])
   const [evIdx, setEvIdx] = useState(0)
   const [exposure, setExposure] = useState<ExposureResponse | null>(null)
+  const [metrics, setMetrics] = useState<api.Metrics | null>(null)
 
   useEffect(() => { api.probe().then(setMode) }, [])
   useEffect(() => {
     if (mode !== 'live') return
     api.getCountries().then(setCountries)
+    api.getMetrics().then(setMetrics)
     api.getPoints().then(setPoints)
     api.getEvents().then(evs => {
       setEvents(evs)
@@ -121,6 +123,7 @@ export default function App() {
           <i className={mode === 'live' ? 'ok' : 'bad'} />
           {mode === 'live'
             ? `${totalCompanies.toLocaleString()} companies · ${countries.length} countries`
+              + (metrics ? ` · ${metrics.graph.relationships} cited relationships` : '')
             : mode === 'checking' ? 'connecting…' : 'API offline'}
         </span>
         <span className="asof num">
@@ -144,7 +147,8 @@ export default function App() {
                  Every edge carries the sentence that proves it.</p>
             </div>
           )}
-          {surface === 'replay' && <Timeline events={events} idx={evIdx} onPick={setEvIdx} />}
+          {surface === 'replay' && <Timeline events={events} idx={evIdx} onPick={setEvIdx}
+                                              earliestFiling={metrics?.corpus.earliestFiling} />}
         </div>
 
         <aside className="panel">

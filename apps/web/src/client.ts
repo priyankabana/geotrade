@@ -32,6 +32,16 @@ export type EventRow = {
   totalExposed: number; surprisingCount: number
 }
 
+export type Metrics = {
+  graph: { citedEdges: number; relationships: number; concentrationBacked: number
+           companiesWithEdges: number }
+  corpus: { documents: number; earliestFiling: string | null; latestFiling: string | null }
+  exposure: { events: number; rows: number; surprising: number; surpriseRate: number }
+  measuredPrecision: Record<string, { judged: number; correct: number; method: string }>
+}
+
+export const getMetrics = () => safe<Metrics | null>('/v1/metrics', null)
+
 export const getEvents = () => safe<EventRow[]>('/v1/events', [])
 export const getExposure = (key: string) =>
   safe<ExposureResponse | null>(`/v1/events/${encodeURIComponent(key)}/exposure?limit=40`, null)

@@ -268,3 +268,28 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
              color: var(--ok, #2f9e68); border: 1px solid color-mix(in srgb, var(--ok, #2f9e68) 35%, transparent); }
 .tier-soft { background: transparent; color: var(--muted, #8a8f98);
              border: 1px solid color-mix(in srgb, var(--muted, #8a8f98) 30%, transparent); }
+
+/* The point-in-time boundary on the replay scrubber. Everything to the left of
+   the line predates our corpus, so the graph there is empty by rule, not by
+   accident. See eval/README.md and docs/RUNBOOK.md. */
+.tl-void {
+  position: absolute; top: 50%; left: 0; height: 3px; transform: translateY(-50%);
+  background: repeating-linear-gradient(90deg,
+    color-mix(in srgb, var(--muted, #8a8f98) 40%, transparent) 0 4px,
+    transparent 4px 8px);
+  border-radius: 2px; pointer-events: none;
+}
+.tl-boundary {
+  position: absolute; top: 50%; width: 1px; height: 22px;
+  transform: translate(-50%, -50%);
+  background: color-mix(in srgb, var(--surprise, #e0a33e) 70%, transparent);
+}
+.tl-boundary-label {
+  position: absolute; left: 6px; top: -4px; white-space: nowrap;
+  font-size: 9px; letter-spacing: .04em; text-transform: uppercase;
+  color: color-mix(in srgb, var(--surprise, #e0a33e) 85%, transparent);
+}
+.tl-warn {
+  margin-left: 10px; font-size: 10px; letter-spacing: .03em; text-transform: uppercase;
+  color: var(--surprise, #e0a33e);
+}
