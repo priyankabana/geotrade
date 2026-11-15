@@ -1,0 +1,1186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atlas Founding Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400;500;600;700&family=Public+Sans:ital,wght@0,300..800;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+  :root {
+    --ground:#F1F5F5; --surface:#FFFFFF; --sunk:#E5ECED;
+    --ink:#0E2129; --ink-soft:#46606B; --ink-faint:#7C939C;
+    --rule:#C9D6D9; --rule-soft:#DFE8E9;
+    --accent:#C7005E; --accent-wash:#FBEAF1;
+    --sea:#14657A; --sea-wash:#E1EEF1;
+    --alarm:#8C1C13; --alarm-wash:#F8E9E7;
+    --measure:68ch;
+    --f-display:"Zilla Slab",Georgia,serif;
+    --f-body:"Public Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --f-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:#071319; --surface:#0D1F26; --sunk:#050F14;
+      --ink:#DFEAEC; --ink-soft:#94ABB3; --ink-faint:#62787F;
+      --rule:#1F3C46; --rule-soft:#162C34;
+      --accent:#FF4D95; --accent-wash:#2B0E1C;
+      --sea:#56B6C7; --sea-wash:#0B2830;
+      --alarm:#FF8A7A; --alarm-wash:#2A100C;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:#071319; --surface:#0D1F26; --sunk:#050F14;
+    --ink:#DFEAEC; --ink-soft:#94ABB3; --ink-faint:#62787F;
+    --rule:#1F3C46; --rule-soft:#162C34;
+    --accent:#FF4D95; --accent-wash:#2B0E1C;
+    --sea:#56B6C7; --sea-wash:#0B2830;
+    --alarm:#FF8A7A; --alarm-wash:#2A100C;
+  }
+
+  * { box-sizing:border-box; }
+  body {
+    margin:0; background:var(--ground); color:var(--ink);
+    font-family:var(--f-body); font-size:16.5px; line-height:1.62; font-weight:380;
+    -webkit-font-smoothing:antialiased;
+  }
+  .shell { display:grid; grid-template-columns:1fr; max-width:1240px; margin:0 auto; padding:0 clamp(20px,5vw,56px); }
+  @media (min-width:1060px){ .shell{ grid-template-columns:222px minmax(0,1fr); gap:56px; } }
+
+  .masthead { grid-column:1/-1; padding:clamp(48px,8vw,92px) 0 38px; border-bottom:2px solid var(--ink); }
+  .eyebrow { font-family:var(--f-mono); font-size:11px; font-weight:500; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); margin:0 0 20px; }
+  .masthead h1 { font-family:var(--f-display); font-weight:700; font-size:clamp(2.4rem,6vw,3.9rem); line-height:1.04; letter-spacing:-.022em; margin:0 0 22px; text-wrap:balance; }
+  .masthead h1 em { font-style:normal; color:var(--accent); }
+  .standfirst { font-size:clamp(1.06rem,2.1vw,1.24rem); line-height:1.5; color:var(--ink-soft); max-width:64ch; margin:0 0 34px; font-weight:340; }
+  .factstrip { display:flex; flex-wrap:wrap; border-top:1px solid var(--rule); }
+  .fact { flex:1 1 128px; padding:16px 20px 14px 0; border-right:1px solid var(--rule-soft); }
+  .fact:last-child{ border-right:0; }
+  .fact dt { font-family:var(--f-mono); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); margin:0 0 6px; }
+  .fact dd { margin:0; font-family:var(--f-display); font-size:1.06rem; font-weight:600; font-variant-numeric:tabular-nums; }
+
+  .rail { display:none; }
+  @media (min-width:1060px){ .rail{ display:block; grid-column:1; padding-top:56px; } .rail-inner{ position:sticky; top:40px; } }
+  .rail h2 { font-family:var(--f-mono); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); font-weight:500; margin:0 0 14px; }
+  .rail ol { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px; counter-reset:toc; }
+  .rail a { display:flex; gap:10px; padding:5px 0 5px 12px; font-size:13.5px; line-height:1.35; color:var(--ink-soft); text-decoration:none; border-left:2px solid transparent; transition:color .15s,border-color .15s; }
+  .rail a::before { counter-increment:toc; content:counter(toc,decimal-leading-zero); font-family:var(--f-mono); font-size:10.5px; color:var(--ink-faint); padding-top:2px; }
+  .rail a:hover { color:var(--ink); }
+  .rail a.on { color:var(--accent); border-left-color:var(--accent); font-weight:600; }
+  .rail a.on::before { color:var(--accent); }
+
+  main { grid-column:1/-1; padding-bottom:100px; }
+  @media (min-width:1060px){ main{ grid-column:2; } }
+  section { padding-top:58px; }
+  section > h2 { font-family:var(--f-display); font-size:clamp(1.58rem,3.4vw,2.1rem); font-weight:700; line-height:1.15; letter-spacing:-.014em; margin:0 0 8px; text-wrap:balance; }
+  .sec-num { font-family:var(--f-mono); font-size:11px; font-weight:500; letter-spacing:.14em; color:var(--accent); display:block; margin-bottom:12px; }
+  .sec-lede { color:var(--ink-soft); max-width:var(--measure); margin:0 0 26px; font-size:1.02rem; }
+  p { max-width:var(--measure); }
+  h3 { font-family:var(--f-display); font-size:1.16rem; font-weight:600; margin:32px 0 10px; letter-spacing:-.006em; }
+  h4 { font-family:var(--f-mono); font-size:11px; letter-spacing:.13em; text-transform:uppercase; color:var(--ink-faint); font-weight:500; margin:26px 0 10px; }
+  a { color:var(--accent); }
+  strong { font-weight:650; color:var(--ink); }
+  code { font-family:var(--f-mono); font-size:.86em; background:var(--sunk); padding:.12em .38em; border-radius:2px; }
+  hr { border:0; border-top:1px solid var(--rule); margin:52px 0 0; }
+  ul.tight { max-width:var(--measure); padding-left:1.1em; margin:14px 0; }
+  ul.tight li { margin-bottom:7px; }
+
+  .callout { border-left:3px solid var(--accent); background:var(--accent-wash); padding:18px 22px; margin:26px 0; max-width:var(--measure); }
+  .callout p { margin:0; }
+  .callout p + p { margin-top:10px; }
+  .callout .tag { font-family:var(--f-mono); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); display:block; margin-bottom:7px; font-weight:600; }
+  .callout.alarm { border-left-color:var(--alarm); background:var(--alarm-wash); }
+  .callout.alarm .tag { color:var(--alarm); }
+
+  .tw { overflow-x:auto; margin:22px 0; }
+  table { width:100%; border-collapse:collapse; font-size:14.4px; min-width:520px; }
+  th { text-align:left; font-family:var(--f-mono); font-size:10px; letter-spacing:.13em; text-transform:uppercase; font-weight:500; color:var(--ink-faint); padding:0 16px 9px 0; border-bottom:1px solid var(--ink); white-space:nowrap; }
+  td { padding:11px 16px 11px 0; border-bottom:1px solid var(--rule-soft); vertical-align:top; line-height:1.48; }
+  td:first-child { font-weight:550; color:var(--ink); }
+  tbody tr:last-child td { border-bottom:1px solid var(--rule); }
+  .mono-cell,.num { font-family:var(--f-mono); font-size:13px; font-variant-numeric:tabular-nums; }
+
+  pre.block { font-family:var(--f-mono); font-size:12.6px; line-height:1.72; background:var(--surface); border:1px solid var(--rule); padding:18px 20px; margin:20px 0; overflow-x:auto; max-width:var(--measure); }
+  pre.block .c { color:var(--ink-faint); }
+  pre.block .k { color:var(--accent); }
+  pre.block .s { color:var(--sea); }
+
+  .stages { display:flex; flex-direction:column; margin:24px 0; max-width:var(--measure); }
+  .stage { display:grid; grid-template-columns:34px minmax(0,1fr); gap:16px; padding:14px 0; border-top:1px solid var(--rule-soft); }
+  .stage:first-child { border-top:1px solid var(--ink); }
+  .stage-n { font-family:var(--f-mono); font-size:12px; color:var(--accent); font-weight:600; padding-top:3px; }
+  .stage b { font-family:var(--f-display); font-size:1.02rem; font-weight:600; display:block; margin-bottom:3px; }
+  .stage span { font-size:14.2px; color:var(--ink-soft); line-height:1.5; }
+  .stage em { font-style:normal; font-family:var(--f-mono); font-size:12px; color:var(--sea); }
+
+  .phases { margin:28px 0 0; display:flex; flex-direction:column; }
+  .phase { display:grid; grid-template-columns:56px minmax(0,1fr); gap:0 20px; padding:22px 0; border-top:1px solid var(--rule-soft); }
+  .phase:first-child { border-top:1px solid var(--ink); }
+  .phase-n { font-family:var(--f-mono); font-size:1.5rem; font-weight:500; line-height:1; color:var(--accent); font-variant-numeric:tabular-nums; padding-top:2px; }
+  .phase-wk { font-family:var(--f-mono); font-size:10px; color:var(--ink-faint); letter-spacing:.09em; margin-top:7px; display:block; }
+  .phase h3 { margin:0 0 6px; font-size:1.12rem; }
+  .phase ul { margin:0 0 10px; padding-left:1.05em; font-size:14.2px; color:var(--ink-soft); }
+  .phase ul li { margin-bottom:4px; }
+  .phase .demo { font-size:13.5px; padding:9px 14px; background:var(--sea-wash); border-left:2px solid var(--sea); }
+  .phase .demo b { font-family:var(--f-mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--sea); display:block; margin-bottom:3px; }
+
+  .banned { display:flex; flex-wrap:wrap; gap:7px; margin:18px 0 6px; max-width:var(--measure); padding:0; list-style:none; }
+  .banned li { font-family:var(--f-mono); font-size:12px; padding:5px 10px; border:1px solid var(--rule); color:var(--ink-soft); background:var(--surface); text-decoration:line-through; text-decoration-color:var(--accent); text-decoration-thickness:1.5px; }
+
+  .roles { display:grid; gap:1px; background:var(--rule); border:1px solid var(--rule); margin:24px 0; }
+  @media (min-width:700px){ .roles{ grid-template-columns:1fr 1fr; } }
+  .role { background:var(--surface); padding:18px 20px; }
+  .role .rn { font-family:var(--f-mono); font-size:10px; letter-spacing:.13em; color:var(--accent); font-weight:600; }
+  .role h4 { font-family:var(--f-display); font-size:1.04rem; margin:5px 0 7px; font-weight:600; text-transform:none; letter-spacing:0; color:var(--ink); }
+  .role p { margin:0 0 8px; font-size:13.8px; color:var(--ink-soft); line-height:1.5; }
+  .role .owns { font-family:var(--f-mono); font-size:11px; color:var(--ink-faint); }
+
+  .ledger { display:grid; gap:1px; background:var(--rule); border:1px solid var(--rule); margin:24px 0; max-width:var(--measure); }
+  @media (min-width:640px){ .ledger{ grid-template-columns:1fr 1fr; } }
+  .ledger > div { background:var(--surface); padding:18px 20px; }
+  .ledger .lbl { font-family:var(--f-mono); font-size:10px; letter-spacing:.13em; text-transform:uppercase; margin-bottom:12px; font-weight:600; }
+  .ledger .yes .lbl { color:var(--sea); }
+  .ledger .no .lbl { color:var(--alarm); }
+  .ledger ul { margin:0; padding-left:1.05em; font-size:14px; color:var(--ink-soft); }
+  .ledger li { margin-bottom:6px; }
+
+  .monday { border:2px solid var(--ink); padding:clamp(24px,4vw,34px); margin-top:30px; background:var(--surface); }
+  .monday ol { margin:16px 0 0; padding-left:0; list-style:none; counter-reset:mon; }
+  .monday li { counter-increment:mon; display:grid; grid-template-columns:30px 1fr; gap:12px; padding:11px 0; border-top:1px solid var(--rule-soft); max-width:var(--measure); font-size:15px; }
+  .monday li::before { content:counter(mon); font-family:var(--f-mono); font-size:12px; color:var(--accent); font-weight:600; padding-top:3px; }
+
+  footer { grid-column:1/-1; border-top:2px solid var(--ink); padding:26px 0 60px; font-family:var(--f-mono); font-size:11px; letter-spacing:.06em; color:var(--ink-faint); display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+
+  @media (prefers-reduced-motion: reduce){ *{ transition:none!important; animation:none!important; scroll-behavior:auto!important; } }
+  html { scroll-behavior:smooth; }
+  :focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+</style>
+
+<style>
+@page { size: A4; margin: 14mm 13mm 16mm; }
+
+@media print {
+  /* Always print the light palette, whatever the reader's OS theme is. */
+  :root, :root[data-theme="dark"], :root:not([data-theme="light"]) {
+    --ground:#FFFFFF; --surface:#FFFFFF; --sunk:#EFF3F4;
+    --ink:#0E2129; --ink-soft:#3E5762; --ink-faint:#6B838C;
+    --rule:#B9C9CD; --rule-soft:#DCE6E8;
+    --accent:#B10054; --accent-wash:#FBEAF1;
+    --sea:#0F5A6D; --sea-wash:#E4F0F2;
+    --alarm:#8C1C13; --alarm-wash:#F8E9E7;
+  }
+
+  body { background:#fff; font-size:10.2pt; line-height:1.5; }
+  .shell { display:block; max-width:none; padding:0; }
+  .rail { display:none !important; }
+  main { display:block; padding-bottom:0; }
+
+  /* Masthead owns page one. */
+  .masthead { padding:0 0 14pt; break-after:page; }
+  .masthead h1 { font-size:30pt; }
+  .standfirst { font-size:12pt; max-width:none; }
+
+  section { padding-top:16pt; break-before:auto; }
+  section > h2 { font-size:16pt; break-after:avoid; }
+  h3, h4 { break-after:avoid; }
+  p, .sec-lede { max-width:none; }
+  hr { margin:16pt 0 0; }
+
+  /* Never split an atomic block across a page. */
+  .callout, .stage, .phase, .role, .ledger > div,
+  pre.block, tr, .monday li { break-inside:avoid; }
+  table { break-inside:auto; }
+  thead { display:table-header-group; }
+  .tw { overflow:visible; }
+  table { min-width:0; font-size:9pt; }
+  pre.block { font-size:8.4pt; white-space:pre-wrap; word-break:break-word; }
+
+  .roles, .ledger { break-inside:avoid; }
+  .monday { break-inside:avoid; }
+  footer { break-inside:avoid; }
+
+  a { color:var(--ink); text-decoration:none; }
+  .banned li { font-size:8.6pt; }
+}
+</style>
+
+</head>
+<body>
+
+
+<div class="shell">
+
+  <header class="masthead">
+    <p class="eyebrow">Build plan · v3 · Working codename “Atlas”</p>
+    <h1>Companies describe their own supply chains. <em>Nobody reads them all.</em></h1>
+    <p class="standfirst">
+      Every 10-K risk factor, MD&amp;A section and earnings call names suppliers, plants,
+      ports and concentrations. We extract that into a graph of who depends on what and
+      where — then propagate real world events through it, with every claim cited back to
+      the sentence in the filing that supports it.
+    </p>
+    <dl class="factstrip">
+      <div class="fact"><dt>Team</dt><dd>5 people</dd></div>
+      <div class="fact"><dt>Horizon</dt><dd>20 weeks</dd></div>
+      <div class="fact"><dt>Services</dt><dd>4</dd></div>
+      <div class="fact"><dt>Primary source</dt><dd>Public filings</dd></div>
+      <div class="fact"><dt>Data cost</dt><dd>₹0 to start</dd></div>
+    </dl>
+  </header>
+
+  <nav class="rail" aria-label="Contents">
+    <div class="rail-inner">
+      <h2>Contents</h2>
+      <ol>
+        <li><a href="#product">What we build</a></li>
+        <li><a href="#foundation">Data foundation</a></li>
+        <li><a href="#architecture">Architecture</a></li>
+        <li><a href="#extraction">Extraction pipeline</a></li>
+        <li><a href="#model">Data model</a></li>
+        <li><a href="#engine">Propagation engine</a></li>
+        <li><a href="#api">API surface</a></li>
+        <li><a href="#stack">Stack</a></li>
+        <li><a href="#repo">Repo &amp; environments</a></li>
+        <li><a href="#team">The five roles</a></li>
+        <li><a href="#workflow">Workflow</a></li>
+        <li><a href="#roadmap">Roadmap</a></li>
+        <li><a href="#design">Design direction</a></li>
+        <li><a href="#risks">Risks</a></li>
+        <li><a href="#week1">Week one</a></li>
+      </ol>
+    </div>
+  </nav>
+
+  <main>
+
+    <section id="product">
+      <span class="sec-num">01</span>
+      <h2>What we build</h2>
+      <p class="sec-lede">
+        An exposure graph of public companies, built from what those companies disclose about
+        themselves, rendered on a globe, with world events propagating through it live.
+      </p>
+
+      <p>
+        A listed company's dependencies are already public. They are buried in risk factors,
+        segment notes, supplier concentration disclosures and analyst Q&amp;A — in prose, across
+        thousands of documents, in language that changes every quarter. No one reads all of it,
+        so nobody holds the whole graph.
+      </p>
+      <p>
+        We read all of it. For each company we extract the entities it depends on — suppliers,
+        customers, plants, ports, shipping routes, commodities, jurisdictions — and the strength
+        and direction of each dependency. That becomes a graph. Then real world events enter and
+        travel through it.
+      </p>
+
+      <div class="callout">
+        <span class="tag">The output we owe the user</span>
+        <p>
+          <strong>“A Hormuz closure touches 34 companies in your coverage. Ranked by disclosed
+          dependence. Here is the sentence in each filing that says so, and the earnings call
+          where management was asked about it.”</strong>
+        </p>
+        <p>
+          Named entity, quantified exposure, and a citation to a primary document for every
+          single claim. If we cannot cite it, we do not assert it.
+        </p>
+      </div>
+
+      <h3>Why citation-first is the whole architecture</h3>
+      <p>
+        Every product in this space produces confident numbers with no provenance, which is
+        exactly why analysts do not trust them. Our differentiator is the opposite discipline:
+        <strong>each edge in the graph carries the document, the page, and the exact sentence it
+        came from.</strong> That single constraint gives us three things at once — a defence
+        against hallucination, an audit trail an institutional buyer will insist on, and a viva
+        answer that holds up under any amount of pushing.
+      </p>
+
+      <h3>Two buyers, one graph</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Who</th><th>Question they bring</th><th>What the graph returns</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Corporate procurement &amp; strategy</td>
+              <td>“Which of my suppliers is exposed to this, and who are their alternatives?”</td>
+              <td>Second- and third-tier dependency chains their own vendors disclosed</td>
+            </tr>
+            <tr>
+              <td>Buy-side and sell-side analysts</td>
+              <td>“Which names in my coverage does this event actually reach?”</td>
+              <td>Ranked exposure with filing citations they can paste into a note</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>The three surfaces</h3>
+      <ul class="tight">
+        <li><strong>Live view</strong> — the globe with the exposure graph drawn on it, current events plotted, affected entities ranked in a side panel.</li>
+        <li><strong>Replay</strong> — scrub back through any historical window and watch a real past disruption propagate, then check it against what those companies actually reported the following quarter.</li>
+        <li><strong>Simulation</strong> — define a shock, run it forward, get a ranked impact table with citations and a written brief.</li>
+      </ul>
+
+      <h3>The line we do not cross</h3>
+      <p>
+        We ship <strong>exposure data and cited research, never a recommendation.</strong> No BUY
+        or SELL, no target prices, no portfolio advice. That is a real and well-understood
+        distinction: data and factual research are unregulated, recommendations are not. It costs
+        us nothing — our buyers want the graph, not our opinion — and it keeps the project clear
+        of financial regulation entirely.
+      </p>
+    </section>
+
+    <hr>
+
+    <section id="foundation">
+      <span class="sec-num">02</span>
+      <h2>Data foundation</h2>
+      <p class="sec-lede">
+        The advantage here is knowing exactly which sources matter and how they behave. That
+        knowledge is portable. The data itself has to be rebuilt clean.
+      </p>
+
+      <div class="callout alarm">
+        <span class="tag">Read this before the first commit</span>
+        <p>
+          Anything belonging to an employer — production databases, servers, credentials,
+          licensed vendor feeds, internal code — <strong>stays out of this project unless you
+          have written permission.</strong> Most employment agreements assign work product to the
+          employer, and licensed financial data almost always forbids redistribution regardless
+          of who is asking. A project built on that foundation cannot be published, cannot be
+          demoed publicly, and cannot be sold.
+        </p>
+        <p>
+          The good news is that none of it is necessary. Everything below is public or free, and
+          knowing <em>which</em> sources to use and <em>how</em> they misbehave is the part that
+          actually took years to learn — and that part is yours to keep.
+        </p>
+      </div>
+
+      <div class="ledger">
+        <div class="yes">
+          <div class="lbl">Carry across</div>
+          <ul>
+            <li>Which sources exist and what each is good for</li>
+            <li>Pipeline architecture patterns</li>
+            <li>Hard-won edge cases — fiscal period quirks, half-year reporting, transcript-to-filing matching</li>
+            <li>Your own skills and judgement</li>
+          </ul>
+        </div>
+        <div class="no">
+          <div class="lbl">Leave behind</div>
+          <ul>
+            <li>Any employer database contents or exports</li>
+            <li>Credentials, certificates, server access</li>
+            <li>Licensed vendor data of any kind</li>
+            <li>Code written on company time</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>What we build on instead</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Source</th><th>Gives us</th><th>Terms</th></tr></thead>
+          <tbody>
+            <tr><td>SEC EDGAR full-text + XBRL</td><td>10-K, 10-Q, 8-K for every US filer — risk factors, segments, concentrations</td><td>Public domain. Free API, fair-use rate limits</td></tr>
+            <tr><td>Exchange announcement feeds</td><td>ASX, NSE/BSE, LSE regulatory disclosures</td><td>Public regulatory filings</td></tr>
+            <tr><td>Company IR sites</td><td>Earnings call transcripts and decks, published by the companies themselves</td><td>Public. Check each site's terms</td></tr>
+            <tr><td>GDELT</td><td>Global geocoded event stream, refreshed every 15 minutes</td><td>Free, open licence</td></tr>
+            <tr><td>Port &amp; customs notices</td><td>Disruption ground truth for ~30 major ports</td><td>Public authority publications</td></tr>
+            <tr><td>UN/LOCODE, Natural Earth</td><td>Port and geographic reference data</td><td>Open data</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>
+        Together these cover several thousand listed companies across the US, India and Australia
+        with no licence fee and no redistribution restriction. That is more than enough graph for
+        twenty weeks — and every byte of it is ours to publish, demo and sell.
+      </p>
+
+      <div class="callout">
+        <span class="tag">Scope the universe deliberately</span>
+        <p>
+          Do not try to cover every listed company on earth. Pick <strong>one sector, one
+          market, one filing year</strong> for phase 1 — something with genuinely global supply
+          chains, like semiconductors, pharmaceuticals or auto components. Depth on 200 companies
+          beats a thin layer on 8,000, and it makes the accuracy measurement tractable.
+        </p>
+      </div>
+    </section>
+
+    <hr>
+
+    <section id="architecture">
+      <span class="sec-num">03</span>
+      <h2>System architecture</h2>
+      <p class="sec-lede">Four deployable services, two databases, one shared type package.</p>
+
+<pre class="block"><span class="c">  DISCLOSURE SOURCES                    EVENT SOURCES</span>
+  EDGAR · exchange feeds                GDELT stream
+  IR transcripts &amp; decks                port &amp; customs notices
+          │                                    │
+          ▼                                    ▼
+  <span class="k">┌──────────────────────┐</span>          <span class="k">┌──────────────────────┐</span>
+  <span class="k">│ apps/ingest          │</span>          <span class="k">│ apps/events          │</span>
+  <span class="k">│ fetch·parse·segment  │</span>          <span class="k">│ dedupe·geocode       │</span>
+  <span class="k">│ store raw + chunks   │</span>          <span class="k">│ classify·score       │</span>
+  <span class="k">└──────────┬───────────┘</span>          <span class="k">└──────────┬───────────┘</span>
+             ▼                                 │
+  <span class="k">┌──────────────────────┐</span>                     │
+  <span class="k">│ extraction workers   │</span>                     │
+  <span class="k">│ dependency claims    │</span>                     │
+  <span class="k">│ + citation spans     │</span>                     │
+  <span class="k">└──────────┬───────────┘</span>                     │
+             └────────────────┬────────────────┘
+                              ▼
+       <span class="s">┌────────────────────────────────────────┐</span>
+       <span class="s">│  Postgres+PostGIS   graph · events      │</span>
+       <span class="s">│  Qdrant             chunk embeddings    │</span>
+       <span class="s">│  Redis              cache + job queue   │</span>
+       <span class="s">└────────────────────┬───────────────────┘</span>
+                            ▼
+       <span class="k">┌────────────────────────────────────────┐</span>
+       <span class="k">│  apps/api — propagation engine         │</span>
+       <span class="k">│  event → geography → entity → company  │</span>
+       <span class="k">└────────────────────┬───────────────────┘</span>
+                            ▼
+       <span class="k">┌────────────────────────────────────────┐</span>
+       <span class="k">│  apps/web — globe · replay · sim       │</span>
+       <span class="k">└────────────────────────────────────────┘</span></pre>
+
+      <h3>Why the split</h3>
+      <p>
+        Disclosure ingestion is slow, bursty and seasonal — everything arrives in the weeks after
+        quarter end. Event ingestion is continuous. Extraction is expensive and runs on a backlog.
+        The API must answer in under 200ms and must never be blocked by any of them. Four
+        services means each scales, fails and deploys independently; they share one database and
+        one models package, so the cost of the split is close to zero.
+      </p>
+
+      <h3>Read path versus write path</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Path</th><th>Trigger</th><th>Budget</th></tr></thead>
+          <tbody>
+            <tr><td>Ingest &amp; extract</td><td>New filing or transcript appears</td><td>Hours. Backlog is fine, it runs behind</td></tr>
+            <tr><td>Event &amp; propagate</td><td>Relevant event lands</td><td>Minutes. Recompute exposures, fire alerts</td></tr>
+            <tr><td>Read</td><td>User opens a view or scrubs the timeline</td><td>&lt;200ms. Everything precomputed and cached</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        <strong>Never compute exposure on a page load.</strong> The user reads precomputed rows;
+        the workers do the thinking. This is what keeps the globe feeling instant.
+      </p>
+    </section>
+
+    <hr>
+
+    <section id="extraction">
+      <span class="sec-num">04</span>
+      <h2>Extraction pipeline</h2>
+      <p class="sec-lede">
+        Turning prose into graph edges. This is the hardest part of the project and the part
+        worth the most — budget accordingly.
+      </p>
+
+      <div class="stages">
+        <div class="stage"><div class="stage-n">01</div><div>
+          <b>Fetch and store raw</b><span>Pull the document, store the original bytes before parsing anything. A parser bug must always be replayable without re-hitting the source. <em>adapters/edgar.py</em></span>
+        </div></div>
+        <div class="stage"><div class="stage-n">02</div><div>
+          <b>Segment</b><span>Split into labelled sections — Item 1A Risk Factors, Item 7 MD&amp;A, segment notes, Q&amp;A versus prepared remarks. Section label is a strong prior on what kind of claim lives there, so never discard it.</span>
+        </div></div>
+        <div class="stage"><div class="stage-n">03</div><div>
+          <b>Chunk with offsets</b><span>Chunk for retrieval, but <strong>keep byte offsets back into the source document</strong>. Without offsets you cannot cite, and without citation the product has no defensible claim.</span>
+        </div></div>
+        <div class="stage"><div class="stage-n">04</div><div>
+          <b>Embed and index</b><span>Vectors into Qdrant, keyed by chunk id. This powers retrieval for extraction and the Q&amp;A surface later.</span>
+        </div></div>
+        <div class="stage"><div class="stage-n">05</div><div>
+          <b>Extract dependency claims</b><span>An LLM reads targeted chunks and emits <em>structured claims</em>, never prose: subject company, relation type, object entity, geography, strength language, and the exact quoted span. A schema-validated tool call, so malformed output fails loudly rather than silently corrupting the graph.</span>
+        </div></div>
+        <div class="stage"><div class="stage-n">06</div><div>
+          <b>Resolve entities</b><span>“TSMC”, “Taiwan Semiconductor Manufacturing Company Ltd.” and “our Taiwanese foundry partner” are one node. Blocking plus fuzzy match plus an LLM tiebreak, with every merge decision logged and reversible.</span>
+        </div></div>
+        <div class="stage"><div class="stage-n">07</div><div>
+          <b>Score and persist edges</b><span>Confidence from source section, language strength, corroboration across filings, and recency. Edges below threshold are stored but flagged, never silently dropped — a weak edge is still evidence.</span>
+        </div></div>
+        <div class="stage"><div class="stage-n">08</div><div>
+          <b>Human review queue</b><span>Sample every extraction run into a review UI. Accept, reject, correct. This is both your quality gate and your labelled training set for a cheaper model later.</span>
+        </div></div>
+      </div>
+
+      <h4>The extraction contract</h4>
+<pre class="block"><span class="k">class</span> DependencyClaim(BaseModel):
+    subject_company_id: int
+    relation: Literal[<span class="s">"supplies_to"</span>, <span class="s">"sources_from"</span>,
+                      <span class="s">"operates_in"</span>, <span class="s">"ships_via"</span>,
+                      <span class="s">"exposed_to_commodity"</span>]
+    object_entity: str
+    object_type: Literal[<span class="s">"company"</span>,<span class="s">"country"</span>,<span class="s">"port"</span>,
+                         <span class="s">"route"</span>,<span class="s">"commodity"</span>,<span class="s">"facility"</span>]
+    strength: Literal[<span class="s">"critical"</span>,<span class="s">"significant"</span>,<span class="s">"mentioned"</span>]
+
+    <span class="c"># citation — no claim is stored without these</span>
+    document_id: str
+    section: str
+    quote: str
+    char_start: int
+    char_end: int</pre>
+
+      <div class="callout">
+        <span class="tag">The rule that protects the whole project</span>
+        <p>
+          <strong>The LLM extracts and explains. It never scores.</strong> It reads a sentence and
+          reports what that sentence says, with the span. Confidence, exposure weight and impact
+          are computed afterwards by deterministic, version-controlled, unit-tested code. That
+          makes our output reproducible, testable, and unchanged when a model version rolls
+          forward — and it means “how does it decide” has an answer you can walk through.
+        </p>
+      </div>
+    </section>
+
+    <hr>
+
+    <section id="model">
+      <span class="sec-num">05</span>
+      <h2>Data model</h2>
+      <p class="sec-lede">Postgres with PostGIS as the source of truth; Qdrant for retrieval only.</p>
+
+      <h4>Core tables</h4>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Table</th><th>Key columns</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td class="mono-cell">company</td><td class="mono-cell">id, name, ticker, exchange, cik, sector, hq_country</td><td>The node set. Seeded per market</td></tr>
+            <tr><td class="mono-cell">document</td><td class="mono-cell">id, company_id, type, period, filed_at, source_url, raw_uri</td><td>10-K, 10-Q, 8-K, transcript. Immutable once stored</td></tr>
+            <tr><td class="mono-cell">chunk</td><td class="mono-cell">id, document_id, section, text, char_start, char_end</td><td>Offsets are what make citation possible</td></tr>
+            <tr><td class="mono-cell">entity</td><td class="mono-cell">id, type, canonical_name, geom, country</td><td>Companies, ports, routes, commodities, facilities</td></tr>
+            <tr><td class="mono-cell">entity_alias</td><td class="mono-cell">entity_id, alias, source</td><td>Grows with every resolution decision</td></tr>
+            <tr><td class="mono-cell">dependency_edge</td><td class="mono-cell">subject_id, object_id, relation, strength, confidence, chunk_id</td><td><strong>The product.</strong> chunk_id is mandatory — no citation, no edge</td></tr>
+            <tr><td class="mono-cell">event</td><td class="mono-cell">id, source, occurred_at, category, severity, geom, headline, corroboration_count</td><td>Global, not tenant-scoped</td></tr>
+            <tr><td class="mono-cell">exposure</td><td class="mono-cell">event_id, company_id, score, path, delay_p50, delay_p90, confidence</td><td>Precomputed read path. <code>path</code> stores the walk for explanation</td></tr>
+            <tr><td class="mono-cell">watchlist</td><td class="mono-cell">id, org_id, name, company_ids[]</td><td>The user's coverage universe</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout">
+        <span class="tag">Two constraints from the first migration</span>
+        <p>
+          <strong>1.</strong> <code>dependency_edge.chunk_id</code> is <code>NOT NULL</code>. Enforce
+          citation in the schema, not in a code review — schemas do not forget.
+        </p>
+        <p>
+          <strong>2.</strong> Row-level security on every tenant table, with the isolation test
+          written in the same PR. One customer seeing another's watchlist is the single failure
+          this project cannot recover from.
+        </p>
+      </div>
+
+      <h4>The query that has to be fast</h4>
+<pre class="block"><span class="c">-- which entities does this event physically reach?</span>
+<span class="k">SELECT</span> e.id, e.type
+<span class="k">FROM</span> entity e
+<span class="k">WHERE</span> ST_DWithin(e.geom::geography, $1::geography, $2);
+
+<span class="k">CREATE INDEX</span> ON entity <span class="k">USING</span> GIST (geom);
+<span class="k">CREATE INDEX</span> ON dependency_edge (object_id, relation);</pre>
+    </section>
+
+    <hr>
+
+    <section id="engine">
+      <span class="sec-num">06</span>
+      <h2>Propagation engine</h2>
+      <p class="sec-lede">
+        A bounded weighted walk from an event to the companies it reaches. Deterministic, tested,
+        and explainable edge by edge.
+      </p>
+
+      <div class="stages">
+        <div class="stage"><div class="stage-n">01</div><div>
+          <b>Match geography</b><span>Which entities fall inside the event's blast radius? Radius is a function of category — a plant fire is local, a strait closure reaches everything routed through it.</span>
+        </div></div>
+        <div class="stage"><div class="stage-n">02</div><div>
+          <b>Seed the frontier</b><span>Those directly-hit entities become hop 0, each with an initial weight from event severity and the entity's own exposure.</span>
+        </div></div>
+        <div class="stage"><div class="stage-n">03</div><div>
+          <b>Walk the dependency edges</b><span>Traverse inbound edges, multiplying weight by edge strength and confidence with a decay per hop. <strong>Cap at three hops.</strong> Beyond that the signal is noise and the explanation stops being credible.</span>
+        </div></div>
+        <div class="stage"><div class="stage-n">04</div><div>
+          <b>Aggregate per company</b><span>A company reached by several paths accumulates, sub-linearly — three weak paths are not one strong one. Keep the top paths; they are the explanation.</span>
+        </div></div>
+        <div class="stage"><div class="stage-n">05</div><div>
+          <b>Calibrate to units</b><span>Map the score onto a delay or disruption distribution fitted from historical episodes. Emit p50 <em>and</em> p90. Never a single false-precision number.</span>
+        </div></div>
+        <div class="stage"><div class="stage-n">06</div><div>
+          <b>Explain with citations</b><span>Only now does an LLM write prose — narrating the stored path, quoting the filing sentence behind every hop it mentions.</span>
+        </div></div>
+      </div>
+
+      <h3>Calibration and backtesting</h3>
+      <p>
+        The engine is only credible if we measure it, and here we have an unusually clean way to
+        do that: <strong>companies tell you afterwards what actually happened.</strong> Take a
+        historical disruption, run the engine against the graph as it stood before, then check the
+        next quarter's filings and calls for who actually reported an impact. That is a real
+        labelled test set, generated by the same pipeline that builds the product.
+      </p>
+      <p>
+        From phase 3 the backtest runs in CI on every change to scoring logic, and the precision
+        and recall numbers go in the PR description. If a change makes the model worse, the
+        number says so before it merges.
+      </p>
+    </section>
+
+    <hr>
+
+    <section id="api">
+      <span class="sec-num">07</span>
+      <h2>API surface</h2>
+      <p class="sec-lede">Versioned under <code>/api/v1</code>. Typed in <code>packages/shared</code> before either side builds against it.</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Method &amp; path</th><th>Does what</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td class="mono-cell">GET /companies/{id}/graph</td><td>One company's dependency neighbourhood</td><td>Depth-limited; every edge carries its citation</td></tr>
+            <tr><td class="mono-cell">GET /companies/{id}/citations</td><td>Every claim behind a company's edges</td><td>Quote, section, document link. The trust surface</td></tr>
+            <tr><td class="mono-cell">GET /events</td><td>Events by bbox and time window</td><td>Feeds the globe layer</td></tr>
+            <tr><td class="mono-cell">GET /exposure</td><td>Ranked exposures for a watchlist</td><td>The primary dashboard call. Served from cache</td></tr>
+            <tr><td class="mono-cell">GET /exposure/{id}/path</td><td>The walk behind one exposure score</td><td>Hop by hop, with the quote at each hop</td></tr>
+            <tr><td class="mono-cell">POST /simulate</td><td>Run a user-defined shock</td><td>Job + poll if slow</td></tr>
+            <tr><td class="mono-cell">GET /replay</td><td>Exposure timeline between two dates</td><td>Powers the scrubber. Precomputed per window</td></tr>
+            <tr><td class="mono-cell">POST /watchlists</td><td>Create or update a coverage universe</td><td>Tenant-scoped</td></tr>
+            <tr><td class="mono-cell">GET /health</td><td>Liveness plus dependency status</td><td>db, qdrant, redis, queue depth, last ingest</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4>Conventions we hold to</h4>
+      <ul class="tight">
+        <li><strong>Errors are typed and actionable</strong> — a machine-readable code plus a sentence a user could act on. Never a bare 500 saying "an error occurred".</li>
+        <li><strong>Every list endpoint paginates</strong> from the first commit.</li>
+        <li><strong>Timestamps are UTC ISO-8601</strong> everywhere; timezone display is the frontend's job.</li>
+        <li><strong>Money is integer minor units</strong> with an explicit currency field. Never a float.</li>
+        <li><strong>Any response containing a claim contains its citation.</strong> Enforced in the response model, not by convention.</li>
+      </ul>
+    </section>
+
+    <hr>
+
+    <section id="stack">
+      <span class="sec-num">08</span>
+      <h2>Stack</h2>
+      <p class="sec-lede">Decisions with reasons attached, so a future you can revisit them with context.</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Layer</th><th>Choice</th><th>Why this one</th></tr></thead>
+          <tbody>
+            <tr><td>Frontend</td><td>React + TypeScript + Vite</td><td>Team knows it; TS catches the interface-drift bug class that kills group projects</td></tr>
+            <tr><td>Globe</td><td>react-globe.gl (three.js)</td><td>MIT licensed, does the job, we control textures and interaction</td></tr>
+            <tr><td>2D map</td><td>MapLibre GL</td><td>Open source, vector tiles, no billing surprise</td></tr>
+            <tr><td>Graph view</td><td>Cytoscape.js or d3-force</td><td>The dependency neighbourhood needs a real node-link view, not just a globe</td></tr>
+            <tr><td>Client data</td><td>TanStack Query</td><td>Caching and revalidation — do not hand-roll it</td></tr>
+            <tr><td>Backend</td><td>FastAPI + Pydantic</td><td>Typed models that generate the OpenAPI spec, and schema-validated LLM tool calls for free</td></tr>
+            <tr><td>Database</td><td>Postgres 16 + <strong>PostGIS</strong></td><td>Geography and the graph in one place. Recursive CTEs handle a 3-hop walk comfortably</td></tr>
+            <tr><td>Vectors</td><td>Qdrant</td><td>Retrieval over chunks. Keep it a derived index — Postgres stays the source of truth</td></tr>
+            <tr><td>Migrations</td><td>Alembic</td><td>Schema is code, reviewed in PRs, reversible</td></tr>
+            <tr><td>Queue</td><td>Redis + Celery</td><td>Scheduled ingest, async extraction, exposure recompute</td></tr>
+            <tr><td>LLM</td><td>Claude API, schema-forced tool calls</td><td>Extraction and explanation only. Never scoring</td></tr>
+            <tr><td>ML</td><td>scikit-learn</td><td>Calibration and classification on tabular features. No deep learning until a simple model is beaten</td></tr>
+            <tr><td>Auth</td><td>Clerk or Supabase Auth</td><td>Hand-rolling auth loses two weeks and ships a vulnerability</td></tr>
+            <tr><td>Testing</td><td>pytest · Vitest · Playwright</td><td>Unit, component, and one end-to-end path that must always work</td></tr>
+            <tr><td>Hosting</td><td>Vercel · Fly.io · Neon</td><td>Real free tiers, preview deploys per PR</td></tr>
+            <tr><td>Errors</td><td>Sentry</td><td>Free tier. Without it you debug from screenshots</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout">
+        <span class="tag">Why Postgres and not a graph database</span>
+        <p>
+          A dedicated graph database is the obvious-looking choice and the wrong one here. Our walk
+          is bounded at three hops, our geography lives in PostGIS, and everything else is
+          relational. One database means one backup story, one migration tool, one set of
+          credentials and one thing to learn. Revisit only if a recursive CTE actually becomes the
+          bottleneck — measure first.
+        </p>
+      </div>
+    </section>
+
+    <hr>
+
+    <section id="repo">
+      <span class="sec-num">09</span>
+      <h2>Repo &amp; environments</h2>
+      <p class="sec-lede">One monorepo. Five people, one PR flow, one CI config, no version skew.</p>
+
+<pre class="block">atlas/
+├── apps/
+│   ├── web/            <span class="c">React SPA — Vercel</span>
+│   │   └── src/features/{globe,graph,replay,exposure,citations}/
+│   ├── api/            <span class="c">FastAPI — Fly.io</span>
+│   │   ├── routers/  models/  services/
+│   │   ├── engine/            <span class="c">propagation + scoring</span>
+│   │   └── migrations/        <span class="c">Alembic</span>
+│   ├── ingest/         <span class="c">filings + transcripts + extraction</span>
+│   │   ├── adapters/          <span class="c">edgar, asx, nse, ir_sites</span>
+│   │   ├── segment/  chunk/  extract/  resolve/
+│   │   └── review/            <span class="c">human review queue</span>
+│   └── events/         <span class="c">GDELT + port notices</span>
+├── packages/shared/    <span class="c">types + JSON schemas, web ↔ api</span>
+├── infra/
+│   ├── docker-compose.yml     <span class="c">postgres+postgis, qdrant, redis</span>
+│   └── seed/                  <span class="c">ports, routes, demo universe</span>
+├── docs/               <span class="c">specs — reviewed in PRs like code</span>
+└── .github/workflows/</pre>
+
+      <h3>Environments</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Environment</th><th>Deployed from</th><th>Data</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td>Local</td><td>your machine</td><td>seeded fixture universe</td><td><code>docker compose up</code> is the only setup step</td></tr>
+            <tr><td>Preview</td><td>every PR, automatically</td><td>branch database</td><td>Review a running app, not a diff</td></tr>
+            <tr><td>Production</td><td><code>main</code>, on merge</td><td>Neon primary</td><td>Migrations run before the deploy swaps over</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        No staging environment. With per-PR previews and a team of five it is one more thing to
+        keep in sync, and it rots.
+      </p>
+
+      <div class="callout alarm">
+        <span class="tag">Secrets — set this up on day one</span>
+        <p>
+          <code>.env.example</code> is committed and complete; <code>.env</code> is gitignored and
+          never pasted into Discord. Real secrets live in the hosting provider's secret store.
+          Install <strong>gitleaks as a pre-commit hook and a CI check</strong> in week one — with
+          five people committing, a leaked key is a matter of time, and the hook costs ten minutes.
+          Never keep credential files inside a folder you might later <code>git init</code>.
+        </p>
+      </div>
+    </section>
+
+    <hr>
+
+    <section id="team">
+      <span class="sec-num">10</span>
+      <h2>The five roles</h2>
+      <p class="sec-lede">
+        Areas of ownership, not silos. Everyone writes code everywhere; the owner decides,
+        reviews, and is accountable at the Friday demo.
+      </p>
+
+      <div class="roles">
+        <div class="role">
+          <div class="rn">OWNER 1</div>
+          <h4>Disclosure ingestion</h4>
+          <p>Source adapters, document segmentation, chunking with offsets, the raw store. Owns the guarantee that every chunk can be traced to its source.</p>
+          <div class="owns">apps/ingest/adapters · segment · chunk</div>
+        </div>
+        <div class="role">
+          <div class="rn">OWNER 2</div>
+          <h4>Extraction &amp; entity resolution</h4>
+          <p>Claim schema, extraction prompts, the resolution pipeline, the review queue. Owns graph precision — the hardest and most valuable surface.</p>
+          <div class="owns">apps/ingest/extract · resolve · review</div>
+        </div>
+        <div class="role">
+          <div class="rn">OWNER 3</div>
+          <h4>Backend &amp; propagation</h4>
+          <p>API, schema and migrations, PostGIS queries, the walk, scoring, calibration, the backtest harness.</p>
+          <div class="owns">apps/api · packages/shared</div>
+        </div>
+        <div class="role">
+          <div class="rn">OWNER 4</div>
+          <h4>Frontend &amp; visualisation</h4>
+          <p>Globe, graph view, replay scrubber, simulation UI, the citation surface, and the design system holding it together.</p>
+          <div class="owns">apps/web</div>
+        </div>
+        <div class="role">
+          <div class="rn">OWNER 5</div>
+          <h4>Platform, events &amp; release</h4>
+          <p>Event pipeline, CI/CD, preview environments, migrations in deploy, auth, monitoring — and making sure a release actually happens every week.</p>
+          <div class="owns">apps/events · infra · .github</div>
+        </div>
+      </div>
+
+      <p>
+        Owner 5 is the role teams under-value and then regret. If nobody owns “it deploys and it
+        stays up,” the answer in month four is that three people's branches have never run
+        together.
+      </p>
+    </section>
+
+    <hr>
+
+    <section id="workflow">
+      <span class="sec-num">11</span>
+      <h2>Workflow</h2>
+      <p class="sec-lede">Pick these and stop debating. The debate costs more than the difference.</p>
+
+      <h3>GitHub</h3>
+      <p>
+        Create an <strong>organisation</strong>, not a repo on one person's account — it outlives
+        the project and nobody's grade depends on one login. One private repo. Then in
+        Settings → Branches, add a rule on <code>main</code>:
+      </p>
+      <ul class="tight">
+        <li>Require a pull request before merging</li>
+        <li>Require <strong>one</strong> approving review — one, not two; five students need velocity</li>
+        <li>Require status checks to pass, including the secret scan</li>
+        <li>Block force pushes and deletions</li>
+      </ul>
+      <p>
+        Use <strong>GitHub Projects</strong> for the board — it links issues to PRs automatically,
+        so it stays honest without anyone maintaining it.
+      </p>
+
+      <h3>Branch and PR flow</h3>
+<pre class="block">main                          <span class="c">protected · always deployable</span>
+├── feat/citation-panel       <span class="c">one branch per issue</span>
+├── fix/entity-merge-loop
+└── chore/ci-qdrant-service
+
+<span class="c">commit style</span>   feat: · fix: · chore: · docs: · refactor: · test:
+<span class="c">merge style</span>    squash — one commit per issue on main
+<span class="c">issue link</span>     "Closes #47" in the PR body</pre>
+
+      <p>
+        <strong>Open the PR as a draft on day one of the branch</strong>, not when you have
+        finished — reviewers see direction early, and it kills the week-long surprise PR nobody
+        can meaningfully review. Keep PRs under roughly 400 changed lines; beyond that review
+        quality collapses and people rubber-stamp.
+      </p>
+
+      <h3>CI pipeline</h3>
+      <p>Runs on every PR. Cheapest checks first, fails fast:</p>
+<pre class="block"><span class="k">secrets</span>     gitleaks                           <span class="c">~10s</span>
+<span class="k">lint</span>        ruff · eslint                      <span class="c">~20s</span>
+<span class="k">typecheck</span>   mypy · tsc --noEmit                <span class="c">~40s</span>
+<span class="k">unit</span>        pytest · vitest                    <span class="c">~1m</span>
+<span class="k">integration</span> pytest + postgres/postgis/qdrant   <span class="c">~2m</span>
+<span class="k">extraction</span>  golden-set precision/recall        <span class="c">~2m</span>
+<span class="k">e2e</span>         playwright, one critical path      <span class="c">~2m</span>
+<span class="k">preview</span>     deploy, comment URL on the PR      <span class="c">~2m</span></pre>
+      <p>
+        The <strong>extraction check is the unusual one and the most important</strong>: a fixed
+        set of hand-labelled documents with known correct claims. Any change to prompts, chunking
+        or resolution reports its precision and recall in the PR. Prompt changes without a measured
+        effect are how extraction quality quietly rots.
+      </p>
+
+      <h3>Discord</h3>
+<pre class="block">#announcements   <span class="c">decisions only · low traffic · everyone reads</span>
+#standup         <span class="c">daily async: yesterday / today / blocked</span>
+#eng-ingest  #eng-backend  #eng-frontend
+#extraction      <span class="c">golden-set scores, prompt changes, bad extractions</span>
+#design          <span class="c">screenshots, critique, references</span>
+#github          <span class="c">webhook: PRs, merges, CI failures</span>
+#incidents       <span class="c">prod is broken — everything else stops</span>
+🔊 pair-room     <span class="c">always-on voice for working sessions</span></pre>
+
+      <h3>The weekly rhythm</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>When</th><th>What</th><th class="num">Length</th></tr></thead>
+          <tbody>
+            <tr><td>Monday</td><td>Sprint planning — pick issues, assign owners, size them</td><td class="num">45 min</td></tr>
+            <tr><td>Daily</td><td>Async standup in #standup — three lines each</td><td class="num">3 lines</td></tr>
+            <tr><td>Wednesday</td><td>Unblock call, only if someone is actually stuck</td><td class="num">20 min</td></tr>
+            <tr><td>Friday</td><td><strong>Demo — everyone shows something running.</strong> Not slides</td><td class="num">30 min</td></tr>
+            <tr><td>Friday</td><td>Retro — keep / change / try</td><td class="num">15 min</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Five rules that prevent group-project failure</h3>
+      <ul class="tight">
+        <li><strong>Nobody works alone on a critical path for more than three days.</strong> Rotate pairing deliberately.</li>
+        <li><strong>Integrate weekly, not at the end.</strong> The demo enforces it; nothing else will.</li>
+        <li><strong>Write the interface first</strong> — agree the contract in <code>packages/shared</code> before either side builds against an imagined shape.</li>
+        <li><strong>Two people must be able to deploy.</strong> Have the second person do a real deploy in week two to prove the doc works.</li>
+        <li><strong>Every bug gets a failing test before the fix.</strong> This is how a codebase stays trustworthy with five people committing.</li>
+      </ul>
+    </section>
+
+    <hr>
+
+    <section id="roadmap">
+      <span class="sec-num">12</span>
+      <h2>Roadmap</h2>
+      <p class="sec-lede">
+        Twenty weeks, six phases. Every phase ends in something that runs and can be demoed —
+        never “the pipeline is nearly done.”
+      </p>
+
+      <div class="phases">
+        <div class="phase">
+          <div><div class="phase-n">00</div><span class="phase-wk">WK 1–2</span></div>
+          <div>
+            <h3>Foundations</h3>
+            <ul>
+              <li>Org, monorepo, branch protection, gitleaks in CI and pre-commit</li>
+              <li><code>docker compose up</code> — postgres+postgis, qdrant, redis — on all five machines</li>
+              <li>CI green; preview deploys wired; hello-world on real URLs</li>
+              <li>Coverage universe chosen: one sector, one market, one filing year</li>
+            </ul>
+            <div class="demo"><b>Demo</b>A deployed page on a real URL, and any teammate running the full stack in one command. Deploy on day 10, not month 5.</div>
+          </div>
+        </div>
+
+        <div class="phase">
+          <div><div class="phase-n">01</div><span class="phase-wk">WK 3–6</span></div>
+          <div>
+            <h3>Documents in, chunks out</h3>
+            <ul>
+              <li>EDGAR adapter: fetch, store raw, segment by item</li>
+              <li>Chunking with byte offsets; embeddings indexed in Qdrant</li>
+              <li>A document viewer that highlights a chunk in its source — the citation primitive</li>
+              <li>200 companies, one year, fully ingested</li>
+            </ul>
+            <div class="demo"><b>Demo</b>Search a phrase across 200 companies' filings and jump straight to the highlighted sentence in the original document.</div>
+          </div>
+        </div>
+
+        <div class="phase">
+          <div><div class="phase-n">02</div><span class="phase-wk">WK 7–10</span></div>
+          <div>
+            <h3>The graph</h3>
+            <ul>
+              <li>Claim schema and schema-forced extraction</li>
+              <li>Entity resolution with logged, reversible merges</li>
+              <li>Hand-labelled golden set; precision and recall in CI</li>
+              <li>Review queue UI for accept / reject / correct</li>
+            </ul>
+            <div class="demo"><b>Demo</b>Pick a company, see its dependency graph, click any edge, read the exact filing sentence it came from.</div>
+          </div>
+        </div>
+
+        <div class="phase">
+          <div><div class="phase-n">03</div><span class="phase-wk">WK 11–14</span></div>
+          <div>
+            <h3>Events &amp; propagation</h3>
+            <ul>
+              <li>GDELT pipeline: dedupe, geocode, classify, severity</li>
+              <li>The six-step bounded walk, fully unit-tested</li>
+              <li>Globe renders live events against the graph</li>
+              <li>Backtest: predicted exposure versus what companies reported next quarter</li>
+            </ul>
+            <div class="demo"><b>Demo</b>A real event lands, the globe lights the affected companies, and each one opens to a cited explanation path.</div>
+          </div>
+        </div>
+
+        <div class="phase">
+          <div><div class="phase-n">04</div><span class="phase-wk">WK 15–17</span></div>
+          <div>
+            <h3>Replay &amp; simulation</h3>
+            <ul>
+              <li>Timeline scrubber over precomputed exposure windows</li>
+              <li>Historical replay with next-quarter ground truth overlaid</li>
+              <li>Forward shock simulation with user-defined parameters</li>
+              <li>Written brief generated from the deterministic path, with quotes</li>
+            </ul>
+            <div class="demo"><b>Demo</b>Replay a real past disruption, then reveal which companies actually reported an impact. That reveal is the whole pitch.</div>
+          </div>
+        </div>
+
+        <div class="phase">
+          <div><div class="phase-n">05</div><span class="phase-wk">WK 18–20</span></div>
+          <div>
+            <h3>Hardening &amp; release</h3>
+            <ul>
+              <li>Auth, watchlists, tenant isolation audited</li>
+              <li>Monitoring, error tracking, an alert when ingest stops</li>
+              <li>Performance: read path under 200ms at full universe size</li>
+              <li>Accuracy write-up, documentation, thesis, viva demo script</li>
+            </ul>
+            <div class="demo"><b>Demo</b>Someone outside the team using it unaided, on camera, without anything breaking.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <span class="tag">Runs across all twenty weeks</span>
+        <p>
+          <strong>Quality track.</strong> Golden-set scores never go down. Docs update in the same
+          PR as the behaviour they describe. Each phase ends with the previous phase's bugs closed,
+          not carried — carrying bugs forward is how a project reaches week 18 with a demo that
+          only works if you click in the right order.
+        </p>
+      </div>
+    </section>
+
+    <hr>
+
+    <section id="design">
+      <span class="sec-num">13</span>
+      <h2>Design direction</h2>
+      <p class="sec-lede">
+        Our own visual language, decided in week one and held to. The goal is a screen that looks
+        like an instrument, not a template.
+      </p>
+
+      <h3>Banned in this repo</h3>
+      <ul class="banned">
+        <li>dark navy + purple gradient</li>
+        <li>glassmorphism cards</li>
+        <li>1px white border at 10%</li>
+        <li>Inter / Space Grotesk</li>
+        <li>everything faintly glowing</li>
+        <li>rounded-2xl on every corner</li>
+        <li>four stat cards in a row</li>
+        <li>“Powered by AI”</li>
+        <li>huge empty hero</li>
+      </ul>
+      <p>If a PR contains a purple gradient on a dark navy card, reject it on sight.</p>
+
+      <h3>Pick a direction that comes from somewhere</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Direction</th><th>Vocabulary</th><th>Why it fits</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Nautical chart <em>(recommended)</em></td>
+              <td>Fine hairlines, depth soundings as tiny numerals, rhumb lines, magenta reserved for hazards</td>
+              <td>Means something for a product about routes and chokepoints, and is genuinely uncommon on screen</td>
+            </tr>
+            <tr>
+              <td>Flight-operations panel</td>
+              <td>Near-black, amber and green phosphor, monospace numerals, hard edges</td>
+              <td>Reads as serious infrastructure; supports very high information density</td>
+            </tr>
+            <tr>
+              <td>Swiss editorial / scientific</td>
+              <td>White, large type-scale contrast, strict grid, black rules, one accent</td>
+              <td>Looks like a research institution published it — strong for a citation-first product</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Decide as a team in week one and write it into <code>docs/DESIGN.md</code>.
+        <strong>A consistent mediocre direction beats an inconsistent brilliant one.</strong>
+      </p>
+
+      <h3>Rules regardless of direction</h3>
+      <ul class="tight">
+        <li><strong>Two type families with real hierarchy.</strong> One for interface, one for numerals — tabular figures so columns align.</li>
+        <li><strong>One accent, used rarely.</strong> It means “look here now.” Three appearances per screen, maximum.</li>
+        <li><strong>Density is a feature.</strong> Analysts want more on screen, not less. Airy reads as “no data behind it.”</li>
+        <li><strong>Motion must show causality</strong> — an event travelling an edge. Never decoration.</li>
+        <li><strong>Design the empty, loading and error states.</strong> The clearest tell between student work and product work.</li>
+        <li><strong>The citation is a first-class UI object</strong>, not a tooltip. Quote, source, section, link — always one click away, everywhere a claim appears.</li>
+        <li><strong>Figma before code.</strong> Nobody should be inventing the visual language at 2am inside a component.</li>
+      </ul>
+
+      <h3>The globe has to earn its place</h3>
+      <p>
+        It fits because exposure is geographic — routes, ports, plants, jurisdictions. But it
+        answers a question rather than decorating the page: clicking anything goes somewhere
+        useful, there is a 2D map for reading geography properly, a node-link view for reading the
+        graph properly, and it never blocks the data. If the globe is still loading, the numbers
+        are already on screen.
+      </p>
+    </section>
+
+    <hr>
+
+    <section id="risks">
+      <span class="sec-num">14</span>
+      <h2>Risks</h2>
+      <p class="sec-lede">Named now, with the mitigation already assigned to a phase.</p>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Risk</th><th>Odds</th><th>Mitigation</th></tr></thead>
+          <tbody>
+            <tr><td>Extraction precision too low to trust</td><td><strong>High</strong></td><td>Golden set + CI scoring from phase 2; human review queue; citation required by schema</td></tr>
+            <tr><td>Entity resolution merges wrong companies</td><td><strong>High</strong></td><td>Every merge logged and reversible; alias table; conservative threshold with review</td></tr>
+            <tr><td>Employer or licensed data leaks into the repo</td><td>Medium / <strong>fatal</strong></td><td>Clean-room rule in <code>CONTRIBUTING.md</code>; public sources only; gitleaks in CI</td></tr>
+            <tr><td>Teammate goes dark near exams</td><td><strong>High</strong></td><td>No solo critical paths, weekly integration, two deployers, everything in issues</td></tr>
+            <tr><td>LLM extraction cost runs away</td><td>Medium</td><td>Narrow universe; cache by chunk hash; only re-extract changed sections; track cost per document in CI</td></tr>
+            <tr><td>Propagation is directionally wrong</td><td>Medium</td><td>Next-quarter filings give real ground truth; publish precision and recall, not a confidence score</td></tr>
+            <tr><td>Cross-tenant data leak</td><td>Low / <strong>fatal</strong></td><td>Row-level security in the first migration, isolation test in the same PR</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <hr>
+
+    <section id="week1">
+      <span class="sec-num">15</span>
+      <h2>Week one</h2>
+      <p class="sec-lede">Ten things, all achievable in five days. Put a name against each today.</p>
+
+      <div class="monday">
+        <ol>
+          <li>Move every credential file off the Desktop into a password manager, and rotate anything that has been sitting in a plain-text <code>.env</code>.</li>
+          <li>Create the GitHub organisation and monorepo; add all five as members.</li>
+          <li>Branch protection on <code>main</code> — PR required, one approval, checks must pass.</li>
+          <li>Add gitleaks as a pre-commit hook <em>and</em> a CI check, before any real code lands.</li>
+          <li>Write <code>CONTRIBUTING.md</code> with the clean-room rule, and have all five read it.</li>
+          <li>Set up Discord with the channel list above; wire the GitHub webhook.</li>
+          <li>Get <code>docker compose up</code> running postgres+postgis, qdrant and redis.</li>
+          <li>Pull ten 10-Ks from EDGAR by hand and read the risk factors. Understand the raw material before designing around it.</li>
+          <li>Choose the coverage universe — one sector, one market, one filing year — and write it down.</li>
+          <li>Create the Figma file and choose the visual direction as a team.</li>
+        </ol>
+      </div>
+
+      <div class="callout">
+        <span class="tag">Do this one first</span>
+        <p>
+          <strong>Name the project.</strong> “Atlas” is a placeholder and a folder name — one
+          <code>git mv</code> to change. But the name leaks into package names, deploy URLs,
+          environment variables and a hundred imports, and renaming gets more expensive every week.
+          Decide it before the first real commit.
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <span>Build plan · v3 · 27 Aug 2026</span>
+    <span>Full specs in <code>atlas/docs/</code></span>
+  </footer>
+</div>
+
+<script>
+  (function () {
+    var links = Array.prototype.slice.call(document.querySelectorAll('.rail a'));
+    var map = {};
+    links.forEach(function (a) {
+      var el = document.querySelector(a.getAttribute('href'));
+      if (el) map[el.id] = a;
+    });
+    var sections = Object.keys(map).map(function (id) { return document.getElementById(id); });
+    if (!('IntersectionObserver' in window) || !sections.length) return;
+    var visible = new Set();
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) visible.add(e.target.id); else visible.delete(e.target.id);
+      });
+      var current = sections.filter(function (s) { return visible.has(s.id); })[0];
+      if (!current) return;
+      links.forEach(function (a) { a.classList.remove('on'); });
+      map[current.id].classList.add('on');
+    }, { rootMargin: '-10% 0px -70% 0px', threshold: 0 });
+    sections.forEach(function (s) { obs.observe(s); });
+  })();
+</script>
+
+</body>
+</html>

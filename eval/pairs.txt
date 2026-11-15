@@ -1,0 +1,580 @@
+seed=20261115  population=224 relationships (41 concentration / 183 narrative)  sample=80
+judge each: TRUE if the quote really states this dependency, FALSE otherwise
+
+[01] Embraer S.A.  --customer_concentration-->  American Airlines Group Inc.
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=1
+     “As of December 31, 2025, our largest E-Jet customers by number of aircraft in service were
+      SkyWest, Republic, American Airlines, KLM, Mesa, Azul, Horizon Air, Porter, Tianjn, and
+      LOT Polish.”
+
+[02] Cooper-Standard Holdings Inc  --customer_concentration-->  Hyundai Motor India Limited
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=2
+     “The following charts show the percentage of sales to our top customers for the years ended
+      December 31, 2025, 2024 and 2023: Our other customers include OEMs such as BMW,
+      Jaguar/Land Rover, Toyota, Hyundai, Honda, and Rivian, among others.”
+
+[03] Alpha and Omega Semiconductor Limited  --customer_concentration-->  Stanley Black & Decker, Inc.
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=1
+     “Distributors and customers We have established direct relationships with key OEMs,
+      including Dell Inc., Hewlett-Packard Company, Samsung Group, and Stanley Black & Decker,
+      Inc., most of whom we serve through our distributors and ODMs.”
+
+[04] Cerence Inc  --customer_concentration-->  Volkswagen AG
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=6
+     “Our automobile manufacturer customers, commonly referred to as OEMs, include BMW,
+      Mercedes-Benz, the Volkswagen Group (Volkswagen, Audi, Porsche, and other brands),
+      Stellantis, Renault, Toyota, Ford, General Motors, BYD, Great Wall Motor, NIO, and many
+      others and represented approximately 50% of our revenue in fiscal year 2025.”
+
+[05] ECARX Holdings  --supplier_dependency-->  QUALCOMM, Inc.
+     named_narrative  class=supplier  conf=0.500  pct=None  cited_by=1
+     “We also support multiple ADAS SoC ecosystems, including China-based suppliers (SiEngine,
+      Black Sesame Technologies) and global suppliers (NVIDIA, Mobileye and Qualcomm).”
+
+[06] Dauch Corporation  --customer_concentration-->  General Motors Company
+     named_concentration  class=customer  conf=0.700  pct=44.00  cited_by=1
+     “Sales to General Motors Company (GM) were approximately 44 % of our consolidated net sales
+      in 2025, 42 % in 2024, and 39 % in 2023.”
+
+[07] Ducommun Incorporated  --customer_concentration-->  The Boeing Company
+     named_concentration  class=customer  conf=0.700  pct=13.00  cited_by=16
+     “For 2025, Boeing and RTX Corporation (f/k/a Raytheon Technologies Corporation) (“RTX”)
+      were our largest customers, with Boeing generating 13% and RTX generating 18% of our 2025
+      net revenues.”
+
+[08] Data I/O Corporation  --customer_concentration-->  Aptiv PLC
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=1
+     “OEMs EMS Programming Centers Automotive Electronics IoT, Industrial, Consumer Electronics
+      Contract Manufacturers Notable end customers Borg Warner, Bosch, Alps Alpine, Visteon,
+      Kostal, JVCKenwood, Harman, Hitachi, Denso Ten, Continental, Aptiv Panasonic, Magna,
+      Marelli, Tesla, Desay, BYD LG, TCL, Siemens, Danfoss, Philips, Schneider, Endress+Hauser,
+      Insta, Sony, UTEC Pegatron, Flex, Jabil, Wistron, Sanmina SCI, Foxconn, Salcomp, Calcomp,
+      Plexus Arrow, Avnet, BTV, CPS, Semitron, NOA Leading Business drivers Infotainment,
+      Advanced Driver Assist (ADAS), electrification, connectivity, and security Higher
+      functionality driven by increasing electronic content.”
+
+[09] Elbit Systems Ltd.  --customer_concentration-->  iStar Inc
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=3
+     “The following table presents information about the Company’s reported segments revenues
+      for the periods indicated: Year ended December 31, 2025 % Year ended December 31, 2024 %
+      Year ended December 31, 2023 % Aerospace External customers $ 1,820.9 22.9 1,780.5 26.1 $
+      1,613.2 27.0 Intersegment revenue 246.1 255.8 260.1 2,067.0 24.2 2,036.3 27.4 1,873.3 28.6
+      C4I and Cyber External customers 866.2 10.9 750.6 11.0 668.4 11.2 Intersegment revenue
+      64.7 49.2 52.7 930.9 10.9 799.8 10.8 721.1 11.0 ISTAR and EW External customers 1,323.5
+      16.7 1,118.6 16.4 996.9 16.7 Intersegment revenue 202.3 199.4 182.5 1,525.8 17.9 1,318.0
+      17.8 1,179.4 18.0 Land External customers 2,250.3 28.3 1,605.1 23.5 1,241.0 20.8
+      Intersegment revenue 68.4 74.3 65.2 2,318.7 27.2 1,679.4 22.6 1,306.2 20.0 ESA External
+      customers 1,677.7 21.1 1,573.1 23.0 1,455.2 24.4 Intersegment revenue 16.4 12.6 9.7
+      1,694.1 19.8 1,585.7 21.4 1,464.9 22.4 Revenues Total revenues (external customers and
+      intersegment) for reportable segments $ 8,536.5 $ 7,419.2 $ 6,544.9 Less - Intersegment
+      revenue (597.9) (591.3) (570.2) Total $ 7,938.6 100.0 $ 6,827.9 100.0 $ 5,974.7 100.0 52
+      Our sales are primarily to governmental entities and prime co”
+
+[10] Cerence Inc  --customer_concentration-->  Aptiv PLC
+     named_concentration  class=customer  conf=0.700  pct=50.00  cited_by=1
+     “Our tier 1 supplier customers, who typically sell automobile components to the OEMs,
+      include HARMAN, EcarX, Bosch, Continental, Denso Ten, Aptiv, and many others and
+      represented approximately 50% of our revenue in fiscal year 2025.”
+
+[11] Cerence Inc  --supplier_dependency-->  ECARX Holdings
+     named_narrative  class=supplier  conf=0.500  pct=None  cited_by=1
+     “We also partner with leading tier-one suppliers including HARMAN, EcarX, Bosch,
+      Continental, Denso Ten, Aptiv, and others.”
+
+[12] Atomera Inc  --supplier_dependency-->  Asahi Kasei Corp
+     named_narrative  class=supplier  conf=0.500  pct=None  cited_by=1
+     “We have also entered into integration license agreements with (i) a leading fabless RF
+      semiconductor provider, (ii) a semiconductor foundry and (iii) Asahi Kasei Microdevices,
+      or AKM, which is an IDM and fabless vendor.”
+
+[13] CarParts.com, Inc.  --customer_concentration-->  Meta Platforms, Inc. Class A
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=1
+     “For example, we and our executive officers maintain Facebook, Instagram, Twitter,
+      LinkedIn, and other social media accounts, where marketing and other information relevant
+      to customers and investors is disseminated.”
+
+[14] Axcelis Technologies, Inc.  --customer_concentration-->  Semiconductor Manufacturing International Corp
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=1
+     “One of our major Chinese customers, Semiconductor Manufacturing International Corporation
+      (“SMIC”), is on the U.S. Entity List, but is subject to a 2020 licensing policy that
+      allows shipments to certain mature process SMIC fabs, which to date, we have been able to
+      obtain.”
+
+[15] Cirrus Logic, Inc.  --customer_concentration-->  Globalfoundries Inc
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=1
+     “We recently joined our largest customer’s American Manufacturing Program and are working
+      with both our customer and GlobalFoundries to develop new process technologies for our
+      products, including our efforts to manufacture for the first time at the Malta, New York
+      facility.”
+
+[16] Blue Bird Corporation  --supplier_dependency-->  Allison Transmission Holdings Inc.
+     named_narrative  class=supplier  conf=0.650  pct=None  cited_by=1
+     “Suppliers We purchase our engine and transmission components on a single-source basis from
+      major OEMs with sophisticated engineering, production and logistics capabilities, as
+      reflected in the table below: Component OEM Supplier Diesel engines Cummins Inc. Diesel
+      emissions kits Cummins Inc. Electric powertrains and battery systems Accelera (a business
+      segment of Cummins Inc.) Propane and gasoline engines and transmissions Ford Motor Company
+      Transmissions Allison Transmission Propane fueling kits Roush CleanTech Our purchasing
+      department continually works to improve our purchasing processes by rationalizing the
+      supplier base and by implementing improved control processes.”
+
+[17] AT&T Inc.  --supplier_dependency-->  Verizon Communications Inc.
+     named_narrative  class=supplier  conf=0.500  pct=None  cited_by=1
+     “Partially offsetting this increase and lowering cash from operations during 2025 were
+      voluntarily pension contributions of approximately $1,150 and advanced cash payments of
+      about $900 to Frontier Communications, a subsidiary of Verizon Communications Inc. We
+      actively manage the timing of our supplier payments for operating items to optimize the
+      use of our cash.”
+
+[18] Adient PLC  --supplier_dependency-->  Mercedes Benz Group AG
+     named_narrative  class=supplier  conf=0.500  pct=None  cited_by=1
+     “Customers Adient is a supplier to all of the global OEMs and has longstanding
+      relationships with premier automotive manufacturers, including BMW, Mercedes-Benz Group,
+      Ford Motor Company, General Motors Company, Honda Motor Company, Hyundai Motor Company,
+      Jaguar Land Rover, Kia Corporation, Mazda Motor Corporation, Mitsubishi Motor Corporation,
+      Nissan Motor Corporation, Polaris Inc., Renault Group, Stellantis N.V., Suzuki Motor
+      Corporation, Toyota Motor Corporation, Volkswagen Group, and Volvo Cars.”
+
+[19] Albany International Corporation  --supplier_dependency-->  Safran SA
+     named_narrative  class=supplier  conf=0.500  pct=None  cited_by=2
+     “AEC currently relies on single suppliers under contracts we have with SAFRAN to meet the
+      carbon fiber and carbon resin requirements for the LEAP program.”
+
+[20] Adient PLC  --supplier_dependency-->  Hyundai Motor Co
+     named_narrative  class=supplier  conf=0.500  pct=None  cited_by=1
+     “Customers Adient is a supplier to all of the global OEMs and has longstanding
+      relationships with premier automotive manufacturers, including BMW, Mercedes-Benz Group,
+      Ford Motor Company, General Motors Company, Honda Motor Company, Hyundai Motor Company,
+      Jaguar Land Rover, Kia Corporation, Mazda Motor Corporation, Mitsubishi Motor Corporation,
+      Nissan Motor Corporation, Polaris Inc., Renault Group, Stellantis N.V., Suzuki Motor
+      Corporation, Toyota Motor Corporation, Volkswagen Group, and Volvo Cars.”
+
+[21] Aurora Innovation, Inc. Class A  --supplier_dependency-->  PACCAR Inc.
+     named_narrative  class=supplier  conf=0.500  pct=None  cited_by=2
+     “We work closely with our OEM partners, PACCAR and Volvo, and suppliers for the new truck
+      program, to develop a safe, reliable, and scalable integrated solutions.”
+
+[22] Cerence Inc  --supplier_dependency-->  Aptiv PLC
+     named_narrative  class=supplier  conf=0.500  pct=None  cited_by=1
+     “We also partner with leading tier-one suppliers including HARMAN, EcarX, Bosch,
+      Continental, Denso Ten, Aptiv, and others.”
+
+[23] Data I/O Corporation  --customer_concentration-->  Alps Alpine Co Ltd
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=1
+     “OEMs EMS Programming Centers Automotive Electronics IoT, Industrial, Consumer Electronics
+      Contract Manufacturers Notable end customers Borg Warner, Bosch, Alps Alpine, Visteon,
+      Kostal, JVCKenwood, Harman, Hitachi, Denso Ten, Continental, Aptiv Panasonic, Magna,
+      Marelli, Tesla, Desay, BYD LG, TCL, Siemens, Danfoss, Philips, Schneider, Endress+Hauser,
+      Insta, Sony, UTEC Pegatron, Flex, Jabil, Wistron, Sanmina SCI, Foxconn, Salcomp, Calcomp,
+      Plexus Arrow, Avnet, BTV, CPS, Semitron, NOA Leading Business drivers Infotainment,
+      Advanced Driver Assist (ADAS), electrification, connectivity, and security Higher
+      functionality driven by increasing electronic content.”
+
+[24] Curtiss-Wright Corporation  --customer_concentration-->  Airbus SE
+     named_concentration  class=customer  conf=0.700  pct=90.00  cited_by=1
+     “Our primary focus is OEM products and services for commercial jets, which represent
+      approximately 90% of our sales in this market and are highly dependent on new aircraft
+      production from our primary customers, Boeing and Airbus.”
+
+[25] Charter Communications, Inc. Class A New  --customer_concentration-->  Comcast Corporation Class A
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=2
+     “In some service areas, we have formed advertising interconnects or entered into
+      representation agreements with other video distributors, including, among others, Verizon,
+      DirecTV and Comcast, under which we sell advertising on behalf of those operators.”
+
+[26] CVR Partners, LP  --supplier_dependency-->  CVR Energy, Inc.
+     named_narrative  class=supplier  conf=0.500  pct=None  cited_by=3
+     “A substantial part of our pet coke requirements are supplied by CVR Energy’s adjacent
+      Coffeyville, Kansas refinery pursuant to the Coffeyville Master Services Agreement between
+      one of our subsidiaries and a subsidiary of CVR Energy (the “Coffeyville MSA”).”
+
+[27] Advanced Micro Devices, Inc.  --customer_concentration-->  Intel Corporation
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=2
+     “For example, Intel Corporation (Intel) uses its microprocessor market position to price
+      its products aggressively and target our customers and channel partners with special
+      incentives.”
+
+[28] Century Aluminum Company  --customer_concentration-->  Glencore PLC
+     named_concentration  class=customer  conf=0.700  pct=10.00  cited_by=2
+     “Major customer information Revenues from Glencore in 2025, 2024 and 2023 exceeded 10 % of
+      our net sales.”
+
+[29] Cooper-Standard Holdings Inc  --customer_concentration-->  Volkswagen AG
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=1
+     “Our largest customers are Ford Motor Company (“Ford”), General Motors Company (“GM”),
+      Stellantis, Volkswagen Group, Mercedes-Benz, and Renault-Nissan.”
+
+[30] AST SpaceMobile Inc  --customer_concentration-->  Vodafone Group PLC
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=2
+     “On December 18, 2025, we entered into a reseller agreement with our jointly-owned European
+      satellite service business with Vodafone (“SatCo”) to exclusively distribute SpaceMobile
+      Service to MNOs in Europe, UK and certain other markets.”
+
+[31] Cerence Inc  --customer_concentration-->  Mercedes Benz Group AG
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=3
+     “Our automotive customers include nearly all major automobile original equipment
+      manufacturers (OEMs) worldwide, including BMW, Mercedes-Benz, the Volkswagen Group
+      (Volkswagen, Audi, Porsche, and other brands), Stellantis, Renault, Toyota, Ford, General
+      Motors, BYD, Great Wall Motor, and NIO.”
+
+[32] Algoma Steel Group Inc  --supplier_dependency-->  Praxair Inc
+     named_narrative  class=supplier  conf=0.500  pct=None  cited_by=1
+     “Oxygen is supplied by Praxair Canada Inc. through a supply agreement that extends to
+      mid-2026.”
+
+[33] Data I/O Corporation  --customer_concentration-->  Jabil Inc
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=1
+     “OEMs EMS Programming Centers Automotive Electronics IoT, Industrial, Consumer Electronics
+      Contract Manufacturers Notable end customers Borg Warner, Bosch, Alps Alpine, Visteon,
+      Kostal, JVCKenwood, Harman, Hitachi, Denso Ten, Continental, Aptiv Panasonic, Magna,
+      Marelli, Tesla, Desay, BYD LG, TCL, Siemens, Danfoss, Philips, Schneider, Endress+Hauser,
+      Insta, Sony, UTEC Pegatron, Flex, Jabil, Wistron, Sanmina SCI, Foxconn, Salcomp, Calcomp,
+      Plexus Arrow, Avnet, BTV, CPS, Semitron, NOA Leading Business drivers Infotainment,
+      Advanced Driver Assist (ADAS), electrification, connectivity, and security Higher
+      functionality driven by increasing electronic content.”
+
+[34] Embraer S.A.  --customer_concentration-->  SkyWest, Inc.
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=1
+     “As of December 31, 2025, our largest E-Jet customers by number of aircraft in service were
+      SkyWest, Republic, American Airlines, KLM, Mesa, Azul, Horizon Air, Porter, Tianjn, and
+      LOT Polish.”
+
+[35] ChargePoint Holdings Inc  --customer_concentration-->  Alphabet Inc. Class A
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=1
+     “ChargePoint currently serves customers from third-party data center facilities operated by
+      Amazon Web Services and Google Cloud located in the United States, Europe and Canada.”
+
+[36] Autoliv Inc.  --supplier_dependency-->  Hyundai Motor India Limited
+     named_narrative  class=supplier  conf=0.500  pct=None  cited_by=1
+     “These suppliers generally receive most of the Toyota business in Japan, in the same way,
+      Mobis, a major supplier to Hyundai/Kia in South Korea, generally receives a significant
+      part of their business.”
+
+[37] Dentsply Sirona Inc  --customer_concentration-->  Patterson Companies Inc
+     named_concentration  class=customer  conf=0.700  pct=11.00  cited_by=2
+     “Customers that accounted for 10% or more of net sales or accounts receivable for the year
+      ended December 31, 2023 were as follows: 2023 % of net sales % of accounts receivable
+      Henry Schein, Inc. 14 % 11 % Patterson Companies, Inc. Less than 10% 10 % Product
+      Development While the Company maintains market leadership in several of its product
+      categories, continuous innovation and product development are critical for it to continue
+      to maintain or grow its share in the markets it serves.”
+
+[38] Cerence Inc  --customer_concentration-->  Porsche AG
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=3
+     “Our automotive customers include nearly all major automobile original equipment
+      manufacturers (OEMs) worldwide, including BMW, Mercedes-Benz, the Volkswagen Group
+      (Volkswagen, Audi, Porsche, and other brands), Stellantis, Renault, Toyota, Ford, General
+      Motors, BYD, Great Wall Motor, and NIO.”
+
+[39] Cohu, Inc.  --supplier_dependency-->  Jabil Inc
+     named_narrative  class=supplier  conf=0.500  pct=None  cited_by=1
+     “For example, we depend upon Jabil to manufacture most of our semiconductor test systems
+      from its facility located in Malaysia.”
+
+[40] AST SpaceMobile Inc  --customer_concentration-->  Rakuten Inc
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=1
+     “5       Customers, Sales and Marketing We have developed relationships with companies,
+      such as Vodafone, Rakuten, AT&T, Verizon, Google, American Tower, STC, Bell Canada and
+      others that have innovative technologies and products, skilled personnel, and potential
+      end-user customers that complement our strategy.”
+
+[41] Data Storage Corp.  --customer_concentration-->  Alphabet Inc. Class A
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=1
+     “17           A portion of Nexxis’ potential customers locate its website through search
+      engines, such as Google, Bing, and Yahoo!.”
+
+[42] Aptiv PLC  --customer_concentration-->  TE Connectivity Ltd
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=1
+     “Red Hat • Valeo Engineered Components Group • Amphenol Corporation • Molex, LLC (a
+      subsidiary of Koch, Inc.) • TE Connectivity plc Electrical Distribution Systems • Furukawa
+      Electric Co., Ltd. • Lear Corporation • Sumitomo Electric Industries, Ltd. • Yazaki
+      Corporation 9 Table of Contents Customers We sell our products and services to the major
+      global OEMs in every region of the world.”
+
+[43] Dentsply Sirona Inc  --customer_concentration-->  Henry Schein, Inc.
+     named_concentration  class=customer  conf=0.700  pct=14.00  cited_by=2
+     “Customers that accounted for 10% or more of net sales or accounts receivable for the year
+      ended December 31, 2023 were as follows: 2023 % of net sales % of accounts receivable
+      Henry Schein, Inc. 14 % 11 % Patterson Companies, Inc. Less than 10% 10 % Product
+      Development While the Company maintains market leadership in several of its product
+      categories, continuous innovation and product development are critical for it to continue
+      to maintain or grow its share in the markets it serves.”
+
+[44] Charter Communications, Inc. Class A New  --customer_concentration-->  Verizon Communications Inc.
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=1
+     “Our Spectrum Mobile service is offered to customers subscribing to our Internet service
+      and uses the customers’ private WiFi, our Spectrum Mobile network (comprised of 49 million
+      out-of-home WiFi access points across our footprint combined with out-of-home WiFi access
+      points from other networks with which we partner) as well as leveraging the cellular
+      network of Verizon Communications Inc. ("Verizon").”
+
+[45] Cooper-Standard Holdings Inc  --customer_concentration-->  Renault S.A.
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=1
+     “Our largest customers are Ford Motor Company (“Ford”), General Motors Company (“GM”),
+      Stellantis, Volkswagen Group, Mercedes-Benz, and Renault-Nissan.”
+
+[46] AAR Corp.  --customer_concentration-->  Embraer S.A.
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=1
+     “Our Repair, Engineering, and Software segment primarily supports narrow-body Airbus,
+      Boeing and Embraer regional aircraft for customers, as well as U.S. government defense
+      agencies.”
+
+[47] Amplitech Group Inc.   --customer_concentration-->  Lockheed Martin Corporation
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=1
+     “Some of our customers include Telus, Viasat, L3 Harris Technologies, CPI, Lockheed Martin,
+      Microsemi, and Paramount Global.”
+
+[48] Data I/O Corporation  --customer_concentration-->  Tesla, Inc.
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=1
+     “OEMs EMS Programming Centers Automotive Electronics IoT, Industrial, Consumer Electronics
+      Contract Manufacturers Notable end customers Borg Warner, Bosch, Alps Alpine, Visteon,
+      Kostal, JVCKenwood, Harman, Hitachi, Denso Ten, Continental, Aptiv Panasonic, Magna,
+      Marelli, Tesla, Desay, BYD LG, TCL, Siemens, Danfoss, Philips, Schneider, Endress+Hauser,
+      Insta, Sony, UTEC Pegatron, Flex, Jabil, Wistron, Sanmina SCI, Foxconn, Salcomp, Calcomp,
+      Plexus Arrow, Avnet, BTV, CPS, Semitron, NOA Leading Business drivers Infotainment,
+      Advanced Driver Assist (ADAS), electrification, connectivity, and security Higher
+      functionality driven by increasing electronic content.”
+
+[49] Broadwind Inc.  --customer_concentration-->  GE Vernova
+     named_concentration  class=customer  conf=0.700  pct=10.00  cited_by=2
+     “In 2025, one customer, GE Vernova, accounted for more than 10% of our consolidated
+      revenues, and our five largest customers accounted for 80% of our consolidated revenues.”
+
+[50] Advanced Micro Devices, Inc.  --supplier_dependency-->  Globalfoundries Inc
+     named_narrative  class=supplier  conf=0.500  pct=None  cited_by=3
+     “We rely on Taiwan Semiconductor Manufacturing Company Limited (TSMC) for the production of
+      all wafers for microprocessor and GPU products at 7 nanometer (nm) or smaller nodes, and
+      we rely primarily on GLOBALFOUNDRIES Inc. (GF) for wafers for microprocessor and GPU
+      products manufactured at process nodes larger than 7 nm.”
+
+[51] Allison Transmission Holdings Inc.  --supplier_dependency-->  Mercedes Benz Group AG
+     named_concentration  class=supplier  conf=0.700  pct=14.00  cited_by=1
+     “Years ended December 31,         % of net sales     2025       2024       2023
+      Daimler AG       18   %       20   %       18   %       PACCAR Inc.       11   %       13
+      %       11   %       Traton SE       10   %       11   %       11   %     Two customers
+      accounted for 10% or more of the Company's outstanding accounts receivable within the last
+      two years presente d.                             % of accounts receivable     December
+      31, 2025       December 31, 2024         Daimler AG       14   %       20   %       Traton
+      SE       11   %       11   %     No supplier accounted for 10% or more of materials
+      purchased during any of the years ended December 31, 2025, 2024 or 2023 .”
+
+[52] Cooper-Standard Holdings Inc  --customer_concentration-->  Ford Motor Company
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=1
+     “Our largest customers are Ford Motor Company (“Ford”), General Motors Company (“GM”),
+      Stellantis, Volkswagen Group, Mercedes-Benz, and Renault-Nissan.”
+
+[53] Ducommun Incorporated  --customer_concentration-->  ViaSat, Inc.
+     named_concentration  class=customer  conf=0.700  pct=7.30  cited_by=5
+     “Boeing, Lockheed, Northrop, RTX, and Viasat represented the following percentages of total
+      accounts receivable: December 31, 2025 2024 Boeing 7.3 % 12.4 % Lockheed 1.5 % 1.9 %
+      Northrop 13.3 % 2.7 % RTX 14.7 % 14.7 % Viasat 5.0 % 3.1 % In 2025, 2024 and 2023, net
+      revenues from foreign customers based on the location of the customer were $ 118.8
+      million, $ 113.8 million and $ 82.2 million, respectively.”
+
+[54] Codexis Inc.  --customer_concentration-->  Novartis AG
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=1
+     “These companies include many of our large innovator and generic pharmaceutical customers,
+      such as Merck, GSK, Novartis, Pfizer Inc., Bristol-Myers Squibb, Kyorin Pharmaceutical
+      Corporation, and Teva Pharmaceuticals, which have significant internal research and
+      development efforts directed at developing processes to manufacture APIs and
+      intermediates.”
+
+[55] Asia Pacific Wire & Cable Corporation Limited  --supplier_dependency-->  Mitsubishi Corp
+     named_narrative  class=supplier  conf=0.500  pct=None  cited_by=2
+     “Our Company’s key suppliers include Glencore International AG. (Switzerland), Jiangxi
+      Copper Corporation Limited (China), Alpha Industries Sdn Bhd (Malaysia), Mitsubishi
+      Corporation RtM International Pte (Singapore), Marubeni Corporation (Japan), and Fujian
+      Shanghang Sun Copper Co., Ltd. (China).”
+
+[56] Dauch Corporation  --customer_concentration-->  Ford Motor Company
+     named_concentration  class=customer  conf=0.700  pct=15.00  cited_by=1
+     “Sales to Ford Motor Company (Ford) were approximately 15 % of our consolidated net sales
+      in 2025, 13 % in 2024 and 12 % in 2023.”
+
+[57] Arbe Robotics Ltd  --supplier_dependency-->  General Motors Co
+     named_narrative  class=supplier  conf=0.500  pct=None  cited_by=2
+     “From 2016 through 2023, Mr. Van Dan Elzen served multiple roles at Veoneer, Inc. From 2019
+      through 2021 Mr. Van Dan Elzen was vice president and managing director of their General
+      Motors business unit, including responsibility for all Veoneer, Inc. activities as a
+      supplier to OEM of General Motors.”
+
+[58] AAR Corp.  --customer_concentration-->  Airbus SE
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=1
+     “Our Repair, Engineering, and Software segment primarily supports narrow-body Airbus,
+      Boeing and Embraer regional aircraft for customers, as well as U.S. government defense
+      agencies.”
+
+[59] Allison Transmission Holdings Inc.  --customer_concentration-->  Mercedes Benz Group AG
+     named_concentration  class=customer  conf=0.700  pct=18.00  cited_by=4
+     “Years ended December 31,         % of net sales     2025       2024       2023
+      Daimler AG       18   %       20   %       18   %       PACCAR Inc.       11   %       13
+      %       11   %       Traton SE       10   %       11   %       11   %     Two customers
+      accounted for 10% or more of the Company's outstanding accounts receivable within the last
+      two years presente d.                             % of accounts receivable     December
+      31, 2025       December 31, 2024         Daimler AG       14   %       20   %       Traton
+      SE       11   %       11   %     No supplier accounted for 10% or more of materials
+      purchased during any of the years ended December 31, 2025, 2024 or 2023 .”
+
+[60] Data I/O Corporation  --customer_concentration-->  Hitachi Ltd.
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=1
+     “OEMs EMS Programming Centers Automotive Electronics IoT, Industrial, Consumer Electronics
+      Contract Manufacturers Notable end customers Borg Warner, Bosch, Alps Alpine, Visteon,
+      Kostal, JVCKenwood, Harman, Hitachi, Denso Ten, Continental, Aptiv Panasonic, Magna,
+      Marelli, Tesla, Desay, BYD LG, TCL, Siemens, Danfoss, Philips, Schneider, Endress+Hauser,
+      Insta, Sony, UTEC Pegatron, Flex, Jabil, Wistron, Sanmina SCI, Foxconn, Salcomp, Calcomp,
+      Plexus Arrow, Avnet, BTV, CPS, Semitron, NOA Leading Business drivers Infotainment,
+      Advanced Driver Assist (ADAS), electrification, connectivity, and security Higher
+      functionality driven by increasing electronic content.”
+
+[61] Adeia Inc  --customer_concentration-->  Starz
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=1
+     “Customers have typically paid us fixed fees for specified periods of time and include some
+      of the leading media companies and services including Amazon (including Amazon Prime),
+      DAZN, Disney+, ESPN+, Google (including YouTube), Hulu, Starz and Peacock. • Consumer
+      Electronics (“CE”) Manufacturers: includes producers of content access points such as
+      smart televisions, streaming media devices, video game consoles, mobile devices, content
+      storage devices, digital cameras and other connected media devices.”
+
+[62] DigitalOcean Holdings Inc  --supplier_dependency-->  Alibaba Group Holding Ltd.
+     named_narrative  class=supplier  conf=0.500  pct=None  cited_by=6
+     “The primary vendors in this category include Amazon (AWS), Microsoft (Azure), Google
+      (GCP), IBM (IBM Cloud), Alibaba (Alibaba Cloud) and Oracle (Oracle Cloud).”
+
+[63] ADT Inc  --supplier_dependency-->  Alphabet Inc. Class A
+     named_narrative  class=supplier  conf=0.500  pct=None  cited_by=4
+     “As of December 31, 2025, we have incurred life-to-date expenses of approximately $100
+      million related to the initiatives funded from the initial segment of the Google Success
+      Funds and had received $90 million of reimbursement from the Google Success Funds, with
+      the remaining $10 million reimbursed during January 2026. • Google Cloud Agreement
+      Addendum – Since December 2023, we are obligated to make purchases from Google totaling
+      $200 million over a seven-year period (through December 2030), with an aggregate of $35
+      million in the first two years, an aggregate of $65 million in the next two years after
+      that, and an aggregate of $100 million in the last three years of the commitment.”
+
+[64] Apogee Enterprises, Inc.  --customer_concentration-->  Avery Dennison Corporation
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=1
+     “Prior to this role, Mr. Nolan served as President and Chief Executive Officer of
+      Kennametal Inc., President of the Materials Group for Avery Dennison Corporation, and as
+      Senior Vice President of Global Packaging and Refinish Coatings at Valspar, a developer,
+      manufacturer and distributor of paints and coatings.”
+
+[65] Cerence Inc  --customer_concentration-->  General Motors Co
+     named_concentration  class=customer  conf=0.700  pct=50.00  cited_by=3
+     “Our automobile manufacturer customers, commonly referred to as OEMs, include BMW,
+      Mercedes-Benz, the Volkswagen Group (Volkswagen, Audi, Porsche, and other brands),
+      Stellantis, Renault, Toyota, Ford, General Motors, BYD, Great Wall Motor, NIO, and many
+      others and represented approximately 50% of our revenue in fiscal year 2025.”
+
+[66] Charter Communications, Inc. Class A New  --customer_concentration-->  T-Mobile US, Inc.
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=1
+     “In addition, in July 2025, we entered into a multi-year agreement with T-Mobile US, Inc.
+      (“T-Mobile”) to use their network to deliver mobile services to Spectrum Business
+      customers which is set to launch in 2026.”
+
+[67] Avis Budget Group, Inc.  --supplier_dependency-->  Hyundai Motor India Limited
+     named_narrative  class=supplier  conf=0.500  pct=None  cited_by=1
+     “In 2025, we primarily purchased from the following vehicle brands: Toyota, Chevrolet,
+      Ford, Mazda, Kia, Jeep, Hyundai, Volkswagen, Nissan and Renault.”
+
+[68] Coda Octopus Group Inc  --customer_concentration-->  Raytheon Co
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=1
+     “Customers include prime Defense contractors such as Raytheon, Northrop Grumman, Thales
+      Underwater and BAE Systems.”
+
+[69] Aptiv PLC  --customer_concentration-->  Amphenol Corporation
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=1
+     “Red Hat • Valeo Engineered Components Group • Amphenol Corporation • Molex, LLC (a
+      subsidiary of Koch, Inc.) • TE Connectivity plc Electrical Distribution Systems • Furukawa
+      Electric Co., Ltd. • Lear Corporation • Sumitomo Electric Industries, Ltd. • Yazaki
+      Corporation 9 Table of Contents Customers We sell our products and services to the major
+      global OEMs in every region of the world.”
+
+[70] Aptiv PLC  --customer_concentration-->  General Motors Co
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=1
+     “On September 15, 2023, several of our largest customers’ collective bargaining agreements
+      with the International Union, United Automobile, Aerospace and Agricultural Implement
+      Workers of America (the “UAW”), expired and the UAW subsequently went on strike against
+      General Motors (“GM”), Ford Motor Company (“Ford”) and Stellantis N.V. (“Stellantis”) in
+      the United States (the “U.S.”), causing work stoppages at certain of these customers’
+      vehicle production and parts 40 Table of Contents distribution facilities, which lasted
+      approximately six weeks.”
+
+[71] Avis Budget Group, Inc.  --supplier_dependency-->  Renault S.A.
+     named_narrative  class=supplier  conf=0.500  pct=None  cited_by=1
+     “In 2025, we primarily purchased from the following vehicle brands: Toyota, Chevrolet,
+      Ford, Mazda, Kia, Jeep, Hyundai, Volkswagen, Nissan and Renault.”
+
+[72] Cenntro Inc  --customer_concentration-->  Metro Inc.
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=3
+     “While we have not had a substantial presence in the European Union historically, in
+      January 2022, we opened our European Operations Center in Dusseldorf, Germany and, in
+      March 2022, we acquired a 65% equity  interest in Tropos Motors Europe GmbH (“TME”), a
+      “private label” channel partners that assembles and distributes branded ECVs based on our
+      Metro® called the ABLE and one of our largest customers since 2019.”
+
+[73] CF Industries Holdings, Inc.  --supplier_dependency-->  Mitsui Co Ltd
+     named_narrative  class=supplier  conf=0.500  pct=None  cited_by=1
+     “In December 2025, both JERA and Mitsui were certified as a Supplier of Low-Carbon Hydrogen
+      and its Derivatives by Japan’s Ministry of Economy, Trade and Industry.”
+
+[74] Cerence Inc  --customer_concentration-->  ECARX Holdings
+     named_concentration  class=customer  conf=0.700  pct=50.00  cited_by=2
+     “Our tier 1 supplier customers, who typically sell automobile components to the OEMs,
+      include HARMAN, EcarX, Bosch, Continental, Denso Ten, Aptiv, and many others and
+      represented approximately 50% of our revenue in fiscal year 2025.”
+
+[75] Dauch Corporation  --supplier_dependency-->  Ford Motor Company
+     named_narrative  class=supplier  conf=0.500  pct=None  cited_by=1
+     “We are also a supplier to Ford Motor Company (Ford) for driveline system products on
+      certain vehicle programs including the Bronco Sport, Maverick, Escape and Lincoln
+      Nautilus, and we also sell various products to Ford from our Metal Forming segment.”
+
+[76] Data I/O Corporation  --customer_concentration-->  Panasonic Corp.
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=1
+     “OEMs EMS Programming Centers Automotive Electronics IoT, Industrial, Consumer Electronics
+      Contract Manufacturers Notable end customers Borg Warner, Bosch, Alps Alpine, Visteon,
+      Kostal, JVCKenwood, Harman, Hitachi, Denso Ten, Continental, Aptiv Panasonic, Magna,
+      Marelli, Tesla, Desay, BYD LG, TCL, Siemens, Danfoss, Philips, Schneider, Endress+Hauser,
+      Insta, Sony, UTEC Pegatron, Flex, Jabil, Wistron, Sanmina SCI, Foxconn, Salcomp, Calcomp,
+      Plexus Arrow, Avnet, BTV, CPS, Semitron, NOA Leading Business drivers Infotainment,
+      Advanced Driver Assist (ADAS), electrification, connectivity, and security Higher
+      functionality driven by increasing electronic content.”
+
+[77] Broadcom Inc.  --customer_concentration-->  Gen Digital Inc
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=4
+     “We remain focused on strengthening relationships and increasing penetration within our
+      existing core, mainframe, VMware, and Symantec endpoint customers and expanding the
+      adoption of our enterprise software offerings with these customers.”
+
+[78] Cohu, Inc.  --customer_concentration-->  STMicroelectronics N.V.
+     named_concentration  class=customer  conf=0.700  pct=12.00  cited_by=2
+     “During the last three years, the following customers comprised 10% or greater of our
+      consolidated net sales:                    2025           2024           2023
+      STMicroelectronics         *         *         12.0   %                  * Less than 10%
+      of consolidated net sales.”
+
+[79] Calix, Inc.  --customer_concentration-->  Verizon Communications Inc.
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=1
+     “Our service provider customers include: ALLO Communications, LLC; Connect Holding II LLC
+      (dba Brightspeed); CityFibre Holdings Limited; Conexon Connect, LLC; Cox Communications,
+      Inc.; Gridiron Fiber Corp. (dba Lumos, a T-Mobile Fiber company); Hunter Communications;
+      ICS Advanced Technologies; Jade Communications, LLC; Rally Networks; South Central
+      Telephone Association, Inc.; Tombigbee Electric Power Association and Tombigbee Fiber, LLC
+      and Verizon Communications Inc. The U.S. Federal government has approved programs,
+      totaling more than $40 billion, to fund broadband and connectivity expansion across the
+      rural parts of the U.S. Calix has a dedicated team of funding specialists, assisting
+      customers and prospects with the most up-to-date information on broadband funding
+      opportunities as they are introduced and personalized strategies to maximize their grants
+      to support their growth.”
+
+[80] Data I/O Corporation  --customer_concentration-->  Siemens AG
+     named_narrative  class=customer  conf=0.500  pct=None  cited_by=1
+     “OEMs EMS Programming Centers Automotive Electronics IoT, Industrial, Consumer Electronics
+      Contract Manufacturers Notable end customers Borg Warner, Bosch, Alps Alpine, Visteon,
+      Kostal, JVCKenwood, Harman, Hitachi, Denso Ten, Continental, Aptiv Panasonic, Magna,
+      Marelli, Tesla, Desay, BYD LG, TCL, Siemens, Danfoss, Philips, Schneider, Endress+Hauser,
+      Insta, Sony, UTEC Pegatron, Flex, Jabil, Wistron, Sanmina SCI, Foxconn, Salcomp, Calcomp,
+      Plexus Arrow, Avnet, BTV, CPS, Semitron, NOA Leading Business drivers Infotainment,
+      Advanced Driver Assist (ADAS), electrification, connectivity, and security Higher
+      functionality driven by increasing electronic content.”
+

@@ -1,0 +1,172 @@
+ALL 26 concentration-backed relationships (exhaustive, not sampled)
+20 carry a percentage; 6 are shown without one because the sentence does not permit safe attribution.
+
+[01] Albany International Corporation  -->  Safran SA
+     pct=37.00  of AEC's Net revenues in 2025
+     In the AEC segment, our customer Safran accounted for approximately 37% of AEC's Net revenues
+     in 2025, substantially all of which was under an exclusive long-term supply agreement relating
+     to parts for the LEAP engine.
+
+[02] Dauch Corporation  -->  Ford Motor Company
+     pct=15.00  of our consolidated net sales in 2025
+     Sales to Ford Motor Company (Ford) were approximately 15 % of our consolidated net sales in
+     2025, 13 % in 2024 and 12 % in 2023.
+
+[03] Dauch Corporation  -->  General Motors Company
+     pct=44.00  of our consolidated net sales in 2025
+     Sales to General Motors Company (GM) were approximately 44 % of our consolidated net sales in
+     2025, 42 % in 2024, and 39 % in 2023.
+
+[04] Dauch Corporation  -->  Stellantis N.V.
+     pct=13.00  of our consolidated net sales in 2025
+     Sales to Stellantis were approximately 13% of our consolidated net sales in 2025, 13% in 2024,
+     and 16% in 2023.
+
+[05] Cohu, Inc.  -->  STMicroelectronics N.V.
+     pct=12.00  of consolidated net sales
+     During the last three years, the following customers comprised 10% or greater of our
+     consolidated net sales: 2025 2024 2023 STMicroelectronics * * 12.0 % * Less than 10% of
+     consolidated net sales.
+
+[06] Broadwind Inc.  -->  GE Vernova
+     pct=10.00  of our consolidated revenues for the years ended Decembe
+     Sales to GE Vernova represented greater than 10% of our consolidated revenues for the years
+     ended December 31, 2025 and 2024.
+
+[07] Dentsply Sirona Inc  -->  Henry Schein, Inc.
+     pct=13.00
+     Customers that accounted for 10% or more of net sales or accounts receivable for the year ended
+     December 31, 2025 were as follows: 2025 % of net sales % of accounts receivable Henry Schein,
+     Inc. 13 % Less than 10% Patterson Companies, Inc. Less than 10% 11 % For the year ended
+     December 31, 2024, no customer accounted for 10% or more of consolidated net sales or
+     consolidated accounts receivable.
+
+[08] Dentsply Sirona Inc  -->  Patterson Companies Inc
+     pct=10.00
+     Customers that accounted for 10% or more of net sales or accounts receivable for the year ended
+     December 31, 2025 were as follows: 2025 % of net sales % of accounts receivable Henry Schein,
+     Inc. 13 % Less than 10% Patterson Companies, Inc. Less than 10% 11 % For the year ended
+     December 31, 2024, no customer accounted for 10% or more of consolidated net sales or
+     consolidated accounts receivable.
+
+[09] Arm Holdings Limited  -->  SoftBank Group Corp
+     pct=None
+     In particular, our top five customers (including Arm China and SoftBank Group) collectively
+     accounted for approximately 57%, 56% and 54% of our total revenue for the fiscal years ended
+     March 31, 2026, 2025 and 2024, respectively, and our largest customer individually, Arm China,
+     accounted for approximately 16%, 17% and 21% of our total revenue, respectively, during those
+     fiscal years.
+
+[10] Datavault AI Inc  -->  Scilex Holding Company
+     pct=26.00  of our net revenue
+     Dependence on One or a Few Major Customers For the year ended December 31, 2025, Vivasor, Inc.
+     (“Vivasor”) accounted for 51% and Scilex Holding Company (“Scilex”) 26% of our net revenue.
+
+[11] Century Aluminum Company  -->  Glencore PLC
+     pct=10.00  of our net sales
+     Major customer information Revenues from Glencore in 2025, 2024 and 2023 exceeded 10 % of our
+     net sales.
+
+[12] Allison Transmission Holdings Inc.  -->  Mercedes Benz Group AG
+     pct=14.00
+     Years ended December 31, % of net sales 2025 2024 2023 Daimler AG 18 % 20 % 18 % PACCAR Inc. 11
+     % 13 % 11 % Traton SE 10 % 11 % 11 % Two customers accounted for 10% or more of the Company's
+     outstanding accounts receivable within the last two years presente d. % of accounts receivable
+     December 31, 2025 December 31, 2024 Daimler AG 14 % 20 % Traton SE 11
+
+[13] Allison Transmission Holdings Inc.  -->  PACCAR Inc.
+     pct=11.00
+     Years ended December 31, % of net sales 2025 2024 2023 Daimler AG 18 % 20 % 18 % PACCAR Inc. 11
+     % 13 % 11 % Traton SE 10 % 11 % 11 % Two customers accounted for 10% or more of the Company's
+     outstanding accounts receivable within the last two years presente d. % of accounts receivable
+     December 31, 2025 December 31, 2024 Daimler AG 14 % 20 % Traton SE 11
+
+[14] ChipMOS Technologies Inc  -->  Asahi Kasei Corp
+     pct=None
+     Our top 15 customers in terms of revenue in 2025 were (in alphabetical order): Asahi Kasei
+     Microdevices Corporation Chipone Technology (Beijing) Co., Ltd. Elite Semiconductor
+     Microelectronics Technology Inc. GigaDevice Semiconductor (HK) Limited Himax Technologies, Inc.
+     ILI Technology Corporation Integrated Circuit Solution Inc. Macronix International Co., Ltd.
+     MediaTek Inc. Micron Technology, Inc. Nanya Technology Corporation Novatek Microelectronics
+     Corp. Phison Electronics Corp. Raydium Semiconductor Corporation Winbond Electronics
+     Corporation In 2023, our top three customers accounted for approximately 25%, 13% and 9% of our
+     revenue, respectively.
+
+[15] ChipMOS Technologies Inc  -->  Himax Technologies Inc.
+     pct=None
+     Our top 15 customers in terms of revenue in 2025 were (in alphabetical order): Asahi Kasei
+     Microdevices Corporation Chipone Technology (Beijing) Co., Ltd. Elite Semiconductor
+     Microelectronics Technology Inc. GigaDevice Semiconductor (HK) Limited Himax Technologies, Inc.
+     ILI Technology Corporation Integrated Circuit Solution Inc. Macronix International Co., Ltd.
+     MediaTek Inc. Micron Technology, Inc. Nanya Technology Corporation Novatek Microelectronics
+     Corp. Phison Electronics Corp. Raydium Semiconductor Corporation Winbond Electronics
+     Corporation In 2023, our top three customers accounted for approximately 25%, 13% and 9% of our
+     revenue, respectively.
+
+[16] Ducommun Incorporated  -->  Lockheed Martin Corporation
+     pct=4.20
+     Net Revenues by Major Customers A significant portion of our net revenues are from our top ten
+     customers as follows: Years Ended December 31, 2025 2024 Boeing Company (1) 13.3 % 13.9 %
+     Lockheed Martin Corporation 4.2 % 5.3 % Northrop Grumman Corporation 5.8 % 6.4 % RTX
+     Corporation (2) 17.9 % 16.4 % Top ten customers (3) 60.7 % 60.1 % (1) The Boeing Company
+     (“Boeing”) completed its acquisition of all of Spirit Aerosystems Holdings, Inc.’s Boeing-
+     related commercial operations, based on Boeing’s announcement on December 8, 2025. (2)
+     TransDigm Group Inc. (“TransDigm”) completed its acquisition of the Simmonds Precision
+     Products, Inc. business of Goodrich 
+
+[17] Ducommun Incorporated  -->  The Boeing Company
+     pct=13.00
+     For 2025, Boeing and RTX Corporation (f/k/a Raytheon Technologies Corporation) (“RTX”) were our
+     largest customers, with Boeing generating 13% and RTX generating 18% of our 2025 net revenues.
+
+[18] Elite Express Holding Inc.  -->  FedEx Corporation
+     pct=100.00
+     Concentration of Credit Risk The Company is exposed to a concentration of credit risk due to
+     its reliance on a single customer, FedEx, which accounted for 100 % of the Company’s revenue
+     for all periods presented in this report.
+
+[19] Applied Optoelectronics Inc.  -->  Microsoft Corporation
+     pct=None
+     In 2025, 2024 and 2023 , Microsoft accounted for 28.8%, 43.7% and 46.6% of our revenue,
+     respectively, and in 2024, Oracle accounted for 12.4% of our revenue.
+
+[20] CTS Corporation  -->  Toyota Motor Corporation
+     pct=11.20
+     Our net sales to significant customers as a percentage of total net sales were as follows: Year
+     Ended December 31, 2025 2024 2023 Toyota Motor Corporation 11.2 % 12.2 % 12.5 % Cummins, Inc.
+     8.4 % 11.7 % 15.0 % No other customer accounted for 10% or more of total net sales during these
+     periods.
+
+[21] CTS Corporation  -->  Cummins Inc.
+     pct=8.40  of total net sales
+     Our net sales to significant customers as a percentage of total net sales were as follows: Year
+     Ended December 31, 2025 2024 2023 Toyota Motor Corporation 11.2 % 12.2 % 12.5 % Cummins, Inc.
+     8.4 % 11.7 % 15.0 % No other customer accounted for 10% or more of total net sales during these
+     periods.
+
+[22] Dana Inc  -->  Stellantis N.V.
+     pct=13.00
+     Our sales to Stellantis (via a directed supply relationship) were approximately 13% in 2025,
+     10% in 2024 and 12% in 2023.
+
+[23] Astronics Corporation  -->  The Boeing Company
+     pct=10.40  of sales in 2025
+     Sales to Boeing accounted for 10.4% of sales in 2025, 10.2% of sales in 2024, and 11.0% of
+     sales in 2023.
+
+[24] Camping World Holdings, Inc. Class A  <--  Thor Industries, Inc.
+     pct=None
+     We have strategic relationships with leading RV manufacturers, including Thor Industries, Inc.
+     and Forest River, Inc. As of December 31, 2025, Thor Industries and Forest River accounted for
+     approximately 58.4% and 34.4%, respectively, of our new RV inventory.
+
+[25] Allegro MicroSystems, Inc  -->  Sanken Electric Co Ltd
+     pct=0.60  of total net sales
+     For the fiscal year ended March 29, 2024, Sanken Electric Co., Ltd. (“Sanken”) accounted for
+     0.6 % of total net sales.
+
+[26] Amkor Technology, Inc.  -->  QUALCOMM, Inc.
+     pct=None
+     Direct sales to Apple and Qualcomm accounted for 29.8% and 11.1% of our net sales,
+     respectively, for the year ended December 31, 2025.
+

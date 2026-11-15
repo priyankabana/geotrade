@@ -1,0 +1,1 @@
+event_id,name,event_type,first_occurred_utc,became_public_utc,location_name,country,lat,lon,chokepoint,commodity,severity_note,ground_truth_url,ground_truth_quote,downstream_effect_known,downstream_evidence_url,added_by,added_on

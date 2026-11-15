@@ -1,0 +1,438 @@
+# stratified edge sample · seed 20261115 · n=60
+# judge each: CORRECT / WRONG / UNCLEAR, and why
+
+[01] CTS  ->  Toyota Motor
+     matched_text='Toyota Motor'  class=customer/downstream  ev=named_concentration  conf=0.70  pct=15.00  sub=unstated
+     10-K filed 2026-02-24
+     | Our net sales to significant customers as a percentage of total net sales were as follows: Year Ended
+     | December 31, 2025 2024 2023 Toyota Motor Corporation 11.2 % 12.2 % 12.5 % Cummins, Inc. 8.4 % 11.7 % 15.0 %
+     | No other customer accounted for 10% or more of total net sales during these periods.
+
+[02] Dana  ->  Stellantis
+     matched_text='Stellantis N V'  class=customer/downstream  ev=named_concentration  conf=0.70  pct=10.00  sub=unstated
+     10-K filed 2026-02-27
+     | Net Sales Long-Lived Assets 2025 2024 2023 2025 2024 2023 North America United States $ 4,289 $ 4,366 $
+     | 4,161 $ 963 $ 1,100 $ 1,154 Other North America 226 291 255 289 211 220 Total 4,515 4,657 4,416 1,252 1,311
+     | 1,374 Europe Germany 434 433 482 101 97 120 Other Europe 1,055 1,056 1,082 475 346 317 Total 1,489 1,489
+     | 1,564 576 443 437 South America Brazil 428 476 427 95 86 113 Other South America 244 252 242 22 24 24 T
+
+[03] Ducommun  ->  TransDigm Group
+     matched_text='Transdigm'  class=customer/downstream  ev=named_concentration  conf=0.70  pct=60.70  sub=unstated
+     10-K filed 2026-02-26
+     | Net Revenues by Major Customers A significant portion of our net revenues are from our top ten customers as
+     | follows: Years Ended December 31, 2025 2024 Boeing Company (1) 13.3 % 13.9 % Lockheed Martin Corporation 4.2
+     | % 5.3 % Northrop Grumman Corporation 5.8 % 6.4 % RTX Corporation (2) 17.9 % 16.4 % Top ten customers (3)
+     | 60.7 % 60.1 % (1) The Boeing Company (“Boeing”) completed its acquisition of all of Spirit Aerosys
+
+[04] Dana  ->  Ford Motor
+     matched_text='Ford Motor Company'  class=customer/downstream  ev=named_concentration  conf=0.70  pct=10.00  sub=unstated
+     10-K filed 2026-02-27
+     | Net Sales Long-Lived Assets 2025 2024 2023 2025 2024 2023 North America United States $ 4,289 $ 4,366 $
+     | 4,161 $ 963 $ 1,100 $ 1,154 Other North America 226 291 255 289 211 220 Total 4,515 4,657 4,416 1,252 1,311
+     | 1,374 Europe Germany 434 433 482 101 97 120 Other Europe 1,055 1,056 1,082 475 346 317 Total 1,489 1,489
+     | 1,564 576 443 437 South America Brazil 428 476 427 95 86 113 Other South America 244 252 242 22 24 24 T
+
+[05] Cerence  ->  Stellantis
+     matched_text='Stellantis'  class=customer/downstream  ev=named_concentration  conf=0.70  pct=50.00  sub=unstated
+     10-K filed 2025-11-20
+     | Our automobile manufacturer customers, commonly referred to as OEMs, include BMW, Mercedes-Benz, the
+     | Volkswagen Group (Volkswagen, Audi, Porsche, and other brands), Stellantis, Renault, Toyota, Ford, General
+     | Motors, BYD, Great Wall Motor, NIO, and many others and represented approximately 50% of our revenue in
+     | fiscal year 2025.
+
+[06] Allison Transmission Holdings  ->  Mercedes Benz Group
+     matched_text='Daimler'  class=customer/downstream  ev=named_concentration  conf=0.70  pct=20.00  sub=unstated
+     10-K filed 2026-02-24
+     | Years ended December 31, % of net sales 2025 2024 2023 Daimler AG 18 % 20 % 18 % PACCAR Inc. 11 % 13 % 11 %
+     | Traton SE 10 % 11 % 11 % Two customers accounted for 10% or more of the Company's outstanding accounts
+     | receivable within the last two years presente d. % of accounts receivable December 31, 2025 December 31,
+     | 2024 Daimler AG 14 % 20 % Traton SE 11
+
+[07] Elite Express Holding  ->  FedEx
+     matched_text='Fedex'  class=customer/downstream  ev=named_concentration  conf=0.70  pct=100.00  sub=unstated
+     10-K filed 2026-02-27
+     | 30 Table of Contents These ongoing investments in logistics technology are expected to strengthen our
+     | capacity to manage growing delivery volumes and position us for long-term success. ● Customer Concentration
+     | and Diversification : As of the date of this report, 100% of our revenue is derived from FedEx.
+
+[08] Amphenol-  ->  Wearable Devices
+     matched_text='Wearable Devices'  class=customer/downstream  ev=named_concentration  conf=0.70  pct=91.00  sub=unstated
+     10-K filed 2026-02-11
+     | Net sales to the mobile devices market increased approximately $64.3, driven by growth in sales in handsets,
+     | wearable devices, laptops and tablets. ​ Net sales in the Communications Solutions segment (approximately
+     | 52% of net sales) increased 91% in both U.S. dollars and constant currencies, as well as 71% organically, in
+     | 2025, compared to 2024.
+
+[09] Cerence  ->  Renault
+     matched_text='Renault'  class=customer/downstream  ev=named_concentration  conf=0.70  pct=50.00  sub=unstated
+     10-K filed 2025-11-20
+     | Our automobile manufacturer customers, commonly referred to as OEMs, include BMW, Mercedes-Benz, the
+     | Volkswagen Group (Volkswagen, Audi, Porsche, and other brands), Stellantis, Renault, Toyota, Ford, General
+     | Motors, BYD, Great Wall Motor, NIO, and many others and represented approximately 50% of our revenue in
+     | fiscal year 2025.
+
+[10] Cerence  ->  Volkswagen
+     matched_text='Volkswagen'  class=customer/downstream  ev=named_concentration  conf=0.70  pct=50.00  sub=unstated
+     10-K filed 2025-11-20
+     | Our automobile manufacturer customers, commonly referred to as OEMs, include BMW, Mercedes-Benz, the
+     | Volkswagen Group (Volkswagen, Audi, Porsche, and other brands), Stellantis, Renault, Toyota, Ford, General
+     | Motors, BYD, Great Wall Motor, NIO, and many others and represented approximately 50% of our revenue in
+     | fiscal year 2025.
+
+[11] Apogee Enterprises  ->  Coats Group
+     matched_text='Coats'  class=customer/downstream  ev=named_concentration  conf=0.70  pct=31.00  sub=unstated
+     10-K filed 2026-04-24
+     | In fiscal 2026, this segment accounted for approximately 31% of our net sales. • The Architectural Glass
+     | Segment cuts, treats, coats and fabricates high-performance glass used in custom window and wall systems
+     | used primarily in non-residential buildings.
+
+[12] ChipMOS Technologies  ->  Himax Technologies
+     matched_text='Himax Technologies'  class=customer/downstream  ev=named_concentration  conf=0.70  pct=25.00  sub=unstated
+     20-F filed 2026-04-14
+     | Our top 15 customers in terms of revenue in 2025 were (in alphabetical order): Asahi Kasei Microdevices
+     | Corporation Chipone Technology (Beijing) Co., Ltd. Elite Semiconductor Microelectronics Technology Inc.
+     | GigaDevice Semiconductor (HK) Limited Himax Technologies, Inc. ILI Technology Corporation Integrated Circuit
+     | Solution Inc. Macronix International Co., Ltd. MediaTek Inc. Micron Technology, Inc. Nanya Technology C
+
+[13] Allison Transmission Holdings  ->  PACCAR
+     matched_text='Paccar'  class=customer/downstream  ev=named_concentration  conf=0.70  pct=20.00  sub=unstated
+     10-K filed 2026-02-24
+     | Years ended December 31, % of net sales 2025 2024 2023 Daimler AG 18 % 20 % 18 % PACCAR Inc. 11 % 13 % 11 %
+     | Traton SE 10 % 11 % 11 % Two customers accounted for 10% or more of the Company's outstanding accounts
+     | receivable within the last two years presente d. % of accounts receivable December 31, 2025 December 31,
+     | 2024 Daimler AG 14 % 20 % Traton SE 11
+
+[14] Ducommun  ->  Boeing
+     matched_text='Boeing'  class=customer/downstream  ev=named_concentration  conf=0.70  pct=14.70  sub=unstated
+     10-K filed 2026-02-26
+     | Boeing, Lockheed, Northrop, RTX, and Viasat represented the following percentages of total accounts
+     | receivable: December 31, 2025 2024 Boeing 7.3 % 12.4 % Lockheed 1.5 % 1.9 % Northrop 13.3 % 2.7 % RTX 14.7 %
+     | 14.7 % Viasat 5.0 % 3.1 % In 2025, 2024 and 2023, net revenues from foreign customers based on the location
+     | of the customer were $ 118.8 million, $ 113.8 million and $ 82.2 million, respectively.
+
+[15] Allegro MicroSystems  ->  Sanken Electric Co
+     matched_text='Sanken Electric'  class=customer/downstream  ev=named_concentration  conf=0.70  pct=0.60  sub=unstated
+     10-K filed 2026-05-21
+     | For the fiscal year ended March 29, 2024, Sanken Electric Co., Ltd. (“Sanken”) accounted for 0.6 % of total
+     | net sales.
+
+[16] Broadcom  ->  VMware
+     matched_text='Vmware'  class=customer/downstream  ev=named_concentration  conf=0.70  pct=37.00  sub=unstated
+     10-K filed 2025-12-18
+     | Amortization of Acquisition-Related Intangible Assets in Operating Expenses Amortization of acquisition-
+     | related intangible assets recognized in operating expenses decreased $1,213 million, or 37%, in fiscal year
+     | 2025, compared to the prior fiscal year primarily due to full amortization of customer-related intangible
+     | assets from previous software acquisitions other than VMware.
+
+[17] Ducommun  ->  TransDigm Group
+     matched_text='Transdigm'  class=customer/downstream  ev=named_concentration  conf=0.70  pct=60.70  sub=unstated
+     10-K filed 2026-02-26
+     | Net revenues from our top ten customers, including The Boeing Company (“Boeing”), Lockheed Martin
+     | Corporation (“Lockheed”), Northrop Grumman Corporation (“Northrop”), RTX Corporation (f/k/a Raytheon
+     | Technologies Corporation) (“RTX”), and Viasat, Inc. (“Viasat”), represented the following percentages of
+     | total net revenues: 81 Table of Contents Years Ended December 31, 2025 2024 2023 Boeing (1) 13.3 % 13.9 %
+     | 14.6 % Loc
+
+[18] Dentsply Sirona  ->  Patterson Companies
+     matched_text='Patterson Companies'  class=customer/downstream  ev=named_concentration  conf=0.70  pct=25.00  sub=unstated
+     10-K filed 2026-02-26
+     | Customers that accounted for 10% or more of net sales or accounts receivable for the year ended December 31,
+     | 2025 were as follows: 2025 % of net sales % of accounts receivable Henry Schein, Inc. 13 % Less than 10%
+     | Patterson Companies, Inc. Less than 10% 11 % For the year ended December 31, 2024, no customer accounted for
+     | 10% or more of consolidated net sales or consolidated accounts receivable.
+
+[19] Dana  ->  Stellantis
+     matched_text='Stellantis N V'  class=customer/downstream  ev=named_concentration  conf=0.70  pct=10.00  sub=unstated
+     10-K filed 2026-02-27
+     | Ford Motor Company (Ford) and Stellantis N.V. (Stellantis) were the only individual customers accounting for
+     | 10% or more of our consolidated sales in one or more of the past three years.
+
+[20] Albany International-  ->  Safran
+     matched_text='Safran'  class=customer/downstream  ev=named_concentration  conf=0.70  pct=37.00  sub=unstated
+     10-K filed 2026-02-27
+     | In the AEC segment, our customer Safran accounted for approximately 37% of AEC's Net revenues in 2025,
+     | substantially all of which was under an exclusive long-term supply agreement relating to parts for the LEAP
+     | engine.
+
+[21] Ducommun  ->  Boeing
+     matched_text='Boeing'  class=customer/downstream  ev=named_concentration  conf=0.70  pct=60.70  sub=unstated
+     10-K filed 2026-02-26
+     | Net revenues from our top ten customers, including The Boeing Company (“Boeing”), Lockheed Martin
+     | Corporation (“Lockheed”), Northrop Grumman Corporation (“Northrop”), RTX Corporation (f/k/a Raytheon
+     | Technologies Corporation) (“RTX”), and Viasat, Inc. (“Viasat”), represented the following percentages of
+     | total net revenues: 81 Table of Contents Years Ended December 31, 2025 2024 2023 Boeing (1) 13.3 % 13.9 %
+     | 14.6 % Loc
+
+[22] Applied Optoelectronics  ->  Microsoft
+     matched_text='Microsoft'  class=customer/downstream  ev=named_concentration  conf=0.70  pct=46.60  sub=unstated
+     10-K filed 2026-02-26
+     | In 2025, 2024 and 2023 , Microsoft accounted for 28.8%, 46.6% and 18.4% of our revenue, respectively, and in
+     | 2024, Oracle accounted for 12.4% of our revenue.
+
+[23] Ducommun  ->  TransDigm Group
+     matched_text='Transdigm'  class=customer/downstream  ev=named_concentration  conf=0.70  pct=60.70  sub=unstated
+     10-K filed 2026-02-26
+     | Net Revenues by Major Customers A significant portion of our net revenues are from our top ten customers as
+     | follows: Years Ended December 31, 2025 2024 Boeing Company (1) 13.3 % 13.9 % Lockheed Martin Corporation 4.2
+     | % 5.3 % Northrop Grumman Corporation 5.8 % 6.4 % RTX Corporation (2) 17.9 % 16.4 % Top ten customers (3)
+     | 60.7 % 60.1 % (1) The Boeing Company (“Boeing”) completed its acquisition of all of Spirit Aerosys
+
+[24] ChipMOS Technologies  ->  Asahi Kasei
+     matched_text='Asahi Kasei'  class=customer/downstream  ev=named_concentration  conf=0.70  pct=25.00  sub=unstated
+     20-F filed 2026-04-14
+     | Our top 15 customers in terms of revenue in 2025 were (in alphabetical order): Asahi Kasei Microdevices
+     | Corporation Chipone Technology (Beijing) Co., Ltd. Elite Semiconductor Microelectronics Technology Inc.
+     | GigaDevice Semiconductor (HK) Limited Himax Technologies, Inc. ILI Technology Corporation Integrated Circuit
+     | Solution Inc. Macronix International Co., Ltd. MediaTek Inc. Micron Technology, Inc. Nanya Technology C
+
+[25] Albany International-  ->  Safran
+     matched_text='Safran'  class=customer/downstream  ev=named_concentration  conf=0.70  pct=15.00  sub=unstated
+     10-K filed 2026-02-27
+     | AEC’s largest aerospace customer is SAFRAN and sales to SAFRAN (consisting primarily of fan blades and cases
+     | for CFM’s LEAP engine) accounted for approximately 15% of the Company’s consolidated net revenues in 2025.
+
+[26] Cerence  ->  General Motors Co
+     matched_text='General Motors'  class=customer/downstream  ev=named_concentration  conf=0.70  pct=50.00  sub=unstated
+     10-K filed 2025-11-20
+     | Our automobile manufacturer customers, commonly referred to as OEMs, include BMW, Mercedes-Benz, the
+     | Volkswagen Group (Volkswagen, Audi, Porsche, and other brands), Stellantis, Renault, Toyota, Ford, General
+     | Motors, BYD, Great Wall Motor, NIO, and many others and represented approximately 50% of our revenue in
+     | fiscal year 2025.
+
+[27] Dauch Corporation  ->  Ford Motor
+     matched_text='Ford Motor Company'  class=customer/downstream  ev=named_concentration  conf=0.70  pct=15.00  sub=unstated
+     10-K filed 2026-02-13
+     | Sales to Ford Motor Company (Ford) were approximately 15 % of our consolidated net sales in 2025, 13 % in
+     | 2024 and 12 % in 2023.
+
+[28] Dentsply Sirona  ->  Patterson Companies
+     matched_text='Patterson Companies'  class=customer/downstream  ev=named_concentration  conf=0.70  pct=23.00  sub=unstated
+     10-K filed 2026-02-26
+     | Customers that accounted for 10% or more of net sales or accounts receivable for the year ended December 31,
+     | 2023 were as follows: 2023 % of net sales % of accounts receivable Henry Schein, Inc. 14 % 11 % Patterson
+     | Companies, Inc. Less than 10% 10 % Product Development While the Company maintains market leadership in
+     | several of its product categories, continuous innovation and product development are critical for it
+
+[29] Ducommun  ->  Spirit AeroSystems Holdings
+     matched_text='Spirit Aerosystems'  class=customer/downstream  ev=named_concentration  conf=0.70  pct=60.70  sub=unstated
+     10-K filed 2026-02-26
+     | Net Revenues by Major Customers A significant portion of our net revenues are from our top ten customers as
+     | follows: Years Ended December 31, 2025 2024 Boeing Company (1) 13.3 % 13.9 % Lockheed Martin Corporation 4.2
+     | % 5.3 % Northrop Grumman Corporation 5.8 % 6.4 % RTX Corporation (2) 17.9 % 16.4 % Top ten customers (3)
+     | 60.7 % 60.1 % (1) The Boeing Company (“Boeing”) completed its acquisition of all of Spirit Aerosys
+
+[30] Ducommun  ->  TransDigm Group
+     matched_text='Transdigm'  class=customer/downstream  ev=named_concentration  conf=0.70  pct=60.70  sub=unstated
+     10-K filed 2026-02-26
+     | Net Revenues by Major Customers A significant portion of our net revenues are from our top ten customers as
+     | follows: Years Ended December 31, 2025 2024 Boeing Company (1) 13.3 % 13.9 % Lockheed Martin Corporation 4.2
+     | % 5.3 % Northrop Grumman Corporation 5.8 % 6.4 % RTX Corporation (2) 17.9 % 16.4 % Top ten customers (3)
+     | 60.7 % 60.1 % (1) The Boeing Company (“Boeing”) completed its acquisition of all of Spirit Aerosys
+
+[31] Cable ONE  ->  Bandwidth
+     matched_text='Bandwidth'  class=customer/downstream  ev=named_narrative  conf=0.50  pct=None  sub=unstated
+     10-K filed 2026-02-26
+     | For enterprise and wholesale customers, we offer dedicated bandwidth and Enterprise Wi-Fi in addition to
+     | multiple voice services via fiber optic technology.
+
+[32] Axogen  ->  Surgalign Holdings
+     matched_text='Rti Surgical'  class=supplier/upstream  ev=named_narrative  conf=0.50  pct=None  sub=unstated
+     10-K filed 2026-02-24
+     | 11 Table of Contents Axogen, Inc. Manufacturing of Our Medical Device Classified Products Manufacturing for
+     | the Axoguard Product Line Axoguard Nerve Connector, Axoguard Nerve Protector, Axoguard HA+ Nerve Protector,
+     | and Axoguard Nerve Cap (collectively, the “Axoguard Product Line”) are manufactured by Cook Biotech
+     | Incorporated (acquired on January 31, 2024 by RTI Surgical, Inc. and rebranded on December 17, 2024 as E
+
+[33] DigitalOcean Holdings  ->  Workspace Group
+     matched_text='Workspace'  class=customer/downstream  ev=named_narrative  conf=0.50  pct=None  sub=unstated
+     10-K filed 2026-02-24
+     | Our Jupyter Notebooks offering provides customers with a simple cloud workspace that runs on GPUs, providing
+     | a managed interactive development environment for exploring data and training and building machine learning
+     | models.
+
+[34] Data I/O  ->  Aptiv
+     matched_text='Aptiv'  class=supplier/upstream  ev=named_narrative  conf=0.50  pct=None  sub=unstated
+     10-K filed 2026-04-16
+     | OEMs EMS Programming Centers Automotive Electronics IoT, Industrial, Consumer Electronics Contract
+     | Manufacturers Notable end customers Borg Warner, Bosch, Alps Alpine, Visteon, Kostal, JVCKenwood, Harman,
+     | Hitachi, Denso Ten, Continental, Aptiv Panasonic, Magna, Marelli, Tesla, Desay, BYD LG, TCL, Siemens,
+     | Danfoss, Philips, Schneider, Endress+Hauser, Insta, Sony, UTEC Pegatron, Flex, Jabil, Wistron, Sanmina SCI,
+     | Foxco
+
+[35] Elite Express Holding  ->  FedEx
+     matched_text='Fedex'  class=customer/downstream  ev=named_narrative  conf=0.50  pct=None  sub=unstated
+     10-K filed 2026-02-27
+     | For the reporting periods from December 1, 2022, to November 30, 2025, and as of the date of this annual
+     | report, FedEx has been our sole customer to which we provided pickup and delivery service.
+
+[36] Ceragon Networks  ->  Bandwidth
+     matched_text='Bandwidth'  class=customer/downstream  ev=named_narrative  conf=0.50  pct=None  sub=unstated
+     20-F filed 2026-04-15
+     | Like wireless service providers, customers in this market demand a highly reliable, cost-effective transport
+     | solution that can be easily installed and scaled to their bandwidth requirements.
+
+[37] Anghami  ->  NASDAQ Inc
+     matched_text='Nasdaq'  class=supplier/upstream  ev=named_narrative  conf=0.50  pct=None  sub=unstated
+     20-F filed 2026-04-30
+     | 39 We are a “controlled company” within the meaning of the rules of The Nasdaq Stock Market LLC and, as a
+     | result, can rely on exemptions from certain corporate governance requirements that provide protection to
+     | shareholders of other companies.
+
+[38] Advanced Micro Devices  ->  Globalfoundries
+     matched_text='Globalfoundries'  class=supplier/upstream  ev=named_narrative  conf=0.50  pct=None  sub=unstated
+     10-K filed 2026-02-04
+     | We rely on Taiwan Semiconductor Manufacturing Company Limited (TSMC) for the production of all wafers for
+     | microprocessor and GPU products at 7 nanometer (nm) or smaller nodes, and we rely primarily on
+     | GLOBALFOUNDRIES Inc. (GF) for wafers for microprocessor and GPU products manufactured at process nodes
+     | larger than 7 nm.
+
+[39] Amplitech Group  ->  Microsemi
+     matched_text='Microsemi'  class=customer/downstream  ev=named_narrative  conf=0.50  pct=None  sub=unstated
+     10-K filed 2026-03-26
+     | Some of our customers include Telus, Viasat, L3 Harris Technologies, CPI, Lockheed Martin, Microsemi, and
+     | Paramount Global.
+
+[40] Aurora Innovation  ->  Volvo
+     matched_text='Volvo'  class=supplier/upstream  ev=named_narrative  conf=0.50  pct=None  sub=unstated
+     10-K filed 2026-02-11
+     | We work closely with our OEM partners, PACCAR and Volvo, and suppliers for the new truck program, to develop
+     | a safe, reliable, and scalable integrated solutions.
+
+[41] Cleveland-Cliffs  ->  Stelco Holdings
+     matched_text='Stelco'  class=customer/downstream  ev=named_narrative  conf=0.50  pct=None  sub=unstated
+     10-K filed 2026-02-09
+     | As a result of the Stelco Acquisition, our exposure to the North American spot market doubled, giving us
+     | further insight into spot market dynamics and diversifying our customer base toward spot customers.
+
+[42] Canadian Solar  ->  S&P Global
+     matched_text='S&P Global'  class=supplier/upstream  ev=named_narrative  conf=0.50  pct=None  sub=unstated
+     20-F filed 2026-04-10
+     | In the energy storage sector, we were recognized as a Tier 1 Energy Storage Manufacturer by BloombergNEF and
+     | as a Tier 1 Battery Energy Storage System Supplier by S&P Global.
+
+[43] Cognex  ->  Salesforce
+     matched_text='Salesforce'  class=customer/downstream  ev=named_narrative  conf=0.50  pct=None  sub=unstated
+     10-K filed 2026-02-12
+     | Salesforce transformation Historically, Cognex has been a leader in providing the most powerful machine
+     | vision technology to the most sophisticated customers and solving their most challenging automation
+     | problems.
+
+[44] Deswell Industries  ->  NASDAQ Inc
+     matched_text='Nasdaq'  class=supplier/upstream  ev=named_narrative  conf=0.50  pct=None  sub=unstated
+     20-F filed 2026-07-30
+     | We rely on exemptions from the following NASDAQ Marketplace Rules: ● Rule 5605(b)(1) : Our board is not
+     | comprised of a majority of independent directors. ● Rule 5605(d) : Our board does not have a compensation
+     | committee and compensation of our Chief Executive Officer and other executive officers is neither determined
+     | nor recommended to the board by a majority of our independent directors.
+
+[45] DigitalOcean Holdings  ->  Alibaba Group
+     matched_text='Alibaba'  class=supplier/upstream  ev=named_narrative  conf=0.50  pct=None  sub=unstated
+     10-K filed 2026-02-24
+     | The primary vendors in this category include Amazon (AWS), Microsoft (Azure), Google (GCP), IBM (IBM Cloud),
+     | Alibaba (Alibaba Cloud) and Oracle (Oracle Cloud).
+
+[46] Algoma Steel Group Inc  ->  NASDAQ Inc
+     matched_text='Nasdaq'  class=supplier/upstream  ev=named_narrative  conf=0.50  pct=None  sub=unstated
+     20-F filed 2022-06-17
+     | We rely on this “foreign private issuer exemption” with respect to the Nasdaq rules for shareholder meeting
+     | quorums and Nasdaq rules requiring shareholder approval.
+
+[47] Distribution Solutions Group  ->  Liquid Media Group
+     matched_text='Leading Brands'  class=customer/downstream  ev=named_narrative  conf=0.50  pct=None  sub=unstated
+     10-K filed 2026-03-05
+     | In addition to being a distributor of handheld tools from leading brands, Jensen Tools offers private label
+     | Jensen branded hand tools that have been developed over years of customer usage and manufactured to a
+     | specified and demanding tolerance level.
+
+[48] Cenntro  ->  Metro
+     matched_text='Metro'  class=supplier/upstream  ev=named_narrative  conf=0.50  pct=None  sub=unstated
+     10-K filed 2026-04-15
+     | For example, while several sources for the airbag module in the Metro® are available, we currently have only
+     | one supplier for this component.
+
+[49] Advanced Micro Devices  ->  Globalfoundries
+     matched_text='Globalfoundries'  class=supplier/upstream  ev=named_narrative  conf=0.50  pct=None  sub=unstated
+     10-K filed 2026-02-04
+     | Manufacturing Arrangements and Assembly and Test Facilities Third-Party Wafer Foundry Facilities We utilize
+     | Taiwan Semiconductor Manufacturing Company Limited (TSMC) for the production of wafers for our HPC, FPGA and
+     | adaptive SoC products and GLOBALFOUNDRIES Inc. (GF), with respect to wafer purchases for our HPC products at
+     | the 12 nm and 14 nm technology nodes.
+
+[50] Acacia Research  ->  Oil and Natural Gas Corporation
+     matched_text='Oil And Natural Gas'  class=supplier/upstream  ev=named_narrative  conf=0.50  pct=None  sub=unstated
+     10-K filed 2026-03-12
+     | Benchmark’s financial condition, results of operations, and capital resources are highly dependent upon the
+     | prevailing market prices of, and supply and demand for, crude oil and natural gas.
+
+[51] Ducommun  ->  Boeing
+     matched_text='Boeing'  class=customer/downstream  ev=named_narrative  conf=0.50  pct=None  sub=unstated
+     10-K filed 2026-02-26
+     | Sales to The Boeing Company (“Boeing”), which now includes Spirit AeroSystems Holdings, Inc. (“Spirit”),
+     | based on Boeing’s December 8, 2025 announcement confirming the closing of its acquisition of all of Spirit’s
+     | Boeing-related commercial operations, comprise a significant portion of our commercial aerospace end-use
+     | market in 2025.
+
+[52] Embraer  ->  American Airlines Group
+     matched_text='American Airlines'  class=customer/downstream  ev=named_narrative  conf=0.50  pct=None  sub=unstated
+     20-F filed 2026-03-30
+     | As of December 31, 2025, our largest E-Jet customers by number of aircraft in service were SkyWest,
+     | Republic, American Airlines, KLM, Mesa, Azul, Horizon Air, Porter, Tianjn, and LOT Polish.
+
+[53] Ducommun  ->  Boeing
+     matched_text='Boeing'  class=customer/downstream  ev=named_narrative  conf=0.50  pct=None  sub=unstated
+     10-K filed 2026-02-26
+     | Sales to The Boeing Company (“Boeing”), which now includes Spirit AeroSystems Holdings, Inc. (“Spirit”),
+     | based on Boeing’s December 8, 2025 announcement confirming the closing of its acquisition of all of Spirit’s
+     | Boeing-related commercial operations, comprise a significant portion of our commercial aerospace end-use
+     | market in 2025.
+
+[54] Cummins  ->  Mercedes Benz Group
+     matched_text='Daimler'  class=customer/downstream  ev=named_narrative  conf=0.50  pct=None  sub=unstated
+     10-K filed 2026-02-10
+     | The principal customers of our heavy-duty truck engines include truck manufacturers such as PACCAR Inc.
+     | (PACCAR), Traton Group (Traton) and Daimler Trucks AG (Daimler).
+
+[55] Concorde International Group  ->  Manpower
+     matched_text='Manpower'  class=customer/downstream  ev=named_narrative  conf=0.50  pct=None  sub=unstated
+     20-F filed 2026-05-12
+     | Our patent-protected solution that has been proven to reduce the need for manpower while maintaining, and
+     | even increasing, the quality of service levels for security and facilities management. ● Superior-Class
+     | Customer Service.
+
+[56] Broadcom  ->  VMware
+     matched_text='Vmware'  class=customer/downstream  ev=named_narrative  conf=0.50  pct=None  sub=unstated
+     10-K filed 2025-12-18
+     | Our portfolio delivers public cloud scale and agility with private cloud security, resilience and
+     | performance, and lower total cost of ownership as compared to native public cloud, providing customers with
+     | infrastructure, application and security modernization, private AI as a service and enhanced cyber resilient
+     | data. • VMware Cloud Foundation (“VCF”) : VCF delivers integrated, enterprise-class compute, networking,
+
+[57] Cummins  ->  PACCAR
+     matched_text='Paccar'  class=customer/downstream  ev=named_narrative  conf=0.50  pct=None  sub=unstated
+     10-K filed 2026-02-10
+     | While a significant number of our sales to PACCAR are under long-term supply agreements, these agreements
+     | provide for particular engine requirements for specific vehicle models and not a specific volume of engines
+     | or aftertreatment systems.
+
+[58] Enovix  ->  Panasonic
+     matched_text='Panasonic'  class=supplier/upstream  ev=named_narrative  conf=0.50  pct=None  sub=unstated
+     10-K filed 2026-02-25
+     | Incumbent suppliers of Li-ion batteries include Amperex Technology Limited, Panasonic Corporation, Samsung
+     | SDI Co., Ltd., Contemporary Amperex Technology Co., Limited, SK On Co., Ltd., BYD Company Limited, and LG-
+     | Energy Solution, Ltd. These companies supply conventional Li-ion batteries and, in some cases, Li-ion
+     | batteries with some silicon added to the anode.
+
+[59] BD  ->  Financial Institutions
+     matched_text='Financial Institutions'  class=supplier/upstream  ev=named_narrative  conf=0.50  pct=None  sub=unstated
+     10-K filed 2025-11-25
+     | The amounts transferred and yet to be remitted under factoring arrangements are provided below. (Millions of
+     | dollars) 2025 2024 2023 Trade receivables transferred to third parties under factoring arrangements $ 1,560
+     | $ 1,385 $ 2,615 (Millions of dollars) 2025 2024 Amounts yet to be collected and remitted to the third
+     | parties $ 389 $ 254 Supplier Finance Programs The Company has agreements where participating supplier
+
+[60] AIRO Group Holdings  ->  Joby Aviation
+     matched_text='Joby Aviation'  class=supplier/upstream  ev=named_narrative  conf=0.50  pct=None  sub=unstated
+     10-K filed 2026-03-31
+     | We also serve as an avionics supplier for OEMs, including Robinson Helicopters, Pilatus, Honeywell, and Joby
+     | Aviation.
+

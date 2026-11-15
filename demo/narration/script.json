@@ -1,0 +1,154 @@
+{
+ "voice": "Daniel",
+ "rate": "178",
+ "total": 210.9,
+ "lines": [
+  {
+   "key": "title",
+   "text": "Atlas. A map of which public companies depend on which others, built only from what those companies have already said in public.",
+   "wav": "/Users/priyanka/Desktop/Final year project/atlas/demo/narration/title.wav",
+   "duration": 7.527,
+   "words": 22
+  },
+  {
+   "key": "problem",
+   "text": "When something happens in the world \u2014 a port closes, a plant burns, a country restricts an export \u2014 the companies hit first are obvious. Any analyst already has those names.",
+   "wav": "/Users/priyanka/Desktop/Final year project/atlas/demo/narration/problem.wav",
+   "duration": 11.508,
+   "words": 31
+  },
+  {
+   "key": "hidden",
+   "text": "The companies hit third are not obvious. They buy from the companies that got hit, and nobody keeps a list of them. That gap is the whole product.",
+   "wav": "/Users/priyanka/Desktop/Final year project/atlas/demo/narration/hidden.wav",
+   "duration": 8.441,
+   "words": 28
+  },
+  {
+   "key": "why_hard",
+   "text": "The obvious way to build that list is to read large companies' filings and extract their suppliers. It does not work. Supplier identities are commercially sensitive, so they are written out of the document on purpose.",
+   "wav": "/Users/priyanka/Desktop/Final year project/atlas/demo/narration/why_hard.wav",
+   "duration": 12.634,
+   "words": 36
+  },
+  {
+   "key": "inversion",
+   "text": "So we build the graph from the other end. Large companies hide their suppliers, but small suppliers advertise their large customers, because a marquee customer is their best credential. The edge you cannot get from the buyer, you get free from the seller.",
+   "wav": "/Users/priyanka/Desktop/Final year project/atlas/demo/narration/inversion.wav",
+   "duration": 14.415,
+   "words": 43
+  },
+  {
+   "key": "measured",
+   "text": "We measured that before building on it. A zero-cost keyword pass over ten real semiconductor filings surfaced Lam Research and Applied Materials six times each in one supplier's annual report. No model involved.",
+   "wav": "/Users/priyanka/Desktop/Final year project/atlas/demo/narration/measured.wav",
+   "duration": 12.915,
+   "words": 33
+  },
+  {
+   "key": "rules",
+   "text": "Three rules keep it honest, and all three are enforced in the database schema rather than in code review. Every edge carries its citation. The model never produces a score. And the graph knows what it knew on any given date.",
+   "wav": "/Users/priyanka/Desktop/Final year project/atlas/demo/narration/rules.wav",
+   "duration": 12.963,
+   "words": 41
+  },
+  {
+   "key": "pipeline",
+   "text": "The pipeline takes prose in and puts cited claims out. Fetch, segment, chunk, filter, extract, resolve, score. Only the extract step uses a model, and only on fifteen percent of each document.",
+   "wav": "/Users/priyanka/Desktop/Final year project/atlas/demo/narration/pipeline.wav",
+   "duration": 14.198,
+   "words": 32
+  },
+  {
+   "key": "tothe_app",
+   "text": "The data layer is built and running today. Twenty-three thousand companies across six markets. Let us look at it.",
+   "wav": "/Users/priyanka/Desktop/Final year project/atlas/demo/narration/tothe_app.wav",
+   "duration": 6.92,
+   "words": 19
+  },
+  {
+   "key": "coverage",
+   "text": "This is the real application, reading a live Postgres database. Every bar is a company headquarters, binned by density. Coverage by country is counted from the data.",
+   "wav": "/Users/priyanka/Desktop/Final year project/atlas/demo/narration/coverage.wav",
+   "duration": 10.693,
+   "words": 27
+  },
+  {
+   "key": "sectors",
+   "text": "Pick a country and the sectors are counted from the database, not read from a hardcoded list.",
+   "wav": "/Users/priyanka/Desktop/Final year project/atlas/demo/narration/sectors.wav",
+   "duration": 5.276,
+   "words": 17
+  },
+  {
+   "key": "companies",
+   "text": "Semiconductors \u2014 the sector where small suppliers name their large customers. Real companies, with real identifiers behind each one.",
+   "wav": "/Users/priyanka/Desktop/Final year project/atlas/demo/narration/companies.wav",
+   "duration": 8.598,
+   "words": 19
+  },
+  {
+   "key": "company",
+   "text": "Legal name, sector, headquarters, identifiers, former names. Former names matter, because an old filing uses the old name, and missing that splits one company into two.",
+   "wav": "/Users/priyanka/Desktop/Final year project/atlas/demo/narration/company.wav",
+   "duration": 12.279,
+   "words": 26
+  },
+  {
+   "key": "replay",
+   "text": "Now the part that matters. Replay a real disruption.",
+   "wav": "/Users/priyanka/Desktop/Final year project/atlas/demo/narration/replay.wav",
+   "duration": 3.494,
+   "words": 9
+  },
+  {
+   "key": "arcs",
+   "text": "An event in the Taiwan Strait. The arcs are the dependency chain reaching outward \u2014 across the Pacific, and down into India.",
+   "wav": "/Users/priyanka/Desktop/Final year project/atlas/demo/narration/arcs.wav",
+   "duration": 7.445,
+   "words": 22
+  },
+  {
+   "key": "surprise",
+   "text": "The marked names are the ones you would not have listed yourself. Five of the seven here are two or three hops out from the event.",
+   "wav": "/Users/priyanka/Desktop/Final year project/atlas/demo/narration/surprise.wav",
+   "duration": 6.996,
+   "words": 26
+  },
+  {
+   "key": "citation",
+   "text": "And each hop carries the exact sentence that proves it. If we cannot show you the sentence, we do not make the claim.",
+   "wav": "/Users/priyanka/Desktop/Final year project/atlas/demo/narration/citation.wav",
+   "duration": 7.153,
+   "words": 23
+  },
+  {
+   "key": "backtest",
+   "text": "The timeline is the backtest. Scrub to any past disruption and the graph is read as it stood that morning, never with anything filed later. That is what stops a backtest from quietly cheating.",
+   "wav": "/Users/priyanka/Desktop/Final year project/atlas/demo/narration/backtest.wav",
+   "duration": 10.994,
+   "words": 34
+  },
+  {
+   "key": "honest",
+   "text": "And we are explicit about what is not built yet. Extraction has not run, so these edges are a worked example, and the application says so on screen rather than implying coverage it does not have.",
+   "wav": "/Users/priyanka/Desktop/Final year project/atlas/demo/narration/honest.wav",
+   "duration": 11.854,
+   "words": 36
+  },
+  {
+   "key": "where",
+   "text": "Twenty weeks, six phases, each ending in something that runs. This is the end of the data layer. Week three is a validation experiment before any pipeline is built on top of it \u2014 forty documents, two annotators each, with the decision rules written down before anybody reads one.",
+   "wav": "/Users/priyanka/Desktop/Final year project/atlas/demo/narration/where.wav",
+   "duration": 17.435,
+   "words": 49
+  },
+  {
+   "key": "close",
+   "text": "Every claim traces to a sentence. Every score is code you can read. And the graph knows what it knew, and when.",
+   "wav": "/Users/priyanka/Desktop/Final year project/atlas/demo/narration/close.wav",
+   "duration": 7.211,
+   "words": 22
+  }
+ ]
+}

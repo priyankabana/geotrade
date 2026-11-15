@@ -1,0 +1,88 @@
+{
+ "timings": [
+  {
+   "key": "title",
+   "start": 1.078
+  },
+  {
+   "key": "problem",
+   "start": 9.109
+  },
+  {
+   "key": "hidden",
+   "start": 21.124
+  },
+  {
+   "key": "why_hard",
+   "start": 30.071
+  },
+  {
+   "key": "inversion",
+   "start": 43.212
+  },
+  {
+   "key": "measured",
+   "start": 58.131
+  },
+  {
+   "key": "rules",
+   "start": 71.55
+  },
+  {
+   "key": "pipeline",
+   "start": 85.02
+  },
+  {
+   "key": "tothe_app",
+   "start": 99.723
+  },
+  {
+   "key": "coverage",
+   "start": 115.612
+  },
+  {
+   "key": "sectors",
+   "start": 161.252
+  },
+  {
+   "key": "companies",
+   "start": 175.857
+  },
+  {
+   "key": "company",
+   "start": 193.646
+  },
+  {
+   "key": "replay",
+   "start": 206.428
+  },
+  {
+   "key": "arcs",
+   "start": 216.602
+  },
+  {
+   "key": "surprise",
+   "start": 224.55
+  },
+  {
+   "key": "citation",
+   "start": 232.057
+  },
+  {
+   "key": "backtest",
+   "start": 239.714
+  },
+  {
+   "key": "honest",
+   "start": 253.621
+  },
+  {
+   "key": "where",
+   "start": 267.78
+  },
+  {
+   "key": "close",
+   "start": 285.722
+  }
+ ]
+}
