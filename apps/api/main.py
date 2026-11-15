@@ -349,7 +349,8 @@ def _citation(r):
 
 
 EDGE_SQL = """
-    SELECT de.id, de.edge_type, de.evidence_type, de.confidence, de.weight,
+    SELECT de.id, de.from_entity_id, de.edge_type, de.evidence_type,
+           de.confidence, de.weight,
            de.scorer_version, de.valid_from, de.valid_to,
            de.char_start, de.char_end, de.chunk_id,
            dc.quote, dc.substitutability, dc.materiality_pct, dc.materiality_text,
@@ -497,20 +498,19 @@ def exposure(event_id: str, limit: int = Query(40, ge=1, le=500)):
         ids = [r["entity_id"] for r in rows]
         paths = {}
         if ids:
+            # This ran the same query twice and threw the first result away, then
+            # issued one more query per edge row to ask who owned it - a lookup
+            # the row already carried. Forty exposed companies meant hundreds of
+            # round trips, and the endpoint spent 600 ms under load. One query,
+            # one pass.
             c.execute(EDGE_SQL + """ WHERE de.from_entity_id = ANY(%s)
-                                     ORDER BY de.confidence DESC, length(dc.quote) ASC""", (ids,))
+                                     ORDER BY de.confidence DESC, length(dc.quote) ASC""",
+                      (ids,))
             for er in c.fetchall():
-                paths.setdefault(er["id"], None)
-            c.execute(EDGE_SQL + """ WHERE de.from_entity_id = ANY(%s)
-                                     ORDER BY de.confidence DESC, length(dc.quote) ASC""", (ids,))
-            byent = {}
-            for er in c.fetchall():
-                c.execute("SELECT from_entity_id FROM dependency_edge WHERE id=%s", (er["id"],))
-                owner = c.fetchone()["from_entity_id"]
-                byent.setdefault(owner, [])
-                if len(byent[owner]) < 3:
-                    byent[owner].append(_edge(er))
-            paths = byent
+                owner = er["from_entity_id"]
+                bucket = paths.setdefault(owner, [])
+                if len(bucket) < 3:
+                    bucket.append(_edge(er))
 
         c.execute("SELECT count(*) FROM exposure_precompute WHERE event_id=%s", (ev["id"],))
         total = c.fetchone()["count"]

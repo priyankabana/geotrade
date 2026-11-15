@@ -55,7 +55,7 @@ reprints the graph figures; `eval/README.md` says how the quality ones were meas
 | **Reference layer** | **23,020 companies** across US, India, UK, Germany, Canada, Australia · 82,751 aliases · 51 sectors · 23,018 geolocated |
 | **Gazetteer** | 51,059 usable aliases, **31,750 distinct match keys**, after suppressing names the corpus shows are generic rather than specific |
 | **Schema** | 25 tables. Citation and tenancy enforced in the schema, not in review |
-| **Tests** | **60 tests**: 30 extractor regressions from real filing sentences, 7 proving the backtest cannot see the future, 10 propagation properties, 13 proving tenant isolation |
+| **Tests** | **164 tests**: 30 extractor regressions from real filing sentences, 34 API contract and abuse, 25 data-integrity invariants, 21 ingestion, 12 migration, 12 browser end-to-end, 10 propagation properties, 13 tenant isolation, 7 proving the backtest cannot see the future |
 | **Operations** | `make alerts` (ingest stopped, precision dropped, read path over budget), `make backtest` gating on a committed baseline, structured request logs, API keys, [docs/RUNBOOK.md](docs/RUNBOOK.md) |
 | **API** | 5 ms median against a 200 ms budget. One relationship per row, with the number of citations that corroborate it |
 | **Frontend** | 3D globe (night earth, density bins, propagation arcs), Live / Replay / Simulate, country → sector → company drill-down, citation component, evidence tier shown on every edge |

@@ -209,3 +209,52 @@ def test_a_bad_api_key_is_refused(client):
 def test_every_response_reports_how_long_it_took(client):
     r = client.get("/v1/health")
     assert float(r.headers["x-response-time-ms"]) >= 0
+
+
+# ------------------------------------------------------- concurrency and cost
+
+def test_the_tenant_cannot_leak_between_pooled_connections(client):
+    """Connections are reused. The tenant is set with SET LOCAL inside the
+    transaction precisely so one request's tenant cannot survive into the next
+    request that happens to get the same connection. Hammer it and check."""
+    import concurrent.futures as cf
+    good_key = None                       # unauthenticated requests use the default tenant
+
+    def one(i):
+        if i % 3 == 0:
+            r = client.get("/v1/health", headers={"X-API-Key": "definitely-not-a-key"})
+            return ("bad", r.status_code)
+        r = client.get("/v1/events/hormuz-2026/exposure?limit=5")
+        return ("good", r.status_code, r.json().get("totalExposed"))
+
+    with cf.ThreadPoolExecutor(max_workers=12) as ex:
+        out = list(ex.map(one, range(60)))
+
+    assert all(r[1] == 401 for r in out if r[0] == "bad"), "a bad key was accepted"
+    totals = {r[2] for r in out if r[0] == "good"}
+    assert all(r[1] == 200 for r in out if r[0] == "good")
+    assert len(totals) == 1, f"the same query returned different totals: {totals}"
+    assert next(iter(totals)) > 0, "a valid request saw no rows - the tenant was lost"
+
+
+def test_exposure_does_not_issue_a_query_per_row(client):
+    """This endpoint ran its main query twice and then one more query per edge
+    row to ask who owned it - a value the row already carried. Count the round
+    trips rather than trust that it stays fixed."""
+    import main
+    calls = {"n": 0}
+    real = main.psycopg.Cursor.execute
+
+    def counting(self, *a, **kw):
+        calls["n"] += 1
+        return real(self, *a, **kw)
+
+    main.psycopg.Cursor.execute = counting
+    try:
+        r = client.get("/v1/events/hormuz-2026/exposure?limit=40")
+    finally:
+        main.psycopg.Cursor.execute = real
+    assert r.status_code == 200
+    rows = len(r.json()["rows"])
+    assert calls["n"] <= 12, (
+        f"{calls['n']} queries for {rows} rows - that is a query per row again")

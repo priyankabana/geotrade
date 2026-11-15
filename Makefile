@@ -1,4 +1,4 @@
-.PHONY: help dev down db psql db-ui query migrate load link-cik ingest extract propagate pipeline gazetteer gazetteer-df sample audit backtest alerts recall review key keys eval stats validate measure universe api web narrate demo build test clean
+.PHONY: help dev down db psql db-ui query migrate migrate-status load link-cik ingest extract propagate pipeline gazetteer gazetteer-df sample audit backtest alerts recall review key keys eval stats validate measure universe api web narrate demo build test clean
 
 help:
 	@grep -E '^[a-z-]+:.*##' $(MAKEFILE_LIST) | sed 's/:.*## /\t/' | expand -t22
@@ -28,10 +28,11 @@ query:                 ## Run one query: make query Q="select count(*) from enti
 down:                  ## Stop the stack
 	cd infra && docker compose down
 
-migrate:               ## Apply migrations
-	docker compose -f infra/docker-compose.yml exec -T db \
-	  psql -v ON_ERROR_STOP=1 -U atlas -d atlas -f /migrations/0001_initial_schema.sql
-	@echo "schema applied"
+migrate:               ## Apply every migration that has not run yet
+	python3 -I scripts/migrate.py
+
+migrate-status:        ## Show which migrations have run
+	python3 -I scripts/migrate.py --status
 
 load:                  ## Load data/ CSVs into Postgres
 	python3 -I scripts/load_csv.py

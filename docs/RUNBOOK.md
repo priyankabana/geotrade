@@ -110,9 +110,16 @@ curl -s -H "X-API-Key: $KEY" localhost:8000/v1/health
 ```
 
 **Tenancy tests skip instead of running.**
-The `atlas_app` role does not exist. Apply the migration:
+The `atlas_app` role does not exist. Apply the migrations:
 ```bash
-make migrate
+make migrate          # applies everything that has not run yet
+make migrate-status   # shows what has and has not
+```
+A database built before the migration runner existed has an empty ledger, so
+`make migrate` will try to re-run 0001 and fail on the first `CREATE TABLE`.
+Adopt it instead, which records the files without executing any of them:
+```bash
+python3 -I scripts/migrate.py --baseline
 ```
 
 **`make extract` produces far fewer edges than expected.**
@@ -135,7 +142,7 @@ real browser against a real database; it does not start them for you.
 
 | Cadence | Command | Why |
 |---|---|---|
-| On every change | `make test` | 60 tests: extraction, point-in-time, propagation, tenancy |
+| On every change | `make test` | 164 tests: extraction, ingestion, API, data integrity, migrations, point-in-time, propagation, tenancy, browser end-to-end |
 | On every change to extraction | `make backtest` | reach and surprise must not regress silently |
 | Weekly | `make alerts` | the three above |
 | Weekly | `make eval` | the graph's size, in public |

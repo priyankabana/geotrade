@@ -43,17 +43,16 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install -r apps/api/requirements.txt pytest
+      - run: pip install -r apps/api/requirements.txt pytest httpx
 
       # The schema must apply cleanly from nothing, every time. A migration that
       # only works against a database someone has already massaged is not a
       # migration.
-      - name: apply migrations
+      - name: apply migrations, then prove re-applying is a no-op
         run: |
-          for f in infra/migrations/*.sql; do
-            echo "-- $f"
-            psql -v ON_ERROR_STOP=1 "$DATABASE_URL" -f "$f"
-          done
+          python -I scripts/migrate.py
+          python -I scripts/migrate.py | tee /tmp/second.txt
+          grep -q "0 applied" /tmp/second.txt
 
       # Extraction is pure: these run with no data and no database.
       - name: extractor regression tests
