@@ -27,6 +27,33 @@ CAP_RATIO = 0.65   # below this the phrase is ordinary prose
 DF_FRAC   = 0.12   # above this fraction of documents it is a category
 MAXN      = 4
 
+def verdict(cap, low, doc_freq):
+    """Keep this alias, or suppress it, and say which reason.
+
+    Two independent ways a name earns suppression:
+
+      prose     - the corpus mostly writes it in lower case, so it is an
+                  ordinary phrase that happens to collide with a company name.
+                  "financial institutions" scored 3 capitalised against 623
+                  lower-case; "Applied Materials" scored 28 against 2.
+
+      category  - it is capitalised, but it turns up in so many filings that it
+                  names a category rather than a counterparty. Nasdaq appeared
+                  in 53% of our documents and Sarbanes-Oxley in 59%.
+
+    Order matters: prose is checked first, so a phrase that is both lower-case
+    and ubiquitous is reported as prose, which is the more useful reason.
+    """
+    total = cap + low
+    if total == 0:
+        return "keep"                  # never seen; nothing to judge it on
+    if cap / total < CAP_RATIO:
+        return "prose"
+    if doc_freq > DF_FRAC:
+        return "category"
+    return "keep"
+
+
 def main():
     conn = psycopg.connect(DSN)
     cur = conn.cursor()
@@ -78,12 +105,11 @@ def main():
     bad = []
     with open("eval/gazetteer_df.tsv", "w") as fh:
         fh.write("alias_norm\tcap\tlow\tcap_ratio\tdoc_freq\tverdict\n")
-        for k in sorted(seen, key=lambda k: -(cap[k] + low[k])):
+        for k in sorted(seen, key=lambda k: (-(cap[k] + low[k]), k)):
             c, l = cap[k], low[k]
             ratio = c / (c + l)
             df = len(docs[k]) / ndoc
-            why = ("prose"    if ratio < CAP_RATIO else
-                   "category" if df > DF_FRAC      else "keep")
+            why = verdict(c, l, df)
             if why != "keep":
                 bad.append(k)
             fh.write(f"{k}\t{c}\t{l}\t{ratio:.3f}\t{df:.3f}\t{why}\n")

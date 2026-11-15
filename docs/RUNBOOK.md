@@ -142,7 +142,7 @@ real browser against a real database; it does not start them for you.
 
 | Cadence | Command | Why |
 |---|---|---|
-| On every change | `make test` | 218 tests: extraction, ingestion, API, data integrity, migrations, point-in-time, propagation, tenancy, browser end-to-end |
+| On every change | `make test` | 257 tests: extraction, ingestion, API, data integrity, migrations, point-in-time, propagation, tenancy, browser end-to-end |
 | On every change to extraction | `make backtest` | reach and surprise must not regress silently |
 | Weekly | `make alerts` | the three above |
 | Weekly | `make eval` | the graph's size, in public |

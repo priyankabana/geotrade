@@ -30,19 +30,34 @@ JOIN entity et ON et.id = de.to_entity_id
 ORDER BY de.from_entity_id, de.to_entity_id, de.edge_type, de.confidence DESC, length(dc.quote) ASC
 """
 
+def stratified_sample(rows, n, seed, tier=lambda r: r[3] == "named_concentration"):
+    """Draw n relationships, keeping the two evidence tiers in proportion.
+
+    Stratified rather than simple random so the weaker tier cannot hide behind
+    the stronger one: with 28 concentration-backed relationships out of 207, a
+    plain draw of 80 could easily contain two of them and say nothing useful
+    about either class.
+
+    Pure and seeded, so the same population and seed always give the same
+    sample - which is the whole point of writing it to disk before judging.
+    Returns (concentration pool, narrative pool, the sample).
+    """
+    conc = [r for r in rows if tier(r)]
+    narr = [r for r in rows if not tier(r)]
+    rnd = random.Random(seed)
+    take = lambda pool, k: rnd.sample(pool, max(0, min(k, len(pool))))
+    share = round(n * len(conc) / max(len(rows), 1))
+    sample = take(conc, share) + take(narr, n - share)
+    rnd.shuffle(sample)
+    return conc, narr, sample
+
+
 def main():
     with psycopg.connect(DSN) as conn, conn.cursor() as cur:
         cur.execute(SQL)
         rows = cur.fetchall()
 
-    conc = [r for r in rows if r[3] == "named_concentration"]
-    narr = [r for r in rows if r[3] != "named_concentration"]
-    rnd  = random.Random(SEED)
-    # stratify so the weaker evidence class cannot hide behind the stronger one
-    take = lambda pool, k: rnd.sample(pool, min(k, len(pool)))
-    share = round(N * len(conc) / max(len(rows), 1))
-    sample = take(conc, share) + take(narr, N - share)
-    rnd.shuffle(sample)
+    conc, narr, sample = stratified_sample(rows, N, SEED)
 
     os.makedirs("eval", exist_ok=True)
     # Never the historical audit files by default: eval/pairs.txt holds the
