@@ -14,7 +14,7 @@ import psycopg
 
 UA    = os.environ.get("ATLAS_UA", "Atlas Capstone Research contact@example.com")
 DSN   = os.environ.get("DATABASE_URL", "postgresql://atlas:atlas@localhost:5432/atlas")
-LIMIT = int(sys.argv[1]) if len(sys.argv) > 1 else 250
+DEFAULT_LIMIT = 250
 CHUNK_CHARS, OVERLAP = 4800, 600
 
 # Sectors where suppliers name their customers. This is the inversion, as a filter.
@@ -88,7 +88,8 @@ def pick_spans(text):
         else: merged.append([s, e])
     return merged, ok, (sp if ok else {})
 
-def main():
+def main(limit=None):
+    LIMIT = DEFAULT_LIMIT if limit is None else limit
     conn = psycopg.connect(DSN, autocommit=False)
     cur = conn.cursor()
     cur.execute("""
@@ -187,4 +188,4 @@ def main():
     conn.close()
 
 if __name__ == "__main__":
-    main()
+    main(int(sys.argv[1]) if len(sys.argv) > 1 else None)

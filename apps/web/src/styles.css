@@ -293,3 +293,14 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   margin-left: 10px; font-size: 10px; letter-spacing: .03em; text-transform: uppercase;
   color: var(--surprise, #e0a33e);
 }
+
+/* The top bar is a single flex row, which is fine until a phone: the coverage
+   figures and the as-of date were running off the right edge and taking the
+   whole page sideways with them. Let it wrap, and let the long status line
+   take a row of its own. */
+@media (max-width: 560px) {
+  .topbar { flex-wrap: wrap; row-gap: 6px; padding: 10px 12px; }
+  .topbar .status { order: 3; flex-basis: 100%; font-size: 11px; }
+  .topbar .asof { margin-left: auto; font-size: 11px; }
+  .surfaces { flex-shrink: 0; }
+}

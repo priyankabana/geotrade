@@ -7,7 +7,7 @@ layer endpoints arrive with Phase 2.
 import os, hashlib, time, json, logging
 from contextlib import contextmanager
 from contextvars import ContextVar
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, Query
 from fastapi.middleware.cors import CORSMiddleware
 import psycopg
 from psycopg.rows import dict_row
@@ -82,6 +82,14 @@ async def authenticate_and_log(request: Request, call_next):
     Logs are JSON because the three alerts in the runbook are built on them and
     grepping prose does not scale past one laptop."""
     started = time.monotonic()
+
+    # Postgres text cannot hold a NUL byte, so one in a path parameter reached
+    # the driver and came back as a 500. Reject control characters at the edge
+    # instead: they are never part of a country code, a ticker or an event key.
+    raw = request.url.path
+    if "%00" in raw.lower() or any(ord(ch) < 32 or ord(ch) == 127 for ch in raw):
+        return _json_error(422, "path contains a control character")
+
     key = request.headers.get("x-api-key")
     tenant = _tenant_for_key(key) if key else None
     if key and tenant is None:
@@ -174,7 +182,7 @@ def countries():
         } for r in c.fetchall()]
 
 @app.get("/v1/globe/points")
-def globe_points(limit: int = 4000):
+def globe_points(limit: int = Query(4000, ge=1, le=30000)):
     """Every geolocated company HQ. The globe should show the data, not just a shape."""
     with cur() as c:
         c.execute("""
@@ -210,7 +218,7 @@ def sectors(iso2: str):
         } for r in c.fetchall()]
 
 @app.get("/v1/countries/{iso2}/sectors/{sector}/companies")
-def companies(iso2: str, sector: str, limit: int = 200):
+def companies(iso2: str, sector: str, limit: int = Query(200, ge=1, le=1000)):
     with cur() as c:
         c.execute("""
             SELECT li.company_uid, e.common_name, e.legal_name, m.band,
@@ -248,7 +256,7 @@ def company(company_uid: str):
         """, (company_uid,))
         r = c.fetchone()
         if not r:
-            raise HTTPException(404, f"no company {company_uid}")
+            raise HTTPException(404, f"no company {company_uid[:64]}")
         # CUSIP (CUSIP Global Services) and SEDOL (LSEG) are licensed identifiers.
         # They may sit in our own store; they do not go out in a response.
         c.execute("""SELECT scheme, value FROM entity_identifier
@@ -458,7 +466,7 @@ def events():
 
 
 @app.get("/v1/events/{event_id}/exposure")
-def exposure(event_id: str, limit: int = 40):
+def exposure(event_id: str, limit: int = Query(40, ge=1, le=500)):
     with cur() as c:
         c.execute("""SELECT ev.id, ev.name, ev.event_type, ev.first_occurred_utc,
                             ev.became_public_utc, ev.confirmation_level,
@@ -469,7 +477,7 @@ def exposure(event_id: str, limit: int = 40):
                      WHERE ev.id::text = %s OR ev.dedupe_key = %s""", (event_id, event_id))
         ev = c.fetchone()
         if not ev:
-            raise HTTPException(404, f"no event {event_id}")
+            raise HTTPException(404, f"no event {event_id[:64]}")
 
         c.execute("""
             SELECT ep.score, ep.hops, ep.is_surprising, ep.as_of, ep.scorer_version,
