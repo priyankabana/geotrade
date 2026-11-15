@@ -190,9 +190,18 @@ worth reading. Of the 19 narrative-tier failures:
   entity. "Carraro S.p.A." resolving to Carraro India Limited; "ISTAR", a
   military acronym, resolving to iStar Inc. This class now has a review queue
   (`make review`): of the 80 ambiguous aliases that actually occur in the
-  corpus, 50 were one company under different spellings and 6 collisions have
-  dated human decisions - which is what removed Cenntro's edge to Metro Inc.
-  Roughly 24 still fall back to whichever row the database returns first.
+  corpus, 45 are one company under different spellings, 11 collisions have
+  dated human decisions, and roughly 24 still fall back to whichever row the
+  database returns first.
+
+  Testing that queue found that its own auto-merge rule was too eager. It
+  stripped the legal form before comparing, so "Pfizer Inc" and "Pfizer Ltd"
+  became the same string - as did "Siemens AG" and "Siemens Ltd", which is
+  Siemens India. Five of the first fifty automatic merges were wrong that way.
+  The rule now treats the legal form as jurisdiction rather than furniture, and
+  the five went back to a person. That fixed two edges the audit had already
+  marked wrong: Codexis now depends on Pfizer Inc. rather than Pfizer Ltd., and
+  Data I/O on Siemens AG rather than Siemens Ltd.
 - **6 not a dependency** - a company named in a sentence about something else,
   where no surface cue distinguishes it.
 - **4 competitor lists** - bulleted lists of competitors sitting directly above a

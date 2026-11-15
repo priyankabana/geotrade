@@ -22,15 +22,58 @@ from extract import TOKEN, CONNECTORS, _proper
 
 DSN  = os.environ.get("DATABASE_URL", "postgresql://atlas:atlas@localhost:5432/atlas")
 WHO  = os.environ.get("ATLAS_REVIEWER", os.environ.get("USER", "unknown"))
-SUFFIX = re.compile(r"(?i)\b(inc|corp|corporation|co|ltd|limited|llc|plc|nv|sa|ag|lp|"
-                    r"holdings?|group|the|class\s+[a-z]|series\s+[a-z]|usa)\b\.?")
+# A legal form says which jurisdiction a company is registered in, and that is
+# identity, not furniture. Stripping it outright made "Metro AG" (a German
+# wholesaler) and "Metro Inc." (a Canadian grocer) the same string, and
+# "Pfizer Inc" the same as "Pfizer Ltd" - which is precisely the entity
+# resolution error the audit kept finding. Forms are grouped into families
+# instead: two names merge only if what is left matches AND their forms could
+# belong to the same company.
+FORM_FAMILY = {
+    "inc": "us", "incorporated": "us", "corp": "us", "corporation": "us",
+    "llc": "us", "lp": "lp", "llp": "lp",
+    "ltd": "uk", "limited": "uk", "plc": "uk",
+    "ag": "de", "gmbh": "de", "se": "de",
+    "nv": "nl", "bv": "nl",
+    "sa": "fr", "spa": "it", "ab": "se", "as": "no", "oyj": "fi",
+    "pte": "sg", "pty": "au", "kk": "jp",
+}
+# Words that really are furniture: they say nothing about who the company is.
+NOISE_WORD = re.compile(r"(?i)\b(the|holdings?|group|usa|co|company|companies"
+                        r"|class\s+[a-z]|series\s+[a-z]|registered\s+shares|adr|ads)\b")
+
+
+def _clean(name):
+    cleaned = re.sub(r"[^a-z0-9& ]", " ", (name or "").lower())
+    return NOISE_WORD.sub(" ", cleaned).split()
 
 
 def bare(name):
-    """A legal name with the corporate furniture stripped, for deciding whether
-    two candidates are the same company spelled differently."""
-    cleaned = re.sub(r"[^a-z0-9& ]", " ", (name or "").lower())
-    return " ".join(SUFFIX.sub(" ", cleaned).split())
+    """The identifying part of a legal name, with furniture removed but the
+    legal form kept out of the comparison and reported separately."""
+    toks = [t for t in _clean(name) if t not in FORM_FAMILY]
+    return " ".join(toks)
+
+
+def form(name):
+    """The jurisdiction family implied by the legal form, or None if the name
+    does not state one."""
+    for t in reversed(_clean(name)):
+        if t in FORM_FAMILY:
+            return FORM_FAMILY[t]
+    return None
+
+
+def same_company(a, b):
+    """Safe enough to merge without asking a person?
+
+    Only when the identifying words match and the legal forms do not
+    contradict - one may be absent, but a German AG and a US Inc are two
+    companies that happen to share a name."""
+    if not bare(a) or bare(a) != bare(b):
+        return False
+    fa, fb = form(a), form(b)
+    return fa is None or fb is None or fa == fb
 
 
 def corpus_counts(cur, keys):
@@ -102,7 +145,7 @@ def main():
     if auto:
         merged = 0
         for _, alias, _n, cands in live:
-            if len({bare(c) for c in cands}) == 1:      # same company, spelled differently
+            if all(same_company(cands[0], c) for c in cands[1:]):
                 cur.execute("""INSERT INTO alias_decision
                                  (alias_norm, decision, decided_by, note)
                                VALUES (%s,'merge',%s,%s)
@@ -118,7 +161,7 @@ def main():
         live = [(k, a, n, c) for k, a, n, c in live if a in queue]
 
     for cnt, alias, n, cands in live[:30]:
-        same = len({bare(c) for c in cands}) == 1
+        same = all(same_company(cands[0], c) for c in cands[1:])
         print(f"  {alias:<34} {cnt:>4}x  {n} entities  "
               f"{'[same company, spellings differ]' if same else '[COLLISION]'}")
         for c in cands[:4]:
