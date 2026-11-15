@@ -36,7 +36,7 @@ about Hyundai Motor Company) counts as wrong.
 
 ## Results
 
-Graph as measured: **421 cited edges, 207 distinct relationships, 83 companies.**
+Graph as measured: **363 cited edges, 207 distinct relationships, 83 companies.**
 
 | Tier | Population | Judged | Correct | Precision |
 |---|---|---|---|---|
@@ -165,7 +165,14 @@ Each of these came from a specific misread edge, not from theory.
     Potash and Parsley Energy. The recall measurement found it. Multi-word names
     are now judged only by how the corpus writes them.
 
-Full history in the `EXTRACTOR_VERSION` string: `rules-1.0` -> `rules-3.0`.
+11. **One sentence was asserting two opposite things.** "We rely on Google as
+    an important marketing channel, and if Google changes its algorithms..."
+    named Google three times near different cues, and produced an edge in each
+    direction. A sentence now asserts one relationship per company - the
+    best-evidenced mention, which is the one nearest its cue and the one
+    carrying a figure. 421 cited edges became 363 with no relationship lost.
+
+Full history in the `EXTRACTOR_VERSION` string: `rules-1.0` -> `rules-3.2`.
 
 ## Regression tests
 

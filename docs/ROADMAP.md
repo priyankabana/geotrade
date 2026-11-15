@@ -16,7 +16,7 @@ backed by a command you can run or a file you can read.
 |---|---|---|
 | **0 — Foundations** | done | 25-table schema, `make dev` from a cold machine, CI applies every migration to an empty database |
 | **1 — Documents in, chunks out** | done | 225 filings, 14,738 chunks with character offsets, `make ingest` |
-| **2 — The graph** | done | 421 cited edges / 207 relationships; `edges_as_of` is now the only read path; 7 point-in-time tests including the one that proves the backtest cannot see the future |
+| **2 — The graph** | done | 363 cited edges / 207 relationships; `edges_as_of` is now the only read path; 7 point-in-time tests including the one that proves the backtest cannot see the future |
 | **3 — Events and propagation** | done | 26-event benchmark, bounded 3-hop walk, 10 property tests, exposure precomputed, surprise rate on `/v1/metrics` |
 | **4 — Replay and simulation** | done, bar one item | point-in-time boundary drawn on the scrubber, `make backtest` gates on regression against a committed baseline |
 | **5 — Hardening and release** | mostly done | tenancy proven by 13 tests, three alerts in `make alerts`, structured request logs, `docs/RUNBOOK.md`, API keys |

@@ -192,24 +192,26 @@ def test_every_suppressed_alias_says_why(tx):
                                               OR btrim(ambiguity_note) = '')""") == 0
 
 
-def test_extraction_is_reproducible_from_what_is_stored(tx):
-    """Determinism, checked against the record rather than by re-running.
+def test_one_sentence_never_says_a_company_is_both_supplier_and_customer(tx):
+    """A company named twice in one sentence gives one claim per mention - in
+    "Boeing and RTX were our largest customers, with Boeing generating 13%",
+    only the second mention sits next to a figure, so the percentages differ
+    legitimately and the API picks the better-evidenced one.
 
-    Every claim names the extractor version that produced it and the exact
-    offsets it came from, so the same corpus and the same version must give the
-    same claim. Two claims from one sentence naming one company, differing in
-    what they assert, would mean the output depends on something we are not
-    recording - and the graph would stop being reproducible."""
+    What must never differ is the direction. If one sentence says a company is
+    both our supplier and our customer, the extractor has contradicted itself
+    and one of the two edges is wrong."""
     tx.execute("""
         SELECT count(*) FROM (
-          SELECT chunk_id, char_start, counterparty_entity_id, extractor_version
+          SELECT chunk_id, char_start, counterparty_entity_id
           FROM dependency_claim
-          GROUP BY 1,2,3,4
-          HAVING count(DISTINCT direction || relationship_class
-                       || coalesce(materiality_pct::text,'-')) > 1
+          GROUP BY 1,2,3
+          HAVING count(DISTINCT direction) > 1
+              OR count(DISTINCT relationship_class) > 1
         ) d
     """)
-    assert tx.fetchone()[0] == 0, "one sentence produced contradictory claims"
+    assert tx.fetchone()[0] == 0, "one sentence placed a company on both sides"
+
 
 
 def test_one_extractor_version_produced_the_whole_graph(tx):

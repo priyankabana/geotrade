@@ -143,7 +143,7 @@ ALL 28 concentration-backed relationships (exhaustive, not sampled)
 
 [21] Applied Optoelectronics Inc.  -->  Microsoft Corporation
      pct=None
-     In 2025, 2024 and 2023 , Microsoft accounted for 28.8%, 43.7% and 46.6% of our revenue,
+     In 2025, 2024 and 2023 , Microsoft accounted for 28.8%, 46.6% and 18.4% of our revenue,
      respectively, and in 2024, Oracle accounted for 12.4% of our revenue.
 
 [22] CTS Corporation  -->  Toyota Motor Corporation

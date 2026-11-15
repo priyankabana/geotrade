@@ -14,7 +14,7 @@ repository:
 
 | On the page | Where it comes from |
 |---|---|
-| 225 filings, 421 edges, 207 relationships, 83 companies | `make eval` |
+| 225 filings, 363 edges, 207 relationships, 83 companies | `make eval` |
 | 28 of 28 concentration relationships correct | `make audit`, judged by hand |
 | 41 of 60 narrative relationships correct | `eval/narrative_sample.txt`, seed 991103 |
 | 21 of 21 percentages correct, 7 withheld | `eval/concentration_all.txt` |

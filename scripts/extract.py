@@ -21,7 +21,7 @@ from collections import defaultdict
 import psycopg
 
 DSN = os.environ.get("DATABASE_URL", "postgresql://atlas:atlas@localhost:5432/atlas")
-EXTRACTOR_VERSION = "rules-3.1"
+EXTRACTOR_VERSION = "rules-3.2"
 SCORER_VERSION    = "deterministic-1.0"
 
 # ---------------------------------------------------------------- lexicon
@@ -362,7 +362,19 @@ def extract_sentence(sent, filer_tokens, gaz):
             substitutability=sub, materiality_pct=pct, materiality_text=basis,
             evidence_type=ev,
             confidence=max(0.05, min(0.97, round(conf, 3)))))
-    return out
+
+    # A company named several times in one sentence yields one candidate per
+    # mention, and those can disagree: "we rely on Google ... if Google changes
+    # its algorithms" put Google on both sides of the same sentence and produced
+    # two contradictory edges. One sentence asserts one relationship per company,
+    # so keep the best-evidenced reading - highest confidence, which is the
+    # mention nearest its cue and the one carrying a disclosed percentage.
+    best = {}
+    for cl in out:
+        k = cl["counterparty_entity_id"]
+        if k not in best or cl["confidence"] > best[k]["confidence"]:
+            best[k] = cl
+    return list(best.values())
 
 
 def main():

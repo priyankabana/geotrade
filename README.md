@@ -59,7 +59,7 @@ reprints the graph figures; `eval/README.md` says how the quality ones were meas
 | **Operations** | `make alerts` (ingest stopped, precision dropped, read path over budget), `make backtest` gating on a committed baseline, structured request logs, API keys, [docs/RUNBOOK.md](docs/RUNBOOK.md) |
 | **API** | 5 ms median against a 200 ms budget. One relationship per row, with the number of citations that corroborate it |
 | **Frontend** | 3D globe (night earth, density bins, propagation arcs), Live / Replay / Simulate, country → sector → company drill-down, citation component, evidence tier shown on every edge |
-| **Evidence layer** | **225 real filings** from SEC EDGAR · 14,738 chunks with character offsets · 664 cited claims · **421 cited edges**, which are **207 distinct relationships** across 83 companies |
+| **Evidence layer** | **225 real filings** from SEC EDGAR · 14,738 chunks with character offsets · 571 cited claims · **363 cited edges**, which are **207 distinct relationships** across 83 companies |
 | **Measured precision** | **28 of 28 correct** where the filing states a percentage (exhaustive) · **68.3%** on a random sample of 60 where it only names a counterparty · [`eval/README.md`](eval/README.md) |
 | **Measured attribution** | **Every displayed percentage (21 of 21) is the right number for the right company.** 7 further relationships are shown without a figure because the sentence does not permit safe attribution |
 | **Measured recall** | Of 60 disclosure-shaped sentences read by hand, 5 name a company in our markets and we captured all 5. **48 of the 60 name nobody at all** - the ceiling on the whole method, and the reason the graph is small |
