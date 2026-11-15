@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atlas</title>
+<meta name="description" content="A dependency graph of public companies, built from what they have already disclosed. Every edge cites the sentence that proves it.">
+<style>
+  :root{
+    --bg:#0c0d10; --panel:#131519; --line:#23262e; --ink:#e8eaee; --muted:#8a8f98;
+    --accent:#6ea8fe; --ok:#2f9e68; --warn:#e0a33e; --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  @media (prefers-color-scheme: light){
+    :root:not([data-theme="dark"]){
+      --bg:#fbfbfc; --panel:#fff; --line:#e4e6ea; --ink:#15171c; --muted:#6a6f78;
+      --accent:#2563c9; --ok:#1d7a4c; --warn:#a9741a;
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font:16px/1.65 ui-sans-serif,-apple-system,"Segoe UI",Inter,system-ui,sans-serif;
+       -webkit-font-smoothing:antialiased}
+  .wrap{max-width:860px;margin:0 auto;padding:0 16px}
+  header{padding:72px 0 44px;border-bottom:1px solid var(--line)}
+  .brand{font:600 13px/1 var(--mono);letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  h1{font-size:clamp(28px,5vw,44px);line-height:1.15;margin:20px 0 14px;letter-spacing:-.02em}
+  h2{font-size:21px;margin:48px 0 14px;letter-spacing:-.01em}
+  h3{font-size:15px;margin:26px 0 8px}
+  .lede{font-size:clamp(17px,2.3vw,19px);color:var(--muted);max-width:62ch;margin:0}
+  p{max-width:68ch}
+  .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+  .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;
+         background:var(--line);border:1px solid var(--line);border-radius:10px;
+         overflow:hidden;margin:34px 0}
+  @media (min-width:620px){ .stats{grid-template-columns:repeat(3,1fr)} }
+  .stat{background:var(--panel);padding:16px 18px}
+  .stat b{display:block;font:600 24px/1.2 var(--mono);font-variant-numeric:tabular-nums}
+  .stat span{font-size:12px;color:var(--muted);letter-spacing:.02em}
+  .quote{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--accent);
+         border-radius:8px;padding:16px 18px;margin:20px 0}
+  .quote p{margin:0 0 10px;font-size:15px}
+  .cite{font:11px/1.5 var(--mono);color:var(--muted);letter-spacing:.02em}
+  .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:18px 0}
+  table{border-collapse:collapse;width:100%;font-size:14px}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font:600 11px/1.4 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+  td.n{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .tag{display:inline-block;font:500 10px/1.6 var(--mono);letter-spacing:.05em;
+       text-transform:uppercase;padding:1px 7px;border-radius:3px;border:1px solid}
+  .hard{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 40%,transparent);
+        background:color-mix(in srgb,var(--ok) 12%,transparent)}
+  .soft{color:var(--muted);border-color:color-mix(in srgb,var(--muted) 35%,transparent)}
+  code{font-family:var(--mono);font-size:13px;background:var(--panel);
+       border:1px solid var(--line);border-radius:4px;padding:1px 5px}
+  pre{background:var(--panel);border:1px solid var(--line);border-radius:8px;
+      padding:14px 16px;overflow-x:auto;font-size:13px;line-height:1.55}
+  pre code{background:none;border:none;padding:0}
+  footer{margin:64px 0 48px;padding-top:22px;border-top:1px solid var(--line);
+         font-size:13px;color:var(--muted)}
+  .small{font-size:14px;color:var(--muted)}
+  ul{max-width:68ch}
+  li{margin:6px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="brand">Atlas</div>
+  <h1>Who depends on whom, and the sentence that proves it.</h1>
+  <p class="lede">A dependency graph of public companies, built only from what those
+  companies have already disclosed. Every edge carries the sentence in the filing
+  that supports it. If we cannot show you the sentence, we do not make the claim.</p>
+</header>
+
+<h2>The asymmetry this is built on</h2>
+<p>When a factory burns down, everyone can name the companies hit directly. The
+companies hit <em>next</em> — because they quietly buy something from the ones
+that were hit — are much harder to find, and nobody publishes a list of them.</p>
+
+<p>You cannot get that list from the obvious direction. A large buyer has no
+reason to publish its suppliers and every reason not to. But a small supplier is
+<strong>required</strong> to disclose a customer worth more than about 10% of its
+revenue, because losing that customer would take a tenth of the business with
+it. So the small company names the large one, and we read it from that end.</p>
+
+<div class="quote">
+  <p>&ldquo;Sales to General Motors Company (GM) were approximately 44&nbsp;% of our
+  consolidated net sales in 2025, 42&nbsp;% in 2024, and 39&nbsp;% in 2023.&rdquo;</p>
+  <div class="cite">Dauch Corporation &middot; Form 10-K &middot; filed 2026-02-13 &middot; SEC EDGAR</div>
+</div>
+
+<p>General Motors does not publish that. Dauch has to.</p>
+
+<h2>What is in it today</h2>
+<div class="stats">
+  <div class="stat"><b>225</b><span>SEC filings read</span></div>
+  <div class="stat"><b>421</b><span>cited edges</span></div>
+  <div class="stat"><b>207</b><span>distinct relationships</span></div>
+  <div class="stat"><b>83</b><span>companies with edges</span></div>
+  <div class="stat"><b>23,020</b><span>companies in reference layer</span></div>
+  <div class="stat"><b>26</b><span>events in the benchmark</span></div>
+</div>
+
+<h2>How good it is, measured rather than claimed</h2>
+<p>We read the cited sentences by hand and counted. Two tiers of evidence, measured
+separately, because averaging them would hide the difference that matters.</p>
+
+<div class="scroll"><table>
+  <tr><th>Evidence</th><th>Judged</th><th>Correct</th><th>Method</th></tr>
+  <tr>
+    <td><span class="tag hard">disclosed %</span> the filing states a percentage</td>
+    <td class="n">28</td><td class="n">28 &middot; 100%</td><td class="small">exhaustive, not sampled</td>
+  </tr>
+  <tr>
+    <td><span class="tag soft">named only</span> the filing names a counterparty</td>
+    <td class="n">60</td><td class="n">41 &middot; 68.3%</td><td class="small">seeded random sample</td>
+  </tr>
+</table></div>
+
+<p>Every percentage we display is the right number for the right company
+(21 of 21). Where a sentence does not let us attribute a figure safely, we show
+no figure rather than guess — that applies to 7 of the 28.</p>
+
+<p class="small">The first audit measured 62.5%. Getting here meant <em>removing</em>
+edges: 803 down to 207. The sample, the seed and every judgement are in the
+repository.</p>
+
+<h2>What we also found, and would rather say out loud</h2>
+<p>We measured recall by sweeping the whole corpus for disclosure-shaped
+sentences and reading 60 of them. Of those 60:</p>
+<ul>
+  <li><strong>48 name no company at all.</strong> &ldquo;One customer accounted for
+      42.86% of total sales.&rdquo; That satisfies the regulator completely and
+      tells us nothing.</li>
+  <li><strong>7 name a party outside the markets we cover</strong> — a government
+      department, companies listed in Taiwan or China, a university.</li>
+  <li><strong>5 name a public company we cover, and we captured all 5.</strong></li>
+</ul>
+<p>So roughly one disclosure in twelve names a counterparty we can resolve. That
+is a ceiling on the method, not a defect in the code, and it is the honest answer
+to why the graph is small.</p>
+
+<h2>Rules we hold ourselves to</h2>
+<ul>
+  <li><strong>Every edge cites a sentence.</strong> <code>chunk_id</code> is
+      <code>NOT NULL</code> with a foreign key — a constraint the data cannot
+      violate, not a convention we remember.</li>
+  <li><strong>The model never scores anything.</strong> It reads one sentence and
+      returns structure. Scoring is deterministic and versioned, so the same
+      inputs give the same number forever.</li>
+  <li><strong>No backtest can see the future.</strong> Every read goes through one
+      function that filters by publication date. Replay a 2021 event and the
+      graph correctly returns nothing, and says why.</li>
+  <li><strong>No recommendations.</strong> We show who is exposed and the evidence.
+      We never tell anyone what to buy or sell.</li>
+  <li><strong>Public sources only.</strong> Regulatory filings, fetched by our own
+      code. No employer systems, no licensed feeds, no credentials.</li>
+</ul>
+
+<h2>Run it</h2>
+<pre><code>make dev        # Postgres + PostGIS, migrations, reference data
+make pipeline   # filings -> chunks -> cited claims -> graph -> exposure
+make api        # read API on :8000
+make web        # globe on :5173
+
+make eval       # what is in the graph right now
+make audit      # every concentration-backed relationship, with its sentence
+make backtest   # replay 26 real events, fail on regression
+make test       # 60 tests
+make alerts     # ingest stopped / precision dropped / read path over budget</code></pre>
+
+<footer>
+  Final-year capstone, Group&nbsp;G27, Department of Computer Engineering,
+  Vishwakarma University, Pune. Built by Ishanya Bhumkar, Krish Oswal,
+  Priyanka Bana, Anushka Pallod and Ayush Gawali, guided by Prof.&nbsp;Tareek Pattewar.<br><br>
+  Company and filing data from <a href="https://www.sec.gov/edgar">SEC EDGAR</a>
+  (public domain). Place coordinates from <a href="https://www.geonames.org/">GeoNames</a>,
+  CC&nbsp;BY&nbsp;4.0. Atlas makes no investment recommendations.
+</footer>
+
+</div>
+</body>
+</html>
