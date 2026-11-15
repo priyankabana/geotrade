@@ -63,7 +63,7 @@ reprints the graph figures; `eval/README.md` says how the quality ones were meas
 | **Measured precision** | **28 of 28 correct** where the filing states a percentage (exhaustive) · **68.3%** on a random sample of 60 where it only names a counterparty · [`eval/README.md`](eval/README.md) |
 | **Measured attribution** | **Every displayed percentage (21 of 21) is the right number for the right company.** 7 further relationships are shown without a figure because the sentence does not permit safe attribution |
 | **Measured recall** | Of 60 disclosure-shaped sentences read by hand, 5 name a company in our markets and we captured all 5. **48 of the 60 name nobody at all** - the ceiling on the whole method, and the reason the graph is small |
-| **Events & exposure** | 7 real disruptions seeded · bounded 3-hop deterministic walk · **434 precomputed exposure rows** across a **26-event benchmark**, 54 of them more than one hop from the event |
+| **Events & exposure** | 26 real disruptions seeded · bounded 3-hop deterministic walk (the seed is hop 1, so two dependency edges are traversed) · **434 precomputed exposure rows** across a **26-event benchmark**, 54 of them more than one hop from the event |
 | **Demo** | [`demo/atlas-demo.mp4`](demo/atlas-demo.mp4) — 3 minutes, recorded against the real app and database |
 | **Not yet** | Stage two of extraction is deterministic rules, not an LLM — the interface is ready for one, and `eval/README.md` names the failures that need it. No customer conversations. See [docs/ROADMAP.md](docs/ROADMAP.md) for everything still open, named rather than quietly dropped |
 

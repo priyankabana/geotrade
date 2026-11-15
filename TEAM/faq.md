@@ -329,6 +329,10 @@ built from 2025 filings should fail us, and would be right to.
 We seed the companies directly affected, then walk the graph outward up to three
 hops, multiplying by a decay factor of 0.55 at each hop.
 
+Be precise if pressed: **the seed is hop 1**, so a three-hop walk traverses two
+dependency edges. A company at hop 3 is two disclosed dependencies away from the
+companies the event hit directly.
+
 **Q57. Why three hops?**
 Beyond three the signal is weaker than the noise in our own precision. With 68%
 precision on narrative edges, a three-hop path is three uncertain steps

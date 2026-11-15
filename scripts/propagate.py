@@ -164,6 +164,45 @@ EVENTS = [
 ]
 
 
+FLOOR = 0.02   # below this a company is not meaningfully exposed
+
+
+def walk(out_edges, seeds, severity, max_hops=None, decay=None, floor=None):
+    """Spread an event outward across the dependency graph.
+
+    `out_edges[b]` lists everyone who depends on b, so a hit on b reaches them.
+    Seeds are the companies the event lands on directly and sit at hop 1; each
+    further hop multiplies by the edge's weight, the edge's confidence and a
+    decay constant, and anything below the floor is dropped.
+
+    Deterministic: same graph, same seeds, same numbers, every time. Pure, so
+    it can be tested without a database - which is why it lives here rather than
+    inside main().
+    """
+    max_hops = MAX_HOPS if max_hops is None else max_hops
+    decay    = DECAY    if decay    is None else decay
+    floor    = FLOOR    if floor    is None else floor
+
+    best = {s: (severity, 1, []) for s in seeds}
+    for hop in range(2, max_hops + 1):
+        nxt = []
+        for node, (sc, h, p) in list(best.items()):
+            if h != hop - 1:
+                continue
+            for dependant, w, conf in out_edges.get(node, []):
+                new = sc * w * conf * decay
+                if new < floor:
+                    continue
+                cur = best.get(dependant)
+                if cur is None or new > cur[0]:
+                    nxt.append((dependant, new, hop, p + [node]))
+        for n, sc, h, p in nxt:
+            cur = best.get(n)
+            if cur is None or sc > cur[0]:
+                best[n] = (sc, h, p)
+    return best
+
+
 def main():
     conn = psycopg.connect(DSN, autocommit=False)
     cur = conn.cursor()
@@ -253,32 +292,10 @@ def main():
                     (eid, e["sectors"]))
         seeds = list({*seeds, *[r[0] for r in cur.fetchall()]})
 
-        best = {}
-        paths = {}
-        frontier = [(s, e["severity"], 1, []) for s in seeds]
-        for s, sc, h, p in frontier:
-            best[s] = (sc, h, p)
-
-        # Walk outward. An edge "A depends on B" means a hit on B reaches A.
-        for hop in range(2, MAX_HOPS + 1):
-            nxt = []
-            for node, (sc, h, p) in list(best.items()):
-                if h != hop - 1:
-                    continue
-                for dependant, w, conf in out_edges.get(node, []):
-                    new = sc * w * conf * DECAY
-                    if new < 0.02:
-                        continue
-                    cur_best = best.get(dependant)
-                    if cur_best is None or new > cur_best[0]:
-                        nxt.append((dependant, new, hop, p + [node]))
-            for n, sc, h, p in nxt:
-                cur_best = best.get(n)
-                if cur_best is None or sc > cur_best[0]:
-                    best[n] = (sc, h, p)
+        best = walk(out_edges, seeds, e["severity"])
 
         rows = [(tenant, eid, ent, round(sc, 4), h, h >= 2, asof, SCORER)
-                for ent, (sc, h, p) in best.items() if sc >= 0.02]
+                for ent, (sc, h, p) in best.items() if sc >= FLOOR]
         for r in rows:
             cur.execute("""INSERT INTO exposure_precompute
                 (tenant_id, event_id, entity_id, score, hops, is_surprising,
