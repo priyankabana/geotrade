@@ -38,7 +38,13 @@ export default function SectorQuotes({ companies, sectorName }: {
 
   return (
     <div className="sector-quotes">
-      <h4>Today <span className="by">TradingView</span></h4>
+      {/* Clicking a row here leaves for TradingView, and that surprised a
+          reader who reasonably expected our own company page. We cannot
+          intercept a click inside a cross-origin iframe, and suppressing
+          TradingView's links would breach the terms the free widget comes
+          with - so the honest fix is to say where the rows go. The list
+          underneath is ours and stays in the app. */}
+      <h4>Today <span className="by">TradingView ↗</span></h4>
       <TV key={`q-${sectorName}-${theme}-${symbols.length}`} height={44 + symbols.length * 38}
           src="https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js"
           config={{
@@ -47,6 +53,7 @@ export default function SectorQuotes({ companies, sectorName }: {
             symbolsGroups: [{ name: sectorName, symbols:
               symbols.map(([s, d]) => ({ name: s, displayName: d })) }],
           }} />
+      <p className="quotes-note">Rows open TradingView. The list below stays here.</p>
     </div>
   )
 }

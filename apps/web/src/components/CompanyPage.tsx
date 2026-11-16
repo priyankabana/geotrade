@@ -62,7 +62,8 @@ export default function CompanyPage({
       <div className="cpage-body">
         {tab === 'market' ? (
           tvSym
-            ? <StockPanel symbol={tvSym} name={detail.commonName} />
+            ? <StockPanel symbol={tvSym} name={detail.commonName}
+                          companyUid={detail.companyUid} />
             : <Empty title="No chart for this listing"
                      body={`We hold ${detail.listings.map(l => `${l.exchangeMic}:${l.ticker}`).join(', ') || 'no listing'} for this company, and none of those venues maps to a TradingView symbol we can address with confidence. A chart of the right ticker on the wrong exchange is a different company's price, so we show none.`} />
         ) : tab === 'up' ? (

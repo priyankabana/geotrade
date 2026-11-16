@@ -550,3 +550,17 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
    and was rendering in the browser's default blue on a dark surface. */
 .sig-body cite a, .stock .disclaimer a, .cmeta a { color: var(--accent); }
 .sig-body cite a:hover, .stock .disclaimer a:hover { color: var(--ink); }
+
+/* ---- headlines ---------------------------------------------------------- */
+.newslist { list-style: none; margin: 0; padding: 0; border: 1px solid var(--hairline-2); }
+.newslist li { padding: 9px 12px; border-bottom: 1px solid var(--hairline-2); }
+.newslist li:last-child { border-bottom: 0; }
+.newslist a { color: var(--ink); text-decoration: none; font-size: 13px; line-height: 1.35; display: block; }
+.newslist a:hover { color: var(--accent); }
+.newslist .meta {
+  display: block; margin-top: 3px; font-size: 10px; letter-spacing: .04em;
+  color: var(--ink-3); font-family: var(--font-num);
+}
+.quotes-note {
+  margin: 5px 0 0; font-size: 10px; color: var(--ink-3); letter-spacing: .02em;
+}

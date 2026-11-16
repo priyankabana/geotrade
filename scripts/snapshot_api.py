@@ -118,6 +118,9 @@ def main():
     for uid in sorted(uids):
         try:
             save(f"/v1/companies/{uid}", get(f"/v1/companies/{uid}"))
+            # Headlines are per company and the page asks for them separately,
+            # so the snapshot needs a file per company too.
+            save(f"/v1/companies/{uid}/news", get(f"/v1/companies/{uid}/news"))
         except urllib.error.HTTPError as e:
             if e.code != 404:
                 raise

@@ -157,3 +157,14 @@ export type Graph = {
   walk: { maxHops: number; decay: number; floor: number; scorerVersion: string }
 }
 export const getGraph = () => safe<Graph | null>('/v1/graph', null)
+
+// --- company news -----------------------------------------------------------
+export type NewsItem = {
+  url: string; headline: string; domain: string | null
+  language: string | null; publishedAt: string | null
+}
+export type CompanyNews = {
+  items: NewsItem[]; source: string; lastCheckedUtc: string | null
+}
+export const getCompanyNews = (uid: string) =>
+  safe<CompanyNews | null>(`/v1/companies/${encodeURIComponent(uid)}/news`, null)

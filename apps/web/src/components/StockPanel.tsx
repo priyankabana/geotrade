@@ -13,6 +13,7 @@
  *  borrowing credibility from the other.
  */
 import { useEffect, useRef, useState } from 'react'
+import * as api from '../client'
 
 /** Which theme the page is actually painted in.
  *
@@ -104,8 +105,14 @@ export function TV({ src, config, height }: { src: string; config: object; heigh
 
 const BASE = { isTransparent: true, locale: 'en' }
 
-export default function StockPanel({ symbol, name }: { symbol: string; name: string }) {
+export default function StockPanel({ symbol, name, companyUid }:
+  { symbol: string; name: string; companyUid?: string }) {
   const theme = useTheme()
+  const [news, setNews] = useState<api.CompanyNews | null>(null)
+  useEffect(() => {
+    setNews(null)
+    if (companyUid) api.getCompanyNews(companyUid).then(setNews)
+  }, [companyUid])
   // Every widget is keyed on the theme as well as the symbol, so a change
   // rebuilds the iframe instead of leaving the old palette in place.
   const base = { ...BASE, colorTheme: theme }
@@ -142,11 +149,37 @@ export default function StockPanel({ symbol, name }: { symbol: string; name: str
                         height: 400, largeChartUrl: '' }} />
         </section>
         <section>
-          <h4>News <span className="by">TradingView</span></h4>
-          <TV key={`news-${symbol}-${theme}`} height={400}
-              src="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js"
-              config={{ ...base, feedMode: 'symbol', symbol, displayMode: 'regular',
-                        width: '100%', height: 400 }} />
+          {/* TradingView's feed is rich for the large caps and empty for most
+              of this graph - NVIDIA gets a full timeline, CEVA gets "No data
+              yet". Disclosure inversion means the companies that carry
+              evidence here are small suppliers, so "most of the graph" is the
+              normal case rather than the edge case. Our own headlines come
+              from GDELT's index and cover them; TradingView's widget is still
+              the better panel where it has anything, so it stays as the
+              fallback rather than being replaced outright. */}
+          {news && news.items.length > 0 ? (
+            <>
+              <h4>In the news <span className="by">GDELT</span></h4>
+              <ul className="newslist">
+                {news.items.slice(0, 9).map(n => (
+                  <li key={n.url}>
+                    <a href={n.url} target="_blank" rel="noreferrer">{n.headline}</a>
+                    <span className="meta">
+                      {n.domain}{n.publishedAt ? ` · ${n.publishedAt.slice(0, 10)}` : ''}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : (
+            <>
+              <h4>News <span className="by">TradingView</span></h4>
+              <TV key={`news-${symbol}-${theme}`} height={400}
+                  src="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js"
+                  config={{ ...base, feedMode: 'symbol', symbol, displayMode: 'regular',
+                            width: '100%', height: 400 }} />
+            </>
+          )}
         </section>
       </div>
 

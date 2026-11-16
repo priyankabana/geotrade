@@ -582,6 +582,34 @@ def signals_summary():
                            "assets": t["assets"], "events": t["events"]}}
 
 
+@app.get("/v1/companies/{company_uid}/news")
+def company_news(company_uid: str, limit: int = Query(12, ge=1, le=50)):
+    """Headlines about this company, from GDELT's index of world news.
+
+    Link and headline only. The article body belongs to the publisher and the
+    click goes to them - that is the arrangement that makes reading an index of
+    their work fair, and it is why this is an API call rather than a scrape.
+    """
+    with cur() as c:
+        c.execute("""
+            SELECT n.url, n.headline, n.domain, n.language, n.published_at
+            FROM company_news n
+            JOIN entity_listing li ON li.entity_id = n.entity_id AND li.is_primary
+            WHERE li.company_uid = %s AND n.headline IS NOT NULL
+            ORDER BY n.published_at DESC NULLS LAST
+            LIMIT %s""", (company_uid, limit))
+        rows = [{"url": r["url"], "headline": r["headline"], "domain": r["domain"],
+                 "language": r["language"],
+                 "publishedAt": r["published_at"].isoformat() if r["published_at"] else None}
+                for r in c.fetchall()]
+        c.execute("""SELECT cu.last_fetched FROM company_news_cursor cu
+                     JOIN entity_listing li ON li.entity_id = cu.entity_id AND li.is_primary
+                     WHERE li.company_uid = %s""", (company_uid,))
+        got = c.fetchone()
+    return {"items": rows, "source": "GDELT",
+            "lastCheckedUtc": got["last_fetched"].isoformat() if got else None}
+
+
 @app.get("/v1/graph")
 def graph(limit: int = Query(5000, ge=1, le=20000)):
     """The whole dependency graph, flat, small enough to reason over in a browser.

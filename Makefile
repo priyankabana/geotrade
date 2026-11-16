@@ -1,4 +1,4 @@
-.PHONY: help up dev down db psql db-ui query migrate migrate-status load link-cik ingest extract events events-dry signals refresh propagate pipeline gazetteer gazetteer-df sample audit backtest alerts recall review key keys eval stats validate measure universe api web narrate demo build public-db site deploy test clean
+.PHONY: help up dev down db psql db-ui query migrate migrate-status load link-cik ingest extract events events-dry news signals refresh propagate pipeline gazetteer gazetteer-df sample audit backtest alerts recall review key keys eval stats validate measure universe api web narrate demo build public-db site deploy test clean
 
 help:
 	@grep -E '^[a-z-]+:.*##' $(MAKEFILE_LIST) | sed 's/:.*## /\t/' | expand -t22
@@ -73,6 +73,9 @@ events:                ## Fetch live events (USGS, NASA EONET, GDELT)
 
 events-dry:            ## Fetch and print, write nothing
 	python3 -I scripts/ingest_events.py --dry-run
+
+news:                  ## Fetch headlines per company (GDELT, rate limited)
+	python3 -I scripts/ingest_company_news.py --limit 40
 
 signals:               ## Recompute per-asset signals from events
 	python3 -I scripts/seed_assets.py

@@ -105,6 +105,25 @@ still owed.
 | `gdacs` | Global Disaster Alert and Coordination System (EC/UN) | disaster alerts with a published green/orange/red severity and coordinates | **blocked** — the site's WAF rejects an automated client outright (`Request Rejected`, support id, no feed), with any User-Agent. Not a licence problem; we simply cannot fetch it. |
 | `reliefweb` | UN OCHA ReliefWeb disasters API | disasters by country and type, with status | **blocked** — v1 decommissioned; v2 returns `AccessDeniedHttpException` without an `appname` approved by a person at OCHA. Open terms, closed door. Request the appname and revisit. |
 | `newsapi` | NewsAPI.org | general news search | **rejected** — free tier is explicitly development-only; production use requires a paid plan. Using it in a deployed project would breach the terms whatever the volume. |
+| `financial-news-sites` | Yahoo Finance, MarketWatch, CNBC, Seeking Alpha, Investing.com, Benzinga, Motley Fool, Nikkei, kabutan, minkabu, Toyo Keizai, finanzen.net, boerse.de, Handelsblatt, Manager Magazin, Financial Post, Globe and Mail, BNN Bloomberg, Stockhouse, Caixin, Yicai, SCMP, China Daily, Sina Finance, Eastmoney, Xueqiu | per-ticker news | **rejected — do not scrape.** Each of these prohibits automated extraction in its terms of use. A capstone that scrapes them is one `robots.txt` away from being indefensible, and the headlines are available legally through GDELT, which indexes these same outlets. |
+
+> **The news question, answered once.** The obvious way to get per-company news is to
+> scrape the sites that publish it. We are not going to, and the reason is the rule at
+> the top of this file rather than caution: their terms prohibit automated extraction,
+> which makes `may_we_fetch` **no**, not unclear.
+>
+> **GDELT indexes those same outlets** — Yahoo, MarketWatch, CNBC, Nikkei, Handelsblatt,
+> SCMP and the rest — publishes an API, and permits links and headlines. So
+> `scripts/ingest_company_news.py` stores a link, a headline, a domain and a date, and
+> **never the article body**. The click goes to the publisher, who gets the visit. That
+> is the arrangement that makes reading an index of someone's work fair.
+>
+> Two categories are worth adding later and are safe: **regulator disclosure feeds**
+> (EDINET and TDnet for Japan, SEDAR+ for Canada, cninfo / SSE / SZSE / HKEXnews for
+> China and Hong Kong) are public record exactly as EDGAR is; and the **press-release
+> wires** (Business Wire, PR Newswire, GlobeNewswire) publish RSS intended for
+> redistribution. Both are the company's own words, which is the kind of evidence this
+> project is built on — unlike a journalist's article, which is the journalist's.
 
 Both blocked rows stay here rather than being quietly dropped, because "why didn't you use
 GDACS?" is exactly the kind of question this file exists to answer.
