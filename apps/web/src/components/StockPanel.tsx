@@ -57,6 +57,13 @@ const TV_EXCHANGE: Record<string, string> = {
   XJSE: 'JSE', XTAE: 'TASE', XIST: 'BIST', XWAR: 'GPW',
 }
 
+/** Same mapping, from a `MIC:TICKER` company uid. */
+export function tvFromUid(uid: string): string | null {
+  const [mic, ticker] = (uid || '').split(':')
+  const ex = TV_EXCHANGE[(mic || '').toUpperCase()]
+  return ex && ticker ? `${ex}:${ticker.replace(/[^A-Za-z0-9.]/g, '')}` : null
+}
+
 export function tvSymbol(listings: { exchangeMic: string; ticker: string; isPrimary: boolean }[]) {
   const sorted = [...listings].sort((a, b) => Number(b.isPrimary) - Number(a.isPrimary))
   for (const l of sorted) {
@@ -70,7 +77,7 @@ export function tvSymbol(listings: { exchangeMic: string; ticker: string; isPrim
  *  body, which does not fit React's model at all - so the container is managed
  *  by hand and torn down completely on every change. Reusing the node leaves
  *  the previous company's chart underneath the new one. */
-function TV({ src, config, height }: { src: string; config: object; height: number }) {
+export function TV({ src, config, height }: { src: string; config: object; height: number }) {
   const host = useRef<HTMLDivElement>(null)
   const json = JSON.stringify(config)
   useEffect(() => {

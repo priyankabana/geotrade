@@ -35,82 +35,61 @@ RULES = [
       commodities=["crude oil", "LNG", "petrochemical feedstock"],
       types=[], weight=0.90,
       assets={"BRENT": "up", "WTI": "up", "XLE": "up", "NATGAS": "up"},
-      why="A disruption at a crude or LNG chokepoint removes seaborne barrels "
-          "from the market faster than production can be rerouted, so the "
-          "benchmark and the producers that sell into it rise."),
+      why="Chokepoint disruption removes seaborne barrels faster than supply can reroute."),
  dict(id="oil-chokepoint-consumers",
       chokepoints=["HORMUZ", "RED_SEA", "BAB_EL_MANDEB"],
       commodities=["crude oil"], types=[], weight=0.60,
       assets={"SPX": "down", "NKY": "down", "DAX": "down"},
-      why="Oil-importing economies carry a higher input cost, which compresses "
-          "margins across the broad index. Japan and Germany import nearly all "
-          "their crude, so their indices carry more of it than the US does."),
+      why="Oil importers carry a higher input cost; Japan and Germany import nearly all their crude."),
  dict(id="conflict-safe-haven",
       chokepoints=["HORMUZ", "RED_SEA", "BAB_EL_MANDEB", "TAIWAN_STRAIT"],
       commodities=[], types=["chokepoint"], weight=0.70,
       assets={"XAUUSD": "up", "GLD": "up", "XAGUSD": "up",
               "TLT": "up", "IEF": "up", "USDCHF": "down", "DXY": "up"},
-      why="Military or shipping risk at a chokepoint moves capital toward "
-          "assets that settle regardless of the outcome: gold, government debt, "
-          "and the franc. CHF strengthening shows as USD/CHF falling."),
+      why="Shipping and military risk moves capital into gold, government debt and the franc."),
  dict(id="defence-demand",
       chokepoints=["HORMUZ", "TAIWAN_STRAIT", "RED_SEA"],
       commodities=[], types=["chokepoint"], weight=0.65,
       assets={"ITA": "up", "LMT": "up", "RTX": "up", "NOC": "up", "GD": "up"},
-      why="Sustained military risk raises expected defence procurement. This is "
-          "a demand argument about budgets, not a disclosed dependency - which "
-          "is exactly why it is a rule and not a citation."),
+      why="Sustained military risk raises expected defence procurement."),
  dict(id="semi-supply-shock",
       chokepoints=["TAIWAN_STRAIT"],
       commodities=["semiconductors", "substrates", "lithography equipment"],
       types=["export_control", "plant_outage"], weight=0.85,
       assets={"SOXX": "down", "NDX": "down", "TWII": "down", "AAPL": "down",
               "NVDA": "down", "AMD": "down", "TSM": "down"},
-      why="Advanced logic has no short-run substitute: the capacity is in a "
-          "handful of fabs and qualification of a new one takes quarters, so a "
-          "supply interruption is felt by everyone downstream at once."),
+      why="Advanced logic has no short-run substitute; qualifying a new fab takes quarters."),
  dict(id="semi-domestic-substitute",
       chokepoints=["TAIWAN_STRAIT"], commodities=["semiconductors"],
       types=["export_control"], weight=0.40,
       assets={"INTC": "up"},
-      why="Capacity outside the affected region gains relative value when the "
-          "concentrated source is interrupted. The effect is second order and "
-          "weighted accordingly."),
+      why="Capacity outside the affected region gains value when a concentrated source is interrupted."),
  dict(id="freight-cost",
       chokepoints=["SUEZ", "PANAMA", "RED_SEA", "BAB_EL_MANDEB", "MALACCA"],
       commodities=["containerised freight"], types=["labour_action"], weight=0.75,
       assets={"SPX": "down", "DJI": "down"},
-      why="Rerouting around a blocked canal adds sea days and therefore freight "
-          "cost and working capital, which lands on importers and retailers."),
+      why="Rerouting a blocked canal adds sea days, freight cost and working capital."),
  dict(id="critical-minerals",
       chokepoints=[],
       commodities=["rare earths", "gallium", "germanium", "graphite"],
       types=["export_control"], weight=0.70,
       assets={"COPPER": "up", "SOXX": "down", "ITA": "down", "NVDA": "down"},
-      why="Export restriction on an input with a concentrated source raises its "
-          "price and squeezes the specific industries - defence electronics and "
-          "semiconductors - that have no qualified alternative."),
+      why="Restricting a concentrated input raises its price and squeezes buyers with no alternative."),
  dict(id="china-trade-retaliation",
       chokepoints=[], commodities=["semiconductors", "rare earths"],
       types=["export_control"], weight=0.55,
       assets={"HSI": "down", "USDCNY": "up", "SOYBEANS": "down"},
-      why="Export-control rounds have historically drawn agricultural "
-          "retaliation and a weaker managed currency. A pattern argument, not a "
-          "disclosure, and weighted as the weaker claim it is."),
+      why="Export-control rounds have drawn agricultural retaliation and a weaker managed currency."),
  dict(id="energy-supply-europe",
       chokepoints=[], commodities=["natural gas", "LNG"], types=[], weight=0.65,
       assets={"NATGAS": "up", "DAX": "down", "EURUSD": "down"},
-      why="European industry is gas-intensive and prices at the margin, so a gas "
-          "supply shock shows up in the DAX and in the euro before it shows up "
-          "in company filings."),
+      why="European industry is gas-intensive and prices at the margin."),
  dict(id="physical-hazard-broad",
       chokepoints=[], commodities=[],
       types=["earthquake", "storm", "flood", "volcano", "wildfire", "tsunami"],
       weight=0.35,
       assets={"XAUUSD": "up"},
-      why="A large natural hazard is a mild risk-off impulse at index level. "
-          "Deliberately weak: most earthquakes move no market at all, and a "
-          "rule that fired loudly on all of them would be wrong most days."),
+      why="A large natural hazard is a mild risk-off impulse at index level."),
 ]
 
 
@@ -186,12 +165,12 @@ def main():
                 VALUES (%s,%s,'down','cited_dependency',%s,%s,%s,%s,%s,%s)
                 ON CONFLICT DO NOTHING""",
                 (eid, asset_id, round(float(score), 3), hops, edge_id,
+                 # The quote is rendered directly beneath this line on the
+                 # board, so repeating it here printed the sentence twice.
                  (f"Disclosed dependence on {counterparty}"
                   if outbound else
                   f"{counterparty} disclosed depending on this company")
-                 + f", reached at {hops} hop{'s' if hops != 1 else ''} "
-                   f"from this event. "
-                 f"The filing says: “{(quote or '')[:400]}”",
+                 + f" · {hops} hop{'s' if hops != 1 else ''} from this event",
                  asof, SIGNAL_VERSION))
             cited += cur.rowcount
 

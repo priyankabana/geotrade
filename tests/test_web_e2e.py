@@ -67,7 +67,11 @@ def test_the_app_loads_without_a_single_runtime_error(page):
 
 def test_it_says_it_is_live_rather_than_pretending(page):
     """When the API is down the banner must say so, not show stale numbers."""
-    assert "offline" not in page.inner_text(".mockstrip").lower()
+    # The strip is only rendered when something is wrong, so a healthy page
+    # has no strip at all. Absent is the stronger pass; present and not
+    # saying "offline" is still acceptable.
+    strip = page.locator(".mockstrip")
+    assert strip.count() == 0 or "offline" not in strip.inner_text().lower()
 
 
 def test_the_globe_actually_renders(page):
@@ -81,6 +85,10 @@ def test_coverage_is_reported_from_the_database_not_hard_coded(page):
     import json
     m = json.loads(urllib.request.urlopen(API + "/v1/metrics").read())
     assert str(m["graph"]["relationships"]) in page.inner_text(".topbar")
+
+
+# The company view is its own page now, not a column inside the globe view.
+COMPANY = ".cpage"
 
 
 def _drill_to_a_company_with_edges(page):
@@ -98,7 +106,7 @@ def _drill_to_a_company_with_edges(page):
 
 def test_a_person_can_reach_a_company_from_the_globe(page):
     assert _drill_to_a_company_with_edges(page), "no company with cited edges was reachable"
-    assert page.locator(".tabs").count() == 1, "the company view did not open"
+    assert page.locator(".ctabs").count() == 1, "the company view did not open"
 
 
 def test_every_edge_on_screen_shows_its_evidence_tier(page):
@@ -111,13 +119,13 @@ def test_the_sentence_on_screen_is_the_one_the_api_served(page):
     """Not merely that some text is shown: that it is the filing's own words,
     character for character, as the API returned them."""
     import json, re, urllib.parse
-    uid = re.search(r"\b[A-Z]{4}:[A-Z0-9.\-]+\b", page.inner_text("aside"))
-    assert uid, "no company identifier visible in the panel"
+    uid = re.search(r"\b[A-Z]{4}:[A-Z0-9.\-]+\b", page.inner_text(COMPANY))
+    assert uid, "no company identifier visible on the page"
     d = json.loads(urllib.request.urlopen(
         API + "/v1/companies/" + urllib.parse.quote(uid.group(0))).read())
     edges = d["dependsOn"] + d["dependedOnBy"]
     assert edges, "the API returned no edges for the company on screen"
-    panel = " ".join(page.inner_text("aside").split())
+    panel = " ".join(page.inner_text(COMPANY).split())
     quote = " ".join(edges[0]["citation"]["quote"].split())
     assert quote[:70] in panel, "the quote on screen is not the one the API served"
 
@@ -125,7 +133,7 @@ def test_the_sentence_on_screen_is_the_one_the_api_served(page):
 def test_a_percentage_is_never_shown_bare(page):
     """'44%' is not a fact. '44% of our consolidated net sales' is."""
     import re
-    panel = " ".join(page.inner_text("aside").split())
+    panel = " ".join(page.inner_text(COMPANY).split())
     for m in re.finditer(r"\b\d{1,3}(?:\.\d+)?% of\b", panel):
         tail = panel[m.end(): m.end() + 40].strip()
         assert tail and not tail.startswith("confidence"), f"bare percentage near {m.group(0)!r}"
@@ -133,7 +141,7 @@ def test_a_percentage_is_never_shown_bare(page):
 
 def test_the_citation_links_to_the_regulator_not_to_us(page):
     """The claim is checkable by a third party without asking us for anything."""
-    links = page.locator('aside a[href]').all()
+    links = page.locator(COMPANY + ' a[href]').all()
     hrefs = [a.get_attribute("href") or "" for a in links]
     assert any("sec.gov" in h for h in hrefs), f"no link to the source filing: {hrefs[:4]}"
 

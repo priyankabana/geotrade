@@ -67,6 +67,10 @@ export default function SignalsBoard() {
       .sort((a, b) => b.total - a.total)
   }, [sum])
 
+  const present = useMemo(
+    () => new Set((sum?.buckets ?? []).filter(b => b.count > 0).map(b => b.assetClass)),
+    [sum])
+
   const t = sum?.totals
 
   return (
@@ -106,7 +110,9 @@ export default function SignalsBoard() {
 
       <div className="filters">
         <div className="fgroup">
-          {CLASSES.map(([v, label]) => (
+          {/* Only classes that actually have signals. A Crypto tab that always
+              returns nothing is a promise the data does not keep. */}
+          {CLASSES.filter(([v]) => !v || present.has(v)).map(([v, label]) => (
             <button key={v} aria-selected={cls === v} onClick={() => setCls(v)}>{label}</button>
           ))}
         </div>
@@ -168,9 +174,7 @@ export default function SignalsBoard() {
                     <p className="small dim">Rule <code>{s.ruleId}</code></p>
                   )}
                   <p className="small dim">
-                    Event severity {s.event.severity !== null ? fmt(s.event.severity) : '—'} ·
-                    feed <code>{s.event.feed}</code> ·
-                    as of {s.asOf.slice(0, 10)} · {s.scorerVersion}
+                    {s.event.feed} · {s.asOf.slice(0, 10)}
                   </p>
                 </div>
               )}

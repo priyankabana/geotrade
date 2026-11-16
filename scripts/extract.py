@@ -21,7 +21,7 @@ from collections import defaultdict
 import psycopg
 
 DSN = os.environ.get("DATABASE_URL", "postgresql://atlas:atlas@localhost:5432/atlas")
-EXTRACTOR_VERSION = "rules-3.2"
+EXTRACTOR_VERSION = "rules-3.3"
 SCORER_VERSION    = "deterministic-1.0"
 
 # ---------------------------------------------------------------- lexicon
@@ -167,6 +167,31 @@ NOISE = re.compile(r"(?i)\b(?:social\s+media|search\s+engines?|facebook|instagra
                    r"twitter|press\s+releases?|website|webcast|annual\s+meeting|"
                    r"vendors\s+in\s+this\s+category|principal\s+competitors|"
                    r"compete\s+(?:with|against)|competitors\s+include|our\s+(?:established\s+)?brands?\s+include|brand\s+portfolio|repurchas\w+|buy-?back|treasury\s+stock|board\s+authority|shares\s+of\s+[\w\s]{0,24}common\s+stock|include\s+but\s+are\s+not\s+limited\s+to\s+companies)\b")
+# A bibliography is not a disclosure.
+#
+# Arbe Robotics' 20-F carries a "Sources:" block listing market-research
+# reports, and one of them mentions NVIDIA. The extractor read that as Arbe
+# disclosing a dependency on NVIDIA, which is wrong in a way that matters: it
+# put a citation list into the one view where every row is supposed to be a
+# sentence a company filed about its own business.
+#
+# These three shapes are what a reference block looks like and what running
+# prose never does: a bullet glyph, an opening "Sources:", or a bare domain in
+# parentheses the way a footnote cites one.
+# Anchored, and only the heading.
+#
+# The first attempt also rejected any sentence containing a bullet glyph or a
+# parenthesised domain, and that was badly wrong: SEC risk-factor sections are
+# written as bulleted lists, so the bullet *is* the disclosure. Tested against
+# the stored claims it would have withdrawn 55 of them, including "Customers
+# typically pay us a monthly per-subscriber fee and include many of the leading
+# MVPDs" and "We rely on third parties to manufacture our products" - exactly
+# the sentences this project exists to find.
+#
+# What actually went wrong was narrower: a reference block opening with
+# "Sources:". That is what this matches, and nothing else.
+CITATION_LIST = re.compile(r"(?i)^\s*(?:sources?|references?|bibliography)\s*:")
+
 # the name is the filer's own plant, brand or product, not another company
 SELF_REF = re.compile(r"(?i)^\s*(?:[\u00ae\u2122]|(?:manufacturing\s+)?(?:plant|facility|facilities|segment|division|brands?|products?|vehicles?|platform|solutions?|operations?|business\s+unit)\b)")
 
@@ -268,7 +293,7 @@ def extract_sentence(sent, filer_tokens, gaz):
     Replace this body with a schema-forced Gemini call and nothing else in the
     pipeline changes: same input, same output shape, same offsets.
     """
-    if BIO.search(sent) or NOISE.search(sent):
+    if BIO.search(sent) or NOISE.search(sent) or CITATION_LIST.search(sent):
         return []
 
     cues = []

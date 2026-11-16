@@ -7,6 +7,7 @@ import SignalsBoard from './components/SignalsBoard'
 import { tvSymbol } from './components/StockPanel'
 import CompanyPage from './components/CompanyPage'
 import Search from './components/Search'
+import SectorQuotes from './components/SectorQuotes'
 import type { CompanyDetail, CompanyRow, CountryTile, ExposureResponse, SectorMove } from '@shared/api'
 
 const PRODUCT = import.meta.env.VITE_PRODUCT_NAME ?? 'Atlas'
@@ -228,9 +229,13 @@ export default function App() {
               sectors === null ? <Empty title="Loading…" body="" />
                 : <SectorList sectors={sectors} onPick={s => go({ k: 'sector', iso2: view.iso2, sector: s })} />
             ) : (
-              companies === null ? <Empty title="Loading…" body="" />
-                : <CompanyList companies={companies}
+              companies === null ? <Empty title="Loading…" body="" /> : (
+                <>
+                  <SectorQuotes companies={companies} sectorName={view.sector.name} />
+                  <CompanyList companies={companies}
                                onPick={c => setView({ k: 'company', uid: c.companyUid, back: view })} />
+                </>
+              )
             )}
           </div>
         </aside>
