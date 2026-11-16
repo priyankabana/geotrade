@@ -19,6 +19,16 @@ const CLASSES = [
   ['etf', 'ETFs'], ['bond', 'Bonds'],
 ] as const
 
+/** Feed ids are how the ingester names its adapters. On screen they should say
+ *  where the event came from, in words. */
+const FEED_LABEL: Record<string, string> = {
+  'gdelt-doc': 'Detected in world news',
+  'gdelt-company': 'Detected in company news',
+  'usgs-earthquake': 'USGS earthquake feed',
+  'nasa-eonet': 'NASA hazard tracker',
+  'benchmark': 'Historical benchmark event',
+}
+
 const CLASS_LABEL: Record<string, string> = {
   commodity: 'commodity', equity_index: 'index', fx: 'fx',
   crypto: 'crypto', stock: 'stock', etf: 'etf', bond: 'bond',
@@ -171,10 +181,14 @@ export default function SignalsBoard() {
                       </cite>
                     </blockquote>
                   ) : (
-                    <p className="small dim">Rule <code>{s.ruleId}</code></p>
+                    /* `semi-supply-shock` is this repository's name for a rule,
+                       not something a reader can be expected to decode. The
+                       sentence above already says what the rule claims; the
+                       slug stays in the API for anyone auditing it. */
+                    <p className="small dim">Our own rule — no company filed this.</p>
                   )}
                   <p className="small dim">
-                    {s.event.feed} · {s.asOf.slice(0, 10)}
+                    {FEED_LABEL[s.event.feed] ?? s.event.feed} · {s.asOf.slice(0, 10)}
                   </p>
                 </div>
               )}
