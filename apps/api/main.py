@@ -263,11 +263,15 @@ def company(company_uid: str):
     with cur() as c:
         c.execute("""
             SELECT e.id, e.legal_name, e.common_name, e.country_hq, e.atlas_sector,
+                   -- The code is our internal key. The page should show the
+                   -- name, the way the sector list already does.
+                   s.name AS sector_name,
                    e.fiscal_year_end, e.status, e.website, e.ir_url,
                    l.city, ST_Y(l.geom::geometry) AS lat, ST_X(l.geom::geometry) AS lon,
                    m.band
             FROM entity_listing li
             JOIN entity e ON e.id = li.entity_id
+            LEFT JOIN atlas_sector s ON s.code = e.atlas_sector
             LEFT JOIN entity_location l ON l.entity_id = e.id AND l.role = 'hq'
             LEFT JOIN entity_metric m ON m.entity_id = e.id AND m.metric = 'market_cap_usd'
             WHERE li.company_uid = %s
@@ -292,7 +296,9 @@ def company(company_uid: str):
             "commonName": r["common_name"], "formerNames": formers,
             "countryHq": r["country_hq"] or "US",
             "hq": {"lat": r["lat"], "lon": r["lon"], "city": r["city"]},
-            "atlasSector": r["atlas_sector"], "marketCapBand": r["band"] or "small",
+            "atlasSector": r["atlas_sector"],
+            "atlasSectorName": r["sector_name"] or r["atlas_sector"],
+            "marketCapBand": r["band"] or "small",
             "fiscalYearEnd": r["fiscal_year_end"] or "", "status": r["status"],
             "listings": listings, "identifiers": ids,
             "dependsOn": _depends(c, r["id"], "from"),
@@ -574,6 +580,58 @@ def signals_summary():
         return {"buckets": buckets, "feeds": feeds,
                 "totals": {"cited": t["cited"], "rule": t["ruled"],
                            "assets": t["assets"], "events": t["events"]}}
+
+
+@app.get("/v1/graph")
+def graph(limit: int = Query(5000, ge=1, le=20000)):
+    """The whole dependency graph, flat, small enough to reason over in a browser.
+
+    This exists so the simulator can run the propagation walk client-side and
+    still be the same walk. `scripts/propagate.py` is the authority on the
+    numbers; the constants it uses are returned here with the edges so a second
+    implementation cannot quietly drift to a different decay or a different hop
+    bound. If they ever disagree, this endpoint is what proves it.
+
+    Direction matters and is easy to get backwards: `from` is the company that
+    disclosed the dependency, `to` is the company it said it depends on. A shock
+    therefore travels from `to` towards `from`.
+    """
+    with cur() as c:
+        c.execute("""
+            SELECT lf.company_uid AS from_uid, ef.common_name AS from_name,
+                   lt.company_uid AS to_uid,   et.common_name AS to_name,
+                   de.weight, de.confidence, de.evidence_type, de.valid_from,
+                   left(dc.quote, 320) AS quote, d.doc_type, d.filed_at_utc,
+                   d.primary_doc_url
+            FROM dependency_edge de
+            JOIN dependency_claim dc ON dc.id = de.claim_id
+            JOIN chunk ch ON ch.id = de.chunk_id
+            JOIN document d ON d.id = ch.document_id
+            JOIN entity ef ON ef.id = de.from_entity_id
+            JOIN entity et ON et.id = de.to_entity_id
+            JOIN entity_listing lf ON lf.entity_id = ef.id AND lf.is_primary
+            JOIN entity_listing lt ON lt.entity_id = et.id AND lt.is_primary
+            WHERE de.valid_to IS NULL
+            ORDER BY de.confidence DESC
+            LIMIT %s
+        """, (limit,))
+        edges = [{
+            "from": r["from_uid"], "fromName": r["from_name"],
+            "to": r["to_uid"], "toName": r["to_name"],
+            "weight": float(r["weight"]), "confidence": float(r["confidence"]),
+            "evidenceType": r["evidence_type"],
+            "validFrom": r["valid_from"].isoformat() if r["valid_from"] else None,
+            "citation": {"quote": r["quote"], "docType": r["doc_type"],
+                         "filedAt": r["filed_at_utc"].isoformat() if r["filed_at_utc"] else None,
+                         "url": r["primary_doc_url"]},
+        } for r in c.fetchall()]
+    return {
+        "edges": edges,
+        # Mirrored from scripts/propagate.py. A simulator that invented its own
+        # decay would produce numbers that look like Atlas's and are not.
+        "walk": {"maxHops": 3, "decay": 0.55, "floor": 0.02,
+                 "scorerVersion": "walk-1.1"},
+    }
 
 
 @app.get("/v1/events")

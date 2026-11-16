@@ -98,6 +98,8 @@ def main():
 
     # The signals board fetches these two once and filters in the browser, so
     # two files cover every filter combination the interface can produce.
+    # The simulator walks this in the browser, so the published build needs it.
+    save("/v1/graph", get("/v1/graph"))
     save("/v1/signals", get("/v1/signals?limit=1000"))
     save("/v1/signals/summary", get("/v1/signals/summary"))
 

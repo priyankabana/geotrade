@@ -93,7 +93,8 @@ export interface CompanyDetail {
   formerNames: string[];
   countryHq: Iso2;
   hq: { lat: number; lon: number; city: string | null };
-  atlasSector: string;
+  atlasSector: string;          // the internal code, e.g. AUTO_COMPONENTS
+  atlasSectorName: string;      // what to show a reader, e.g. Automotive Components
   marketCapBand: CompanyRow['marketCapBand'];
   fiscalYearEnd: string;        // 'MM-DD'
   status: 'active' | 'delisted' | 'acquired' | 'merged' | 'suspended';

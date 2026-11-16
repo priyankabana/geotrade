@@ -38,7 +38,7 @@ export default function CompanyPage({
 
         <dl className="cmeta">
           <div><dt>Legal name</dt><dd>{detail.legalName}</dd></div>
-          <div><dt>Sector</dt><dd>{detail.atlasSector ?? '—'}</dd></div>
+          <div><dt>Sector</dt><dd>{detail.atlasSectorName ?? detail.atlasSector ?? '—'}</dd></div>
           <div><dt>Headquarters</dt><dd>{detail.hq.city ?? '—'}{detail.countryHq ? `, ${detail.countryHq}` : ''}</dd></div>
           <div><dt>Filings held</dt><dd className="num">{detail.documentCount}</dd></div>
           <div><dt>Cited dependencies</dt><dd className="num">{upN} out · {downN} in</dd></div>

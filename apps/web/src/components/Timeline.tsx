@@ -22,6 +22,25 @@ export default function Timeline({ events, idx, onPick, earliestFiling }:
     : null
   const beforeBoundary = boundary !== null && pos(cur.becamePublicUtc) < boundary
 
+  /* Which pips get a year printed under them.
+     Labelling the first event of each year was fine with twenty hand-written
+     events. Live ingestion put a hundred-odd into 2026, and several years ended
+     up inside a few percent of the track, so "2022 2023 2024" ran together and
+     ran together. A label is only drawn if there is room for it. */
+  const MIN_GAP = 5.5   // percent of track width
+  const labelled = new Set<number>()
+  let lastAt = -Infinity
+  events.forEach((e, i) => {
+    const yr = e.becamePublicUtc.slice(0, 4)
+    const firstOfYear = events.findIndex(x => x.becamePublicUtc.slice(0, 4) === yr) === i
+    if (!firstOfYear) return
+    const at = pos(e.becamePublicUtc)
+    // Keep clear of the boundary label as well as of the previous year.
+    if (at - lastAt < MIN_GAP) return
+    labelled.add(i)
+    lastAt = at
+  })
+
   return (
     <div className="timeline">
       <div className="tl-head">
@@ -49,14 +68,13 @@ export default function Timeline({ events, idx, onPick, earliestFiling }:
         <div className="tl-fill" style={{ width: `${pos(cur.becamePublicUtc)}%` }} />
         {events.map((e, i) => {
           const yr = e.becamePublicUtc.slice(0, 4)
-          const first = events.findIndex(x => x.becamePublicUtc.slice(0, 4) === yr) === i
           return (
             <button key={e.eventId} className={`tl-pip${i === idx ? ' on' : ''}`}
                     style={{ left: `${pos(e.becamePublicUtc)}%` } as CSSProperties}
                     onClick={() => onPick(i)}
                     title={`${e.becamePublicUtc.slice(0, 10)} — ${e.name} · ${e.totalExposed} exposed`}>
               <span className="tl-dot" />
-              <span className="tl-year num">{first || i === idx ? yr : ''}</span>
+              <span className="tl-year num">{labelled.has(i) || i === idx ? yr : ''}</span>
             </button>
           )
         })}

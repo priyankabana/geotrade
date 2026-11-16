@@ -8,6 +8,7 @@ import { tvSymbol } from './components/StockPanel'
 import CompanyPage from './components/CompanyPage'
 import Search from './components/Search'
 import SectorQuotes from './components/SectorQuotes'
+import Simulator from './components/Simulator'
 import type { CompanyDetail, CompanyRow, CountryTile, ExposureResponse, SectorMove } from '@shared/api'
 
 const PRODUCT = import.meta.env.VITE_PRODUCT_NAME ?? 'Atlas'
@@ -154,6 +155,10 @@ export default function App() {
       </header>
 
       {surface === 'signals' ? <SignalsBoard />
+       : surface === 'simulate' ? (
+         <Simulator onOpenCompany={uid =>
+           setView({ k: 'company', uid, back: { k: 'home' } })} />
+       )
        /* A company gets the whole width. It used to share a 430px column with
           the globe, which made the chart unreadable and kept a map on screen
           for a question the reader had already stopped asking. */

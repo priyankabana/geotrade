@@ -143,3 +143,17 @@ export type SignalSummary = {
  *  same answer. */
 export const getSignals = () => safe<Signal[]>('/v1/signals?limit=1000', [])
 export const getSignalsSummary = () => safe<SignalSummary | null>('/v1/signals/summary', null)
+
+// --- graph (for the simulator) ----------------------------------------------
+export type GraphEdge = {
+  from: string; fromName: string
+  to: string;   toName: string
+  weight: number; confidence: number; evidenceType: string
+  validFrom: string | null
+  citation: { quote: string; docType: string | null; filedAt: string | null; url: string | null }
+}
+export type Graph = {
+  edges: GraphEdge[]
+  walk: { maxHops: number; decay: number; floor: number; scorerVersion: string }
+}
+export const getGraph = () => safe<Graph | null>('/v1/graph', null)
