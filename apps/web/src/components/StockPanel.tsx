@@ -119,10 +119,6 @@ export default function StockPanel({ symbol, name }: { symbol: string; name: str
 
         <section className="tv-side">
           <h4>Technical rating <span className="by">TradingView</span></h4>
-          <p className="small dim">
-            Computed by TradingView from price and volume. It is <em>their</em>
-            read of the tape, not Atlas's — Atlas never scores a security.
-          </p>
           <TV key={`ta-${symbol}-${theme}`} height={400}
               src="https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js"
               config={{ ...base, symbol, interval: '1D', width: '100%', height: 400,
@@ -148,11 +144,9 @@ export default function StockPanel({ symbol, name }: { symbol: string; name: str
       </div>
 
       <p className="disclaimer">
-        Charts, fundamentals, news and the technical rating are supplied by
-        TradingView. Atlas contributes the dependency graph and the filings
-        beneath it, and makes no recommendation about any security.
+        Market data by{' '}
         <a href={`https://www.tradingview.com/symbols/${symbol.replace(':', '-')}/`}
-           target="_blank" rel="noreferrer"> {name} on TradingView ↗</a>
+           target="_blank" rel="noreferrer">TradingView</a>. Not investment advice.
       </p>
     </div>
   )

@@ -282,7 +282,8 @@ def main():
     # not have been fetched.
     cur.execute("""
         SELECT id, dedupe_key, name, became_public_utc, severity, seed_sectors,
-               COALESCE(source_feed, 'benchmark') AS feed
+               COALESCE(source_feed, 'benchmark') AS feed,
+               COALESCE(seed_entity_ids, '{}') AS seed_entities
         FROM event
         WHERE seed_sectors IS NOT NULL AND severity IS NOT NULL
           AND severity >= %s
@@ -302,7 +303,7 @@ def main():
 
     total = 0
     skipped = 0
-    for eid, key, ename, public, severity, sectors, feed in todo:
+    for eid, key, ename, public, severity, sectors, feed, seed_entities in todo:
         e = dict(key=key, name=ename, public=public,
                  severity=float(severity), sectors=sectors)
         asof = e["public"]
@@ -332,6 +333,12 @@ def main():
                                         COALESCE(el.radius_km, 300) * 1000)""",
                     (eid, e["sectors"]))
         seeds = list({*seeds, *[r[0] for r in cur.fetchall()]})
+
+        # Companies the event names outright. For a company shock this is the
+        # only seed there is, which is the point: everything downstream of it
+        # is reached through an edge somebody filed, so the whole path is
+        # evidence rather than a sector rule.
+        seeds = list({*seeds, *(seed_entities or [])})
 
         best = walk(out_edges, seeds, e["severity"])
 

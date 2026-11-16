@@ -43,6 +43,7 @@ to answer from the repo rather than from memory.
 | `usgs-earthquake` | USGS earthquake feed | M4.5+ earthquakes, last 30 days: magnitude, epicentre, time | HTTPS GeoJSON | none stated | yes | yes — **US government work**, not copyrightable | auto | 2026-11-16 |
 | `nasa-eonet` | NASA Earth Observatory Natural Event Tracker | open natural hazards: storms, wildfires, volcanoes, floods, with coordinates | HTTPS JSON | none stated | yes | yes — **US government work** | auto | 2026-11-16 |
 | `gdelt-doc` | GDELT 2.0 Document API | world news article index, 15-minute cadence, used to **detect** named disruptions | HTTPS JSON | **1 request / 5 s**, enforced | yes | links and headlines only — **article text is the publisher's** | auto | 2026-11-16 |
+| `gdelt-company` | GDELT 2.0, company queries | the same index, queried per company for shocks — a departure, a recall, a halt, an investigation | HTTPS JSON | **1 request / 5 s**, enforced | yes | links and headlines only | auto | 2026-11-17 |
 
 **Measured 2026-09-20:** `company_tickers.json` returned HTTP 200, 799,073 bytes, in
 3.21 s with a declared User-Agent. Ten 10-K documents fetched and parsed successfully
@@ -80,6 +81,20 @@ still owed.
 >
 > GDELT rate-limits to one request every five seconds and answers a faster caller with a
 > 429 that is not JSON, so the adapter waits rather than retrying into the same wall.
+
+> **Why a separate row for the same API.** `gdelt-doc` watches nine supply-chain
+> topics and seeds propagation by sector and geography, which is an educated guess
+> about who is affected. `gdelt-company` watches named companies and seeds
+> propagation on the company itself, so every hop outward is an edge somebody filed.
+> They have different seeding rules and different failure modes, and a row that
+> covered both would hide that.
+>
+> The gap this closed is worth recording. On 2026-11-17 GDELT carried the departure
+> of NVIDIA's chief executive across eighteen domains, including a story explicitly
+> about supply-chain contracts — and Atlas saw none of it, because every one of the
+> nine watched topics was a chokepoint or an export control. The feed was working;
+> the question was never asked. A watchlist is a claim about what matters, and it
+> should be read as one.
 
 ---
 

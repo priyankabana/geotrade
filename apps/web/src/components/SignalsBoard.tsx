@@ -74,11 +74,7 @@ export default function SignalsBoard() {
       <div className="board-head">
         <div>
           <h1>What this disruption touches</h1>
-          <p className="small">
-            Ranked by how hard the event presses on each asset. <strong>Direction is
-            not advice</strong> — it says which way a disruption pushes, not what
-            anyone should do about it.
-          </p>
+          <p className="small">Assets ranked by how hard each event presses on them.</p>
         </div>
         {t && (
           <div className="tiles">
@@ -129,9 +125,7 @@ export default function SignalsBoard() {
       {rows === null && <p className="small dim">loading…</p>}
       {rows?.length === 0 && (
         <p className="small dim">
-          No signal matches that filter. With <em>Cited only</em> selected that is
-          a real answer, not an empty state: no company filed anything that
-          connects this event to an asset of that class.
+          No signal matches that filter.
         </p>
       )}
 
@@ -171,11 +165,7 @@ export default function SignalsBoard() {
                       </cite>
                     </blockquote>
                   ) : (
-                    <p className="small dim">
-                      No filing says this. It follows from rule <code>{s.ruleId}</code>,
-                      which is written out in <code>scripts/signals.py</code> and can be
-                      disputed there.
-                    </p>
+                    <p className="small dim">Rule <code>{s.ruleId}</code></p>
                   )}
                   <p className="small dim">
                     Event severity {s.event.severity !== null ? fmt(s.event.severity) : '—'} ·
@@ -189,10 +179,7 @@ export default function SignalsBoard() {
         })}
       </div>
 
-      <p className="disclaimer">
-        Atlas reports exposure and the evidence for it. It does not tell anyone
-        what to buy or sell, and nothing here is investment advice.
-      </p>
+      <p className="disclaimer">Not investment advice.</p>
     </div>
   )
 }

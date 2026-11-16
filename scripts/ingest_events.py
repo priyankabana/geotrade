@@ -320,6 +320,87 @@ def gdelt(days=7, topics=None):
     return out
 
 
+# --- feed: GDELT, company shocks --------------------------------------------
+# A shock to one company, found the same way as a chokepoint topic but seeded
+# differently: on the company itself, so every hop outward is a disclosure
+# somebody filed rather than a sector rule we wrote.
+#
+# The list is deliberately short and hand-picked. These are companies that other
+# companies in our graph have actually named, which is the only reason a shock
+# to them has anywhere to travel - and under disclosure inversion that set is
+# small and is not the same as "the biggest companies".
+SHOCK_TERMS = ('(resign OR resignation OR "steps down" OR ousted OR fired '
+               'OR recall OR halt OR halted OR shutdown OR outage OR fire '
+               'OR investigation OR lawsuit OR "export ban" OR sanctions '
+               'OR bankruptcy OR strike)')
+
+COMPANY_WATCH = [
+    ("NVDA", "NVIDIA",            '(nvidia OR "jensen huang")'),
+    ("BA",   "Boeing",            '(boeing)'),
+    ("TSM",  "TSMC",              '(tsmc OR "taiwan semiconductor")'),
+    ("INTC", "Intel",             '(intel)'),
+    ("QCOM", "Qualcomm",          '(qualcomm)'),
+    ("MU",   "Micron Technology", '(micron)'),
+    ("AVGO", "Broadcom",          '(broadcom OR vmware)'),
+    ("TSLA", "Tesla",             '(tesla)'),
+]
+
+# GDELT publishes no severity, so a company shock takes one of two documented
+# constants depending only on how many independent outlets carried it. Two
+# values, no interpolation, and the threshold is the same one the topic feed
+# uses - see CORROBORATED_AT above.
+SHOCK_SEVERITY = {"corroborated": 0.60, "unconfirmed": 0.45}
+
+
+def gdelt_company(days=7, watch=None):
+    out = []
+    for i, (ticker, name, expr) in enumerate(watch or COMPANY_WATCH):
+        if i:
+            time.sleep(GDELT_GAP_S)
+        url = GDELT_URL.format(q=urllib.parse.quote(f"{expr} {SHOCK_TERMS}"), days=days)
+        raw = None
+        for attempt in range(3):
+            try:
+                raw = http(url)
+                break
+            except urllib.error.HTTPError as exc:
+                if exc.code != 429:
+                    break
+                time.sleep(GDELT_BACKOFF_S * (attempt + 1))
+            except Exception:
+                break
+        if raw is None:
+            print(f"    ! gdelt company {ticker}: rate limited")
+            continue
+        try:
+            arts = json.loads(raw).get("articles", []) or []
+        except json.JSONDecodeError:
+            continue
+        domains = {a.get("domain") for a in arts if a.get("domain")}
+        if len(domains) < MIN_DOMAINS:
+            continue
+        level = "corroborated" if len(domains) >= CORROBORATED_AT else "unconfirmed"
+        dates = sorted(d for d in (_gdelt_date(a.get("seendate")) for a in arts) if d)
+        now = datetime.now(timezone.utc)
+        first, last = (dates[0], dates[-1]) if dates else (now, now)
+        out.append(dict(
+            key=f"gdelt-shock-{ticker}-{last.strftime('%G-W%V')}", feed="gdelt-company",
+            name=f"{name}: disruption reported in {len(domains)} outlets",
+            type="company_shock", occurred=first, public=last,
+            severity=SHOCK_SEVERITY[level],
+            # The company's own headquarters is the honest location, and the
+            # radius is nominal: this event does not travel by geography at all,
+            # it travels along disclosed dependencies.
+            lat=None, lon=None, place=name, country=None, radius_km=1,
+            commodities=[], chokepoints=[], sectors=[],
+            seed_ticker=ticker,
+            confirmation=level,
+            sources=[(a.get("url"), a.get("title"), _gdelt_date(a.get("seendate")))
+                     for a in arts[:25] if a.get("url")],
+        ))
+    return out
+
+
 # --- small parsers -----------------------------------------------------------
 def _gdelt_date(s):
     try:
@@ -337,7 +418,8 @@ def _iso(s):
         return None
 
 
-FEEDS = {"usgs": usgs, "eonet": eonet, "gdelt": gdelt}
+FEEDS = {"usgs": usgs, "eonet": eonet, "gdelt": gdelt,
+         "gdelt-company": gdelt_company}
 
 
 # --- write -------------------------------------------------------------------
@@ -351,26 +433,46 @@ def store(conn, events):
             eid = row[0]
             updated += 1
         else:
+            # A company shock lands on a named company, not on a place. Resolve
+            # the ticker here rather than in the adapter, which has no database
+            # and should not acquire one just for this.
+            seeds = None
+            if e.get("seed_ticker"):
+                cur.execute("""SELECT entity_id FROM entity_listing
+                               WHERE ticker = %s AND is_primary LIMIT 1""",
+                            (e["seed_ticker"],))
+                row = cur.fetchone()
+                if not row:
+                    # No company, nowhere for the shock to travel, no event.
+                    print(f"    - {e['seed_ticker']} is not in the universe, skipped")
+                    continue
+                seeds = [row[0]]
+
             cur.execute("""
                 INSERT INTO event (name, event_type, first_occurred_utc,
                     became_public_utc, confirmation_level, severity,
                     severity_version, commodities, chokepoints, dedupe_key,
-                    seed_sectors, source_feed)
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id""",
+                    seed_sectors, seed_entity_ids, source_feed)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id""",
                 (e["name"][:200], e["type"], e["occurred"], e["public"],
                  e["confirmation"], e["severity"], SEVERITY_VERSION,
                  e["commodities"], e["chokepoints"], e["key"],
-                 e["sectors"], e["feed"]))
+                 e["sectors"], seeds, e["feed"]))
             eid = cur.fetchone()[0]
-            cur.execute("""
-                INSERT INTO event_location (event_id, name, country, geom,
-                    radius_km, geocode_confidence)
-                VALUES (%s,%s,%s, ST_SetSRID(ST_MakePoint(%s,%s),4326)::geography, %s, %s)""",
-                (eid, (e.get("place") or "")[:120], e.get("country"),
-                 e["lon"], e["lat"], e.get("radius_km", 300),
-                 # A feed that publishes coordinates is giving us its own
-                 # geocode; a chokepoint we looked up ourselves is exact.
-                 1.0 if e["feed"] == "gdelt-doc" else 0.9))
+            # Not every event has a geography. A company shock travels along
+            # disclosed dependencies and nowhere near its headquarters, and
+            # inventing a point for it would put it on the globe as though
+            # proximity meant something here.
+            if e.get("lat") is not None and e.get("lon") is not None:
+                cur.execute("""
+                    INSERT INTO event_location (event_id, name, country, geom,
+                        radius_km, geocode_confidence)
+                    VALUES (%s,%s,%s, ST_SetSRID(ST_MakePoint(%s,%s),4326)::geography, %s, %s)""",
+                    (eid, (e.get("place") or "")[:120], e.get("country"),
+                     e["lon"], e["lat"], e.get("radius_km", 300),
+                     # A feed that publishes coordinates is giving us its own
+                     # geocode; a chokepoint we looked up ourselves is exact.
+                     1.0 if e["feed"] == "gdelt-doc" else 0.9))
             new += 1
 
         for url, headline, when in e.get("sources", []):

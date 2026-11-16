@@ -1,4 +1,4 @@
-.PHONY: help up dev down db psql db-ui query migrate migrate-status load link-cik ingest extract propagate pipeline gazetteer gazetteer-df sample audit backtest alerts recall review key keys eval stats validate measure universe api web narrate demo build public-db site deploy test clean
+.PHONY: help up dev down db psql db-ui query migrate migrate-status load link-cik ingest extract events events-dry signals refresh propagate pipeline gazetteer gazetteer-df sample audit backtest alerts recall review key keys eval stats validate measure universe api web narrate demo build public-db site deploy test clean
 
 help:
 	@grep -E '^[a-z-]+:.*##' $(MAKEFILE_LIST) | sed 's/:.*## /\t/' | expand -t22
@@ -67,6 +67,22 @@ ingest:                ## Fetch real filings -> documents, sections, chunks
 
 extract:               ## Chunks -> cited claims -> graph edges
 	python3 -I scripts/extract.py
+
+events:                ## Fetch live events (USGS, NASA EONET, GDELT)
+	python3 -I scripts/ingest_events.py
+
+events-dry:            ## Fetch and print, write nothing
+	python3 -I scripts/ingest_events.py --dry-run
+
+signals:               ## Recompute per-asset signals from events
+	python3 -I scripts/seed_assets.py
+	python3 -I scripts/signals.py
+
+# The whole live path, in the order the data flows. Nothing here is scheduled:
+# GDELT updates every fifteen minutes, so freshness is a question of how often
+# this is run, and running it is a decision rather than a cron job we installed
+# on someone's laptop without telling them. See docs/RUNBOOK.md.
+refresh: events propagate signals   ## Fetch, propagate, rescore - the live path
 
 propagate:             ## Seed events, walk the graph, precompute exposure
 	python3 -I scripts/propagate.py

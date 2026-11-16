@@ -6,6 +6,7 @@ import * as api from './client'
 import SignalsBoard from './components/SignalsBoard'
 import { tvSymbol } from './components/StockPanel'
 import CompanyPage from './components/CompanyPage'
+import Search from './components/Search'
 import type { CompanyDetail, CompanyRow, CountryTile, ExposureResponse, SectorMove } from '@shared/api'
 
 const PRODUCT = import.meta.env.VITE_PRODUCT_NAME ?? 'Atlas'
@@ -106,35 +107,22 @@ export default function App() {
   }, [showEvent, exposure, evLoc, byUid])
 
   const tvSym = detail ? tvSymbol(detail.listings) : null
-  const snap = mode === 'snapshot' ? api.getSnapshotMeta() : null
   const go = (v: View) => { setView(v); if (v.k !== 'event') setSurface('live') }
   const totalCompanies = countries.reduce((a, c) => a + c.companyCount, 0)
 
   return (
     <div className="shell">
-      <div className="mockstrip" style={{ background: mode === 'live' ? 'var(--surprise)' : 'var(--accent)' }}>
-        {mode === 'checking' && 'connecting to API…'}
-        {mode === 'live' && `Live — extraction has run. Every dependency below links to the sentence in the filing that supports it.`}
-        {/* Not "live", and the strip should not imply it is. The graph, the
-            edges and the quoted sentences are the real ones; what is missing
-            is the 23,020-company universe, which came from vendor files we
-            have not cleared for publication. Saying so is more useful than a
-            green light. */}
-        {mode === 'snapshot' && (
-          `Published snapshot${snap ? ` · built ${snap.builtAt.slice(0, 10)}` : ''} — `
-          + `${snap ? snap.entities.toLocaleString() : ''} companies that appear in the evidence, `
-          + `not the full coverage universe. Every dependency links to the sentence that supports it. `
-          + `Run it locally for live queries.`
-        )}
-        {mode === 'offline' && (
-          /* On a deployed HTTPS page the browser refuses to fetch an http://
-             localhost API at all, so "start the API" is advice that cannot
-             work here. Say what will. */
-          typeof window !== 'undefined' && window.location.protocol === 'https:'
-            ? 'This is the interface only. The graph lives in a database on your own machine, and a page served over HTTPS is not allowed to reach it — run the project locally and open localhost:5173.'
-            : 'API offline — start it with: make up'
-        )}
-      </div>
+      {/* The strip only appears when something is wrong. A banner across a
+          working page explaining that it is working is noise - the status line
+          in the header already says which mode this is, and the snapshot's
+          build date lives on the about page. */}
+      {mode === 'offline' && (
+        <div className="mockstrip">
+          {typeof window !== 'undefined' && window.location.protocol === 'https:'
+            ? 'No data loaded. If you are running this locally, start the API with: make up'
+            : 'API offline — start it with: make up'}
+        </div>
+      )}
 
       <header className="topbar">
         <span className="brand">{PRODUCT}</span>
@@ -149,6 +137,8 @@ export default function App() {
             </button>
           ))}
         </nav>
+        <Search points={points}
+                onPick={uid => setView({ k: 'company', uid, back: view })} />
         <span className="status">
           <i className={mode === 'live' || mode === 'snapshot' ? 'ok' : 'bad'} />
           {mode === 'live' || mode === 'snapshot'
