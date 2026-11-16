@@ -40,6 +40,9 @@ to answer from the repo rather than from memory.
 | `sec-cte` | `company_tickers_exchange.json` | ticker ↔ CIK ↔ name ↔ **exchange**, ordered by market cap | HTTPS JSON | 10 req/s, User-Agent required | yes | yes | — | **pending signature** |
 | `us-cities-db` | US-Cities-Database (kelvins) | 29,738 US city → lat/lon | GitHub raw CSV | none | yes | yes — **MIT** | auto | 2026-10-23 |
 | `geonames-cities15000` | GeoNames cities15000 | 39,026 world city → lat/lon + country | HTTPS zip | none | yes | yes — **CC BY 4.0**, attribution required | auto | 2026-10-23 |
+| `usgs-earthquake` | USGS earthquake feed | M4.5+ earthquakes, last 30 days: magnitude, epicentre, time | HTTPS GeoJSON | none stated | yes | yes — **US government work**, not copyrightable | auto | 2026-11-16 |
+| `nasa-eonet` | NASA Earth Observatory Natural Event Tracker | open natural hazards: storms, wildfires, volcanoes, floods, with coordinates | HTTPS JSON | none stated | yes | yes — **US government work** | auto | 2026-11-16 |
+| `gdelt-doc` | GDELT 2.0 Document API | world news article index, 15-minute cadence, used to **detect** named disruptions | HTTPS JSON | **1 request / 5 s**, enforced | yes | links and headlines only — **article text is the publisher's** | auto | 2026-11-16 |
 
 **Measured 2026-09-20:** `company_tickers.json` returned HTTP 200, 799,073 bytes, in
 3.21 s with a declared User-Agent. Ten 10-K documents fetched and parsed successfully
@@ -58,6 +61,38 @@ still owed.
 >
 > The User-Agent used in `scripts/measure_corpus.py` is a placeholder. The SEC asks for a
 > real contact address. **Set a real project address before any run larger than a test.**
+
+> **The event feeds, and what each number is allowed to mean.** Before 2026-11-16 every
+> event in the graph was a literal in `scripts/propagate.py` and `event_source` had never
+> held a row — nothing in Atlas watched the world. These three feeds change that, and the
+> rule they are held to is the one the rest of the pipeline follows: **a feed may decide
+> that something happened; it may not decide how much it matters unless it publishes its
+> own scale.**
+>
+> * **USGS** publishes moment magnitude, mapped by one formula to 0–1 between M4 and M9.
+> * **NASA EONET** publishes cyclone wind speed in knots, mapped onto the **Saffir–Simpson**
+>   thresholds. Categories with no magnitude take one documented constant each.
+> * **GDELT publishes no severity at all.** A GDELT event therefore takes its severity from
+>   a versioned topic table in `scripts/ingest_events.py` and never from the article text.
+>   GDELT decides *whether*; the table decides *how much*, and the table is in version
+>   control where it can be argued with. A topic needs **5 distinct domains** before it
+>   becomes an event and **12** before it is called corroborated.
+>
+> GDELT rate-limits to one request every five seconds and answers a faster caller with a
+> 429 that is not JSON, so the adapter waits rather than retrying into the same wall.
+
+---
+
+## Rejected or blocked
+
+| source_id | name | what it would have given us | status |
+|---|---|---|---|
+| `gdacs` | Global Disaster Alert and Coordination System (EC/UN) | disaster alerts with a published green/orange/red severity and coordinates | **blocked** — the site's WAF rejects an automated client outright (`Request Rejected`, support id, no feed), with any User-Agent. Not a licence problem; we simply cannot fetch it. |
+| `reliefweb` | UN OCHA ReliefWeb disasters API | disasters by country and type, with status | **blocked** — v1 decommissioned; v2 returns `AccessDeniedHttpException` without an `appname` approved by a person at OCHA. Open terms, closed door. Request the appname and revisit. |
+| `newsapi` | NewsAPI.org | general news search | **rejected** — free tier is explicitly development-only; production use requires a paid plan. Using it in a deployed project would breach the terms whatever the volume. |
+
+Both blocked rows stay here rather than being quietly dropped, because "why didn't you use
+GDACS?" is exactly the kind of question this file exists to answer.
 
 ---
 

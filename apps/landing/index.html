@@ -159,17 +159,26 @@ to why the graph is small.</p>
 </ul>
 
 <h2>The live app</h2>
-<p><a href="/app/"><strong>Open the globe &rarr;</strong></a></p>
-<p class="small">What is deployed here is the interface. The graph itself lives
-in a PostgreSQL database holding 225 filings and their character offsets, which
-runs on the machine doing the reading - and a page served over HTTPS is not
-permitted by the browser to reach a database on your own computer, so this copy
-will always say <em>API offline</em>. It is here so the design and the
-interaction can be looked at.</p>
-<p class="small">To see it with real data, clone the repository and run
-<code>make up</code>, then open <code>localhost:5173</code>. Everything becomes
-clickable: pick a company, read the sentence it was extracted from, and follow
-the link through to that filing on the SEC's own servers.</p>
+<p><a href="/"><strong>Open the globe &rarr;</strong></a></p>
+<p class="small">This one has the data in it. Pick a company, read the sentence
+its dependency was extracted from, and follow the link through to that filing
+on the SEC's own servers. All 363 cited edges are there, all 571 claims, all
+26 events, and every one of the 14,738 filing passages behind them.</p>
+<p class="small"><strong>What it is not.</strong> A deployed page cannot reach a
+database on your computer - a browser refuses an HTTPS page's request to
+<code>http://localhost</code> - so this copy is served from a frozen snapshot of
+the API's own responses rather than from a live query. Two things follow, and
+both are worth knowing before you judge what you are looking at. It holds
+<strong>586 companies, not the 23,020</strong> in our coverage universe: the
+universe came from vendor market files that
+<a href="https://github.com/KrishOswal18/atlas-dependency-graph/blob/main/docs/sources.md">our
+own source register</a> marks <em>not cleared for publication</em>, so what we
+publish is the subset that actually carries evidence - a company we cited, read
+a filing of, or reached by propagation. And it is a snapshot, so it answers the
+questions the interface asks and not arbitrary ones.</p>
+<p class="small">Run it locally and both limits go: <code>make up</code>, then
+open <code>localhost:5173</code>, and the same interface queries the real
+database over the full universe.</p>
 
 <h2>Run it</h2>
 <pre><code>make dev        # Postgres + PostGIS, migrations, reference data

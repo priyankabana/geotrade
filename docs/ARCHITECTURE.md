@@ -1,4 +1,4 @@
-# Architecture & stack
+![1794853192998](image/ARCHITECTURE/1794853192998.png)![1794853197032](image/ARCHITECTURE/1794853197032.png)![1794853209996](image/ARCHITECTURE/1794853209996.png)![1794853211646](image/ARCHITECTURE/1794853211646.png)# Architecture & stack
 
 Decisions are made, not surveyed. Where a choice was close, the reason is noted so a
 future you can revisit it with context.

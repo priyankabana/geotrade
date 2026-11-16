@@ -216,7 +216,15 @@ def sectors(iso2: str):
             GROUP BY 1, 2
             -- 'Unclassified' is a gap in our mapping, not a sector anyone wants to
             -- browse, so it sorts last however big it is.
-            ORDER BY (e.atlas_sector = 'OTHER'), count(*) DESC
+            --
+            -- Within the rest, sort by how many companies actually carry an
+            -- edge, not by how many companies exist. Sorting by size put the
+            -- biggest sector first and its first company had no filings and no
+            -- dependencies - a dead end one click from the globe.
+            ORDER BY (e.atlas_sector = 'OTHER'),
+                     count(*) FILTER (WHERE e.id IN (SELECT from_entity_id FROM dependency_edge)
+                                        OR e.id IN (SELECT to_entity_id FROM dependency_edge)) DESC,
+                     count(*) DESC
         """, (iso2.upper(),))
         return [{
             "atlasSector": r["code"], "name": r["name"] or r["code"],
@@ -237,7 +245,10 @@ def companies(iso2: str, sector: str, limit: int = Query(200, ge=1, le=1000)):
             LEFT JOIN dependency_edge d ON d.from_entity_id = e.id
             WHERE l.country = %s AND e.atlas_sector = %s
             GROUP BY 1,2,3,4
-            ORDER BY count(d.id) DESC, e.common_name
+            -- Companies that carry evidence first, then by name. A company
+            -- with no edge is still listed - it is part of the universe - but
+            -- it should not be the first thing a reader clicks.
+            ORDER BY count(d.id) DESC, m.band IS NULL, e.common_name
             LIMIT %s
         """, (iso2.upper(), sector, limit))
         return [{
@@ -441,6 +452,128 @@ def metrics():
             "narrativeTier": {"judged": 60, "correct": 41, "method": "seeded random sample"},
         },
     }
+
+
+SIGNAL_SQL = """
+    SELECT s.id, s.direction, s.basis, s.magnitude, s.hops, s.rule_id,
+           s.rationale, s.as_of, s.scorer_version,
+           a.symbol, a.name AS asset_name, a.asset_class, a.currency,
+           li.company_uid,
+           ev.id AS event_id, ev.name AS event_name, ev.event_type,
+           ev.severity, ev.became_public_utc, ev.dedupe_key,
+           COALESCE(ev.source_feed, 'benchmark') AS feed,
+           dc.quote, d.doc_type, d.filed_at_utc, d.primary_doc_url,
+           fe.common_name AS filer_name
+    FROM asset_signal s
+    JOIN asset a ON a.id = s.asset_id
+    JOIN event ev ON ev.id = s.event_id
+    LEFT JOIN entity_listing li ON li.entity_id = a.entity_id AND li.is_primary
+    LEFT JOIN dependency_edge de ON de.id = s.edge_id
+    LEFT JOIN dependency_claim dc ON dc.id = de.claim_id
+    LEFT JOIN chunk ch ON ch.id = de.chunk_id
+    LEFT JOIN document d ON d.id = ch.document_id
+    LEFT JOIN entity fe ON fe.id = de.from_entity_id
+"""
+
+
+def _signal(r):
+    return {
+        "signalId": str(r["id"]),
+        "symbol": r["symbol"], "assetName": r["asset_name"],
+        "assetClass": r["asset_class"], "currency": r["currency"],
+        "companyUid": r["company_uid"],
+        "direction": r["direction"],
+        # The whole point of the two tiers. A caller can filter the board down
+        # to only what a company actually filed.
+        "basis": r["basis"],
+        "magnitude": float(r["magnitude"]),
+        "hops": r["hops"], "ruleId": r["rule_id"],
+        "rationale": r["rationale"],
+        "asOf": r["as_of"].isoformat(),
+        "scorerVersion": r["scorer_version"],
+        "event": {
+            "eventId": str(r["event_id"]), "key": r["dedupe_key"],
+            "name": r["event_name"], "eventType": r["event_type"],
+            "severity": float(r["severity"]) if r["severity"] is not None else None,
+            "becamePublicUtc": r["became_public_utc"].isoformat(),
+            "feed": r["feed"],
+        },
+        "citation": ({
+            "quote": r["quote"], "filerName": r["filer_name"],
+            "docType": r["doc_type"],
+            "filedAt": r["filed_at_utc"].isoformat() if r["filed_at_utc"] else None,
+            "url": r["primary_doc_url"],
+        } if r["quote"] else None),
+    }
+
+
+@app.get("/v1/signals")
+def signals(asset_class: str | None = None, direction: str | None = None,
+            basis: str | None = None, event: str | None = None,
+            q: str | None = None,
+            limit: int = Query(200, ge=1, le=1000)):
+    """Ranked per-asset signals.
+
+    `direction` is up/down/unclear and describes which way a disruption pushes,
+    not what anyone should do about it. `basis` separates the two tiers:
+    `cited_dependency` rows carry the filing sentence, `rule` rows carry the id
+    of the rule being asserted. Filtering to the former is how a sceptical
+    reader reduces this to only what is evidenced.
+    """
+    where, args = [], []
+    if asset_class:
+        where.append("a.asset_class = ANY(%s)")
+        args.append([c.strip() for c in asset_class.split(",") if c.strip()][:12])
+    if direction:
+        where.append("s.direction = %s"); args.append(direction)
+    if basis:
+        where.append("s.basis = %s"); args.append(basis)
+    if event:
+        where.append("(ev.dedupe_key = %s OR ev.id::text = %s)")
+        args += [event, event]
+    if q:
+        where.append("(a.symbol ILIKE %s OR a.name ILIKE %s)")
+        like = f"%{q.replace('%', '')[:60]}%"
+        args += [like, like]
+    sql = SIGNAL_SQL + (" WHERE " + " AND ".join(where) if where else "")
+    # Evidence outranks assertion at equal strength: a cited row and a rule row
+    # with the same magnitude are not equally good, and the default order should
+    # not pretend otherwise.
+    sql += """ ORDER BY (s.basis = 'cited_dependency') DESC, s.magnitude DESC,
+                        ev.became_public_utc DESC LIMIT %s"""
+    args.append(limit)
+    with cur() as c:
+        c.execute(sql, args)
+        return [_signal(r) for r in c.fetchall()]
+
+
+@app.get("/v1/signals/summary")
+def signals_summary():
+    """Counts for the dashboard's headline tiles and charts."""
+    with cur() as c:
+        c.execute("""SELECT a.asset_class, s.direction, s.basis, count(*) n,
+                            round(avg(s.magnitude), 3) avg_mag
+                     FROM asset_signal s JOIN asset a ON a.id = s.asset_id
+                     GROUP BY 1,2,3 ORDER BY 1,2""")
+        buckets = [{"assetClass": r["asset_class"], "direction": r["direction"],
+                    "basis": r["basis"], "count": r["n"],
+                    "avgMagnitude": float(r["avg_mag"])} for r in c.fetchall()]
+        c.execute("""SELECT COALESCE(ev.source_feed,'benchmark') feed,
+                            count(DISTINCT ev.id) events,
+                            count(s.id) signals
+                     FROM event ev LEFT JOIN asset_signal s ON s.event_id = ev.id
+                     GROUP BY 1 ORDER BY 3 DESC""")
+        feeds = [{"feed": r["feed"], "events": r["events"],
+                  "signals": r["signals"]} for r in c.fetchall()]
+        c.execute("""SELECT count(*) FILTER (WHERE basis='cited_dependency') cited,
+                            count(*) FILTER (WHERE basis='rule') ruled,
+                            count(DISTINCT asset_id) assets,
+                            count(DISTINCT event_id) events
+                     FROM asset_signal""")
+        t = c.fetchone()
+        return {"buckets": buckets, "feeds": feeds,
+                "totals": {"cited": t["cited"], "rule": t["ruled"],
+                           "assets": t["assets"], "events": t["events"]}}
 
 
 @app.get("/v1/events")

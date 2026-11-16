@@ -164,7 +164,16 @@ EVENTS = [
 ]
 
 
-FLOOR = 0.02   # below this a company is not meaningfully exposed
+FLOOR = 0.02
+# Below this an event is recorded, kept, and queryable, but not propagated.
+#
+# Live ingestion changed the shape of the problem. A M5.0 earthquake under the
+# Pacific and a 60-hectare wildfire in Mississippi are real, correctly severity-
+# scored events, and propagating them produced seven thousand signals that rank
+# at the bottom and bury the ones that matter. The threshold is on the event's
+# own severity, which every feed derives from its own published scale, so this
+# is a statement about the world and not about our appetite for rows.
+SEED_MIN_SEVERITY = 0.35   # below this a company is not meaningfully exposed
 
 
 def walk(out_edges, seeds, severity, max_hops=None, decay=None, floor=None):
@@ -226,11 +235,11 @@ def main():
         cur.execute("""
             INSERT INTO event (name, event_type, first_occurred_utc, became_public_utc,
                 confirmation_level, severity, severity_version, commodities,
-                chokepoints, dedupe_key)
-            VALUES (%s,%s,%s,%s,'primary_confirmed',%s,'seed-1.0',%s,%s,%s)
+                chokepoints, dedupe_key, seed_sectors)
+            VALUES (%s,%s,%s,%s,'primary_confirmed',%s,'seed-1.0',%s,%s,%s,%s)
             RETURNING id""",
             (e["name"], e["type"], e["occurred"], e["public"], e["severity"],
-             e["commodities"], e["chokepoints"], e["key"]))
+             e["commodities"], e["chokepoints"], e["key"], e["sectors"]))
         eid = cur.fetchone()[0]
         ids[e["key"]] = eid
         cur.execute("""INSERT INTO event_location (event_id, name, country, geom, radius_km,
@@ -238,8 +247,14 @@ def main():
                        VALUES (%s,%s,%s, ST_SetSRID(ST_MakePoint(%s,%s),4326)::geography, %s, 1.0)""",
                     (eid, e["place"], e["country"], e["lon"], e["lat"],
                      e.get("radius_km", 300)))
+    # Rows inserted before 0004 added the column have no seed rule on them, and
+    # the exposure loop below now reads the rule from the row rather than from
+    # this file. Backfill rather than require a rebuild.
+    for e in EVENTS:
+        cur.execute("UPDATE event SET seed_sectors=%s WHERE dedupe_key=%s "
+                    "AND seed_sectors IS NULL", (e["sectors"], e["key"]))
     conn.commit()
-    print(f"  {len(ids)} events seeded")
+    print(f"  {len(ids)} benchmark events seeded")
 
     # ---- the graph ------------------------------------------------------
     # Loaded per event through edges_as_of, which is the only sanctioned read.
@@ -261,9 +276,35 @@ def main():
     cur.execute("DELETE FROM exposure_precompute WHERE tenant_id=%s", (tenant,))
     conn.commit()
 
+    # Every event in the database, not only the ones written above. Events now
+    # arrive from scripts/ingest_events.py - USGS, NASA EONET and GDELT - and
+    # an ingested event that nothing propagates is an event that may as well
+    # not have been fetched.
+    cur.execute("""
+        SELECT id, dedupe_key, name, became_public_utc, severity, seed_sectors,
+               COALESCE(source_feed, 'benchmark') AS feed
+        FROM event
+        WHERE seed_sectors IS NOT NULL AND severity IS NOT NULL
+          AND severity >= %s
+        ORDER BY became_public_utc DESC""", (SEED_MIN_SEVERITY,))
+    todo = cur.fetchall()
+    cur.execute("SELECT count(*) FROM event WHERE severity < %s", (SEED_MIN_SEVERITY,))
+    quiet = cur.fetchone()[0]
+    print(f"\n  propagating {len(todo)} events "
+          f"({quiet} below severity {SEED_MIN_SEVERITY} are recorded, not propagated)")
+
+    # Those quiet events must not keep exposure rows from a previous run that
+    # propagated them: a threshold that only applies going forward is not a
+    # threshold, it is a comment.
+    cur.execute("""DELETE FROM exposure_precompute WHERE event_id IN
+                   (SELECT id FROM event WHERE severity < %s)""", (SEED_MIN_SEVERITY,))
+    conn.commit()
+
     total = 0
-    for e in EVENTS:
-        eid = ids[e["key"]]
+    skipped = 0
+    for eid, key, ename, public, severity, sectors, feed in todo:
+        e = dict(key=key, name=ename, public=public,
+                 severity=float(severity), sectors=sectors)
         asof = e["public"]
         out_edges = graph_as_of(asof)
 
@@ -296,6 +337,10 @@ def main():
 
         rows = [(tenant, eid, ent, round(sc, 4), h, h >= 2, asof, SCORER)
                 for ent, (sc, h, p) in best.items() if sc >= FLOOR]
+
+        # Recomputing must replace, not accumulate. Ingestion runs repeatedly,
+        # and ON CONFLICT DO NOTHING only helps where a constraint exists.
+        cur.execute("DELETE FROM exposure_precompute WHERE event_id=%s", (eid,))
         for r in rows:
             cur.execute("""INSERT INTO exposure_precompute
                 (tenant_id, event_id, entity_id, score, hops, is_surprising,
@@ -304,10 +349,17 @@ def main():
                 ON CONFLICT DO NOTHING""", r)
         conn.commit()
         surp = sum(1 for r in rows if r[5])
-        print(f"  {e['name'][:46]:48} {len(rows):5} exposed  {surp:4} beyond hop 1")
+        if rows:
+            print(f"  {feed:<16} {e['name'][:40]:42} {len(rows):5} exposed "
+                  f"{surp:4} beyond hop 1")
+        else:
+            skipped += 1
         total += len(rows)
 
     print(f"\n  {total:,} exposure rows precomputed")
+    # An earthquake in the mid-Atlantic reaches nobody we cover. Saying so is
+    # more useful than printing eighty lines of zero.
+    print(f"  {skipped} events reached no company we cover")
     conn.close()
 
 if __name__ == "__main__":

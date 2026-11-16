@@ -1,13 +1,18 @@
 import { useEffect, useMemo, useState } from 'react'
 import Globe3D, { type ArcSpec, type Pt } from './components/Globe3D'
 import Timeline from './components/Timeline'
-import { CountryList, SectorList, CompanyList, EdgeList, ExposureList, Empty } from './components/Panels'
+import { CountryList, SectorList, CompanyList, ExposureList, Empty } from './components/Panels'
 import * as api from './client'
+import SignalsBoard from './components/SignalsBoard'
+import { tvSymbol } from './components/StockPanel'
+import CompanyPage from './components/CompanyPage'
 import type { CompanyDetail, CompanyRow, CountryTile, ExposureResponse, SectorMove } from '@shared/api'
 
 const PRODUCT = import.meta.env.VITE_PRODUCT_NAME ?? 'Atlas'
 
-type Surface = 'live' | 'replay' | 'simulate'
+// 'signals' is the analysis surface. The globe answers where; it answers
+// what now, and it is a board rather than a map because ranking is reading.
+type Surface = 'live' | 'signals' | 'replay' | 'simulate'
 type View =
   | { k: 'home' }
   | { k: 'country'; iso2: string }
@@ -19,7 +24,7 @@ export default function App() {
   const [mode, setMode] = useState<api.Mode>('checking')
   const [surface, setSurface] = useState<Surface>('live')
   const [view, setView] = useState<View>({ k: 'home' })
-  const [tab, setTab] = useState<'up' | 'down'>('up')
+  const [tab, setTab] = useState<'up' | 'down' | 'market'>('up')
 
   const [countries, setCountries] = useState<CountryTile[]>([])
   const [points, setPoints] = useState<Pt[]>([])
@@ -34,7 +39,9 @@ export default function App() {
 
   useEffect(() => { api.probe().then(setMode) }, [])
   useEffect(() => {
-    if (mode !== 'live') return
+    // A snapshot is served by the same client through the same calls, so every
+    // loader below is unchanged - only where the bytes come from differs.
+    if (mode !== 'live' && mode !== 'snapshot') return
     api.getCountries().then(setCountries)
     api.getMetrics().then(setMetrics)
     api.getPoints().then(setPoints)
@@ -98,6 +105,8 @@ export default function App() {
     })
   }, [showEvent, exposure, evLoc, byUid])
 
+  const tvSym = detail ? tvSymbol(detail.listings) : null
+  const snap = mode === 'snapshot' ? api.getSnapshotMeta() : null
   const go = (v: View) => { setView(v); if (v.k !== 'event') setSurface('live') }
   const totalCompanies = countries.reduce((a, c) => a + c.companyCount, 0)
 
@@ -106,6 +115,17 @@ export default function App() {
       <div className="mockstrip" style={{ background: mode === 'live' ? 'var(--surprise)' : 'var(--accent)' }}>
         {mode === 'checking' && 'connecting to API…'}
         {mode === 'live' && `Live — extraction has run. Every dependency below links to the sentence in the filing that supports it.`}
+        {/* Not "live", and the strip should not imply it is. The graph, the
+            edges and the quoted sentences are the real ones; what is missing
+            is the 23,020-company universe, which came from vendor files we
+            have not cleared for publication. Saying so is more useful than a
+            green light. */}
+        {mode === 'snapshot' && (
+          `Published snapshot${snap ? ` · built ${snap.builtAt.slice(0, 10)}` : ''} — `
+          + `${snap ? snap.entities.toLocaleString() : ''} companies that appear in the evidence, `
+          + `not the full coverage universe. Every dependency links to the sentence that supports it. `
+          + `Run it locally for live queries.`
+        )}
         {mode === 'offline' && (
           /* On a deployed HTTPS page the browser refuses to fetch an http://
              localhost API at all, so "start the API" is advice that cannot
@@ -119,18 +139,22 @@ export default function App() {
       <header className="topbar">
         <span className="brand">{PRODUCT}</span>
         <nav className="surfaces">
-          {(['live', 'replay', 'simulate'] as Surface[]).map(s => (
+          {(['live', 'signals', 'replay', 'simulate'] as Surface[]).map(s => (
             <button key={s} aria-selected={surface === s}
-                    onClick={() => { setSurface(s); setView(s === 'live' ? { k: 'home' } : { k: 'event' }) }}>
+                    onClick={() => {
+                      setSurface(s)
+                      setView(s === 'live' || s === 'signals' ? { k: 'home' } : { k: 'event' })
+                    }}>
               {s}
             </button>
           ))}
         </nav>
         <span className="status">
-          <i className={mode === 'live' ? 'ok' : 'bad'} />
-          {mode === 'live'
+          <i className={mode === 'live' || mode === 'snapshot' ? 'ok' : 'bad'} />
+          {mode === 'live' || mode === 'snapshot'
             ? `${totalCompanies.toLocaleString()} companies · ${countries.length} countries`
               + (metrics ? ` · ${metrics.graph.relationships} cited relationships` : '')
+              + (mode === 'snapshot' ? ' · snapshot' : '')
             : mode === 'checking' ? 'connecting…' : 'API offline'}
         </span>
         <span className="asof num">
@@ -138,6 +162,17 @@ export default function App() {
         </span>
       </header>
 
+      {surface === 'signals' ? <SignalsBoard />
+       /* A company gets the whole width. It used to share a 430px column with
+          the globe, which made the chart unreadable and kept a map on screen
+          for a question the reader had already stopped asking. */
+       : view.k === 'company' ? (
+         detail
+           ? <CompanyPage detail={detail} tab={tab} setTab={setTab} tvSym={tvSym}
+                          onBack={() => go(view.back)} />
+           : <div className="cpage"><div className="cpage-body">
+               <Empty title="Loading…" body="" /></div></div>
+       ) : (
       <div className={`main${surface === 'replay' ? ' with-timeline' : ''}`}>
         <div className="stage">
           <Globe3D
@@ -163,31 +198,21 @@ export default function App() {
             <div className="crumbs">
               {view.k !== 'home' && <><button onClick={() => go({ k: 'home' })}>World</button><span> / </span></>}
               {view.k === 'sector' && <><button onClick={() => go({ k: 'country', iso2: view.iso2 })}>{view.iso2}</button><span> / </span></>}
-              {view.k === 'company' && <><button onClick={() => setView(view.back)}>back</button><span> / </span></>}
               {view.k === 'home' && 'Coverage by country'}
             </div>
             <div className="title">
               {view.k === 'home' ? 'Coverage by country'
                 : view.k === 'country' ? (countries.find(c => c.country === view.iso2)?.name ?? view.iso2)
                 : view.k === 'sector' ? view.sector.name
-                : view.k === 'company' ? (detail?.commonName ?? view.uid)
                 : (current?.name ?? 'Exposure')}
             </div>
             <div className="sub">
               {view.k === 'home' ? `${points.length.toLocaleString()} headquarters on the globe`
                 : view.k === 'country' ? `${countries.find(c => c.country === view.iso2)?.companyCount ?? 0} companies · ${countries.find(c => c.country === view.iso2)?.mappedCompanyCount ?? 0} with cited edges`
                 : view.k === 'sector' ? `${view.sector.companyCount} companies`
-                : view.k === 'company' ? view.uid
                 : 'Ranked by disclosed dependence'}
             </div>
           </div>
-
-          {view.k === 'company' && (
-            <div className="tabs">
-              <button aria-selected={tab === 'up'} onClick={() => setTab('up')}>Depends on</button>
-              <button aria-selected={tab === 'down'} onClick={() => setTab('down')}>Depended on by</button>
-            </div>
-          )}
 
           <div className="panel-body">
             {showEvent ? (
@@ -212,25 +237,15 @@ export default function App() {
             ) : view.k === 'country' ? (
               sectors === null ? <Empty title="Loading…" body="" />
                 : <SectorList sectors={sectors} onPick={s => go({ k: 'sector', iso2: view.iso2, sector: s })} />
-            ) : view.k === 'sector' ? (
+            ) : (
               companies === null ? <Empty title="Loading…" body="" />
-                : <CompanyList companies={companies} onPick={c => setView({ k: 'company', uid: c.companyUid, back: view })} />
-            ) : detail === null ? <Empty title="Loading…" body="" /> : (
-              <>
-                <dl className="kv">
-                  <dt>Legal name</dt><dd>{detail.legalName}</dd>
-                  <dt>Sector</dt><dd>{detail.atlasSector}</dd>
-                  <dt>HQ</dt><dd>{detail.hq.city ?? '—'}, {detail.countryHq}</dd>
-                  <dt>Filings held</dt><dd className="num">{detail.documentCount}</dd>
-                  <dt>Identifiers</dt><dd className="num">{detail.identifiers.map(i => `${i.scheme} ${i.value}`).join(' · ') || '—'}</dd>
-                </dl>
-                {tab === 'up' ? <EdgeList edges={detail.dependsOn} label="Depends on" />
-                              : <EdgeList edges={detail.dependedOnBy} label="Depended on by" />}
-              </>
+                : <CompanyList companies={companies}
+                               onPick={c => setView({ k: 'company', uid: c.companyUid, back: view })} />
             )}
           </div>
         </aside>
       </div>
+      )}
     </div>
   )
 }

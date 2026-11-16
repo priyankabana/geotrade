@@ -1,4 +1,4 @@
-.PHONY: help up dev down db psql db-ui query migrate migrate-status load link-cik ingest extract propagate pipeline gazetteer gazetteer-df sample audit backtest alerts recall review key keys eval stats validate measure universe api web narrate demo build test clean
+.PHONY: help up dev down db psql db-ui query migrate migrate-status load link-cik ingest extract propagate pipeline gazetteer gazetteer-df sample audit backtest alerts recall review key keys eval stats validate measure universe api web narrate demo build public-db site deploy test clean
 
 help:
 	@grep -E '^[a-z-]+:.*##' $(MAKEFILE_LIST) | sed 's/:.*## /\t/' | expand -t22
@@ -146,6 +146,23 @@ web:                   ## Run the frontend
 
 build:                 ## Production build of the frontend
 	cd apps/web && npm run build
+
+public-db:             ## Rebuild atlas_public: the subset we may publish
+	python3 -I scripts/export_public_db.py
+
+site:                  ## Assemble the public site (landing + app + snapshot)
+	scripts/build_site.sh
+
+# Vercel reads the surrounding repository's git metadata and refuses a
+# deployment whose commit author is not a member of the Vercel team - which is
+# every deployment here, because the repo's commits are authored by a teammate.
+# Copying the built site outside the repository first leaves no git metadata to
+# object to. ATLAS_DEPLOY_DIR overrides where that copy goes.
+DEPLOY_DIR ?= $(TMPDIR)atlas-site
+deploy: site           ## Build and push the public site to Vercel
+	@rm -rf "$(DEPLOY_DIR)" && mkdir -p "$(DEPLOY_DIR)"
+	@cp -R build/site/. "$(DEPLOY_DIR)/"
+	@cd "$(DEPLOY_DIR)" && npx vercel deploy --prod --yes
 
 test:                  ## Run all tests
 	cd apps/web && npm run typecheck
