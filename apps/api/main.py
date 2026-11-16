@@ -25,7 +25,14 @@ REQUIRE_KEY = os.environ.get("ATLAS_REQUIRE_KEY", "") not in ("", "0", "false")
 logging.basicConfig(level=logging.INFO, format="%(message)s")
 log = logging.getLogger("atlas")
 app = FastAPI(title=f"{PRODUCT_NAME} API", version="0.2.0")
-app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173"],
+# The deployed front end is served from Vercel but talks to whatever API the
+# viewer points it at - normally their own machine, running make up. Without
+# the deployed origin here, that request is refused by the browser before it
+# ever reaches us. Extra origins can be added with ATLAS_CORS_ORIGINS.
+CORS_ORIGINS = ["http://localhost:5173", "http://127.0.0.1:5173"] + [
+    o.strip() for o in os.environ.get("ATLAS_CORS_ORIGINS", "").split(",") if o.strip()]
+app.add_middleware(CORSMiddleware, allow_origins=CORS_ORIGINS,
+                   allow_origin_regex=r"https://.*\.vercel\.app",
                    allow_methods=["GET"], allow_headers=["*"])
 
 _pool = ConnectionPool(DSN, min_size=1, max_size=8, open=False,

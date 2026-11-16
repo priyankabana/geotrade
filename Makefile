@@ -14,12 +14,16 @@ up:                    ## Bring everything back after a restart: db, API, web
 	@docker compose -f infra/docker-compose.yml up -d >/dev/null
 	@for i in $$(seq 1 30); do docker compose -f infra/docker-compose.yml exec -T db pg_isready -U atlas >/dev/null 2>&1 && break; sleep 2; done
 	@pkill -f "uvicorn main:app" 2>/dev/null || true
+	@pkill -f "atlas-web.*vite" 2>/dev/null || true
+	@for i in $$(seq 1 20); do lsof -ti :8000 >/dev/null 2>&1 || break; sleep 1; done
 	@( cd apps/api && nohup python3 -I -m uvicorn main:app --port 8000 --host 127.0.0.1 >/tmp/atlas_api.log 2>&1 </dev/null & ) >/dev/null 2>&1
 	@( cd apps/web && nohup npm run dev >/tmp/atlas_web.log 2>&1 </dev/null & ) >/dev/null 2>&1
 	@for i in $$(seq 1 40); do curl -s --max-time 2 localhost:8000/v1/health >/dev/null 2>&1 && break; sleep 2; done
 	@for i in $$(seq 1 40); do curl -s --max-time 2 localhost:5173 >/dev/null 2>&1 && break; sleep 2; done
 	@echo ""
-	@echo "  api  :8000   $$(curl -s --max-time 3 localhost:8000/v1/health || echo DOWN)"
+	@curl -s --max-time 3 localhost:8000/v1/health >/dev/null 2>&1 \
+	  && echo "  api  :8000   $$(curl -s --max-time 3 localhost:8000/v1/health)" \
+	  || echo "  api  :8000   DOWN - see /tmp/atlas_api.log"
 	@echo "  web  :5173   $$(curl -s --max-time 3 -o /dev/null -w '%{http_code}' localhost:5173)"
 	@echo ""
 	@echo "  logs: /tmp/atlas_api.log  /tmp/atlas_web.log"

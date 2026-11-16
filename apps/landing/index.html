@@ -158,6 +158,19 @@ to why the graph is small.</p>
       code. No employer systems, no licensed feeds, no credentials.</li>
 </ul>
 
+<h2>The live app</h2>
+<p><a href="/app/"><strong>Open the globe &rarr;</strong></a></p>
+<p class="small">What is deployed here is the interface. The graph itself lives
+in a PostgreSQL database holding 225 filings and their character offsets, which
+runs on the machine doing the reading - and a page served over HTTPS is not
+permitted by the browser to reach a database on your own computer, so this copy
+will always say <em>API offline</em>. It is here so the design and the
+interaction can be looked at.</p>
+<p class="small">To see it with real data, clone the repository and run
+<code>make up</code>, then open <code>localhost:5173</code>. Everything becomes
+clickable: pick a company, read the sentence it was extracted from, and follow
+the link through to that filing on the SEC's own servers.</p>
+
 <h2>Run it</h2>
 <pre><code>make dev        # Postgres + PostGIS, migrations, reference data
 make pipeline   # filings -> chunks -> cited claims -> graph -> exposure

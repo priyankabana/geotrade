@@ -106,7 +106,14 @@ export default function App() {
       <div className="mockstrip" style={{ background: mode === 'live' ? 'var(--surprise)' : 'var(--accent)' }}>
         {mode === 'checking' && 'connecting to API…'}
         {mode === 'live' && `Live — extraction has run. Every dependency below links to the sentence in the filing that supports it.`}
-        {mode === 'offline' && 'API offline — start it with: make api'}
+        {mode === 'offline' && (
+          /* On a deployed HTTPS page the browser refuses to fetch an http://
+             localhost API at all, so "start the API" is advice that cannot
+             work here. Say what will. */
+          typeof window !== 'undefined' && window.location.protocol === 'https:'
+            ? 'This is the interface only. The graph lives in a database on your own machine, and a page served over HTTPS is not allowed to reach it — run the project locally and open localhost:5173.'
+            : 'API offline — start it with: make up'
+        )}
       </div>
 
       <header className="topbar">
