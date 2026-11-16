@@ -23,10 +23,12 @@ never tell you what to buy or sell. [Why that matters](COMPLIANCE.md).
 
 ```bash
 cp .env.example .env
-make dev        # Postgres + PostGIS + Redis, migrate, load the universe
+make dev        # first time: Postgres + PostGIS + Redis, migrate, load the universe
 make api        # read API on :8000
 make web        # frontend on :5173
 make demo       # re-record the walkthrough video
+
+make up         # after a restart: brings Docker, the database and both servers back
 ```
 
 Rebuild the universe from the raw market files:

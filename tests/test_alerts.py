@@ -95,6 +95,13 @@ def test_the_read_path_alert_fires_when_the_api_is_unreachable(monkeypatch):
 
 
 def test_the_read_path_alert_fires_when_the_budget_is_blown(monkeypatch):
+    """Needs a reachable API: with none, the alert fires for the other reason
+    and this test would be checking nothing."""
+    import urllib.request
+    try:
+        urllib.request.urlopen(alerts.API + "/v1/health", timeout=3).read(1)
+    except Exception:
+        pytest.skip(f"API not running at {alerts.API} - start it with: make api")
     monkeypatch.setattr(alerts, "READ_BUDGET_MS", 0)
     firing, detail = alerts.read_path_slow()
     assert firing is True, detail

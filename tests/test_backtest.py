@@ -17,10 +17,29 @@ def run(cwd, *args):
                           capture_output=True, text=True, cwd=cwd, timeout=180)
 
 
+def _database_is_up():
+    """These tests run the real script as a subprocess, so the usual `tx`
+    fixture cannot guard them. Check connectivity here instead, or the suite
+    fails on a laptop with nothing running rather than skipping."""
+    try:
+        import psycopg
+    except ImportError:
+        return False
+    try:
+        psycopg.connect(os.environ.get("DATABASE_URL",
+                                       "postgresql://atlas:atlas@localhost:5432/atlas"),
+                        connect_timeout=3).close()
+        return True
+    except Exception:
+        return False
+
+
 @pytest.fixture
 def sandbox(tmp_path):
     """A copy of the repo's eval directory, so a test can tamper with the
     baseline without touching the real one."""
+    if not _database_is_up():
+        pytest.skip("no database; backtest.py cannot run")
     if not os.path.exists(BASELINE):
         pytest.skip("no baseline; run make backtest")
     (tmp_path / "eval").mkdir()

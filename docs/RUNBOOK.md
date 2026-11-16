@@ -8,6 +8,25 @@ document and it should be fixed in the same pull request that discovers it.
 
 ---
 
+## Nothing works this morning
+
+Almost always: the machine restarted and Docker is not running, so the database
+is down and the two servers died with it. One command brings all three back and
+tells you what it found:
+
+```bash
+make up
+```
+
+It starts Docker Desktop if it has to, waits for Postgres to accept
+connections, restarts the API and the web server detached, and prints their
+status. It takes a few seconds. Nothing is rebuilt and no data is touched.
+
+If the test suite was failing before you ran it, that was the same cause: 151
+of the 294 tests need a database or a running server and skip themselves
+without one. **A skipped test is not a failing test.** If you see failures
+rather than skips, something is genuinely wrong.
+
 ## Bring the whole thing up from nothing
 
 ```bash
