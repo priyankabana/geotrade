@@ -1,5 +1,12 @@
 # `docker compose up` from this folder gives any teammate the whole stack locally.
 # Getting this working in week 1 pays for itself ten times over.
+#
+# Every port below is bound to 127.0.0.1 on purpose. Docker's default,
+# "5432:5432", publishes on 0.0.0.0, which means anyone on the same network —
+# college wifi, a cafe, a shared hostel connection — can reach these. The
+# password is "atlas" and pgweb has no login at all, so that default put a
+# browser SQL console over the whole dataset on the open network. Binding to
+# 127.0.0.1 keeps them reachable from this machine and nowhere else.
 services:
   db:
     image: postgis/postgis:16-3.4
@@ -7,7 +14,7 @@ services:
       POSTGRES_USER: atlas
       POSTGRES_PASSWORD: atlas
       POSTGRES_DB: atlas
-    ports: ["5432:5432"]
+    ports: ["127.0.0.1:5432:5432"]
     volumes:
       - atlas_pg:/var/lib/postgresql/data
       - ./../infra/migrations:/migrations:ro
@@ -19,7 +26,7 @@ services:
 
   redis:
     image: redis:7-alpine
-    ports: ["6379:6379"]
+    ports: ["127.0.0.1:6379:6379"]
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 3s
@@ -35,7 +42,7 @@ services:
         condition: service_healthy
     environment:
       PGWEB_DATABASE_URL: postgres://atlas:atlas@db:5432/atlas?sslmode=disable
-    ports: ["8081:8081"]
+    ports: ["127.0.0.1:8081:8081"]
     restart: unless-stopped
 
 volumes:
