@@ -102,6 +102,10 @@ def main():
     save("/v1/graph", get("/v1/graph"))
     save("/v1/signals", get("/v1/signals?limit=1000"))
     save("/v1/signals/summary", get("/v1/signals/summary"))
+    # The newsroom is one file, not one per company: the feed is read in bulk
+    # and the client filters it, because a static build cannot answer a query
+    # string.
+    save("/v1/news", get("/v1/news?limit=600"))
 
     events = get("/v1/events")
     save("/v1/events", events)

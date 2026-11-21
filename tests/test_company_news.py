@@ -60,7 +60,13 @@ def test_a_name_that_is_an_ordinary_word_is_not_queried_bare():
 
 
 def test_the_stored_rows_are_about_their_company(db):
-    """The filter is applied at write time; this checks the table agrees."""
+    """The filter is applied at write time; this checks the table agrees.
+
+    Press rows only. An EDGAR filing is filed by the company itself, so the
+    subject test that applies to a journalist's headline does not apply to
+    "8-K: Results of operations and financial condition" - it names nobody and
+    is still unambiguously that filer's.
+    """
     cur = db.cursor()
     cur.execute("SELECT to_regclass('public.company_news')")
     if not cur.fetchone()[0]:
@@ -69,6 +75,7 @@ def test_the_stored_rows_are_about_their_company(db):
                    FROM company_news n
                    JOIN entity e ON e.id = n.entity_id
                    LEFT JOIN entity_listing li ON li.entity_id = e.id AND li.is_primary
+                   WHERE n.source_id = 'gdelt-doc'
                    LIMIT 400""")
     rows = cur.fetchall()
     if not rows:

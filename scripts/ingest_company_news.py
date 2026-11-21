@@ -44,7 +44,12 @@ FORMS = re.compile(r"(?i)\b(inc|corp|corporation|co|ltd|limited|plc|llc|lp|nv|sa
 # need the ticker to disambiguate rather than the name alone.
 TOO_GENERIC = {"apple", "amazon", "shell", "unity", "block", "match", "gap",
                "target", "visa", "nike", "ford", "arm", "box", "chase", "pool",
-               "square", "open", "sky", "alpha", "delta", "range", "core"}
+               "square", "open", "sky", "alpha", "delta", "range", "core",
+               # Found the same way the others were - by reading what came
+               # back. "Sydney cafe set alight in alleged arson attack" was
+               # filed under Alight Inc. Checking every single-word name in
+               # the universe against /usr/share/dict/words turned up these.
+               "alight", "credo", "dana", "brunswick"}
 
 
 def clean(name: str) -> str:
@@ -139,10 +144,16 @@ def purge(conn, apply: bool) -> int:
     scripts/retract.py: re-test, withdraw, never add.
     """
     cur = conn.cursor()
+    # Only press rows are re-tested. An EDGAR filing is filed BY the company,
+    # so "does the headline name it" is the wrong question to ask of one:
+    # "8-K: Results of operations" names no one and is still unambiguously
+    # that filer's. Judging it by this filter would delete the most reliable
+    # rows in the table.
     cur.execute("""SELECT n.id, n.headline, e.common_name, li.ticker
                    FROM company_news n
                    JOIN entity e ON e.id = n.entity_id
-                   LEFT JOIN entity_listing li ON li.entity_id = e.id AND li.is_primary""")
+                   LEFT JOIN entity_listing li ON li.entity_id = e.id AND li.is_primary
+                   WHERE n.source_id = %s""", (SOURCE_ID,))
     doomed = [(nid, head, who) for nid, head, who, tick in cur.fetchall()
               if not about(head, who, tick)]
     if not doomed:
@@ -175,6 +186,9 @@ def main():
     if "--days" in argv:
         days = int(argv[argv.index("--days") + 1])
     everyone = "--all" in argv
+    mics = None
+    if "--mic" in argv:
+        mics = [m.strip().upper() for m in argv[argv.index("--mic") + 1].split(",") if m.strip()]
 
     conn = psycopg.connect(DSN)
     cur = conn.cursor()
@@ -182,6 +196,8 @@ def main():
     scope = "" if everyone else """
         AND (e.id IN (SELECT from_entity_id FROM dependency_edge)
           OR e.id IN (SELECT to_entity_id   FROM dependency_edge))"""
+    if mics:
+        scope += "\n        AND li.exchange_mic = ANY(%s)" % ("'{" + ",".join(mics) + "}'",)
     cur.execute(f"""
         SELECT e.id, e.common_name, li.ticker
         FROM entity e

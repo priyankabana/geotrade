@@ -1,4 +1,4 @@
-.PHONY: help up dev down db psql db-ui query migrate migrate-status load link-cik ingest extract events events-dry news signals refresh propagate pipeline gazetteer gazetteer-df sample audit backtest alerts recall review key keys eval stats validate measure universe api web narrate demo build public-db site deploy test clean
+.PHONY: filings calendar sentiment sentiment-report help up dev down db psql db-ui query migrate migrate-status load link-cik ingest extract events events-dry news signals refresh propagate pipeline gazetteer gazetteer-df sample audit backtest alerts recall review key keys eval stats validate measure universe api web narrate demo build public-db site deploy test clean
 
 help:
 	@grep -E '^[a-z-]+:.*##' $(MAKEFILE_LIST) | sed 's/:.*## /\t/' | expand -t22
@@ -73,6 +73,19 @@ events:                ## Fetch live events (USGS, NASA EONET, GDELT)
 
 events-dry:            ## Fetch and print, write nothing
 	python3 -I scripts/ingest_events.py --dry-run
+
+filings:               ## Fetch 10-Q/10-K/8-K text from EDGAR (needs ATLAS_CONTACT)
+	python3 -I scripts/ingest_filings.py --forms 10-Q,10-K --limit 40
+
+calendar:              ## Fetch reporting dates companies announced in their 8-Ks
+	python3 -I scripts/ingest_filings.py --forms 8-K --days 60 --limit 60 --calendar
+
+sentiment:             ## Score news and filing text (lexicon by default)
+	python3 -I scripts/sentiment.py --source news --limit 2000
+	python3 -I scripts/sentiment.py --source filings --limit 500
+
+sentiment-report:      ## Show what has been scored, by version
+	python3 -I scripts/sentiment.py --report
 
 news:                  ## Fetch headlines per company (GDELT, rate limited)
 	python3 -I scripts/ingest_company_news.py --limit 40

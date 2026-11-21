@@ -168,3 +168,15 @@ export type CompanyNews = {
 }
 export const getCompanyNews = (uid: string) =>
   safe<CompanyNews | null>(`/v1/companies/${encodeURIComponent(uid)}/news`, null)
+
+// --- the newsroom: every headline we hold, across companies -----------------
+export type FeedItem = NewsItem & {
+  companyUid: string; ticker: string; market: string; company: string
+}
+export type Newsroom = {
+  items: FeedItem[]; source: string
+  totals: { headlines: number; companies: number }
+  lastCheckedUtc: string | null
+}
+export const getNewsroom = () =>
+  safe<Newsroom | null>('/v1/news?limit=600', null)

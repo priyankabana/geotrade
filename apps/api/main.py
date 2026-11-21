@@ -610,6 +610,49 @@ def company_news(company_uid: str, limit: int = Query(12, ge=1, le=50)):
             "lastCheckedUtc": got["last_fetched"].isoformat() if got else None}
 
 
+@app.get("/v1/news")
+def newsroom(limit: int = Query(200, ge=1, le=600),
+             market: str | None = Query(None, description="Exchange MIC, e.g. XNAS")):
+    """Every headline we hold, newest first, with the company it is about.
+
+    The per-company endpoint answers "what is being said about this firm".
+    This answers the question a reader actually arrives with - "what happened
+    today" - without making them open companies one at a time. Same rows, same
+    source, same rule: headline and link only, the click goes to the publisher.
+    """
+    where = ["n.headline IS NOT NULL"]
+    args: list = []
+    if market:
+        where.append("li.exchange_mic = %s")
+        args.append(market.upper())
+    args.append(limit)
+    with cur() as c:
+        c.execute(f"""
+            SELECT n.url, n.headline, n.domain, n.language, n.published_at,
+                   li.company_uid, li.ticker, li.exchange_mic, e.common_name
+            FROM company_news n
+            JOIN entity e ON e.id = n.entity_id
+            JOIN entity_listing li ON li.entity_id = n.entity_id AND li.is_primary
+            WHERE {' AND '.join(where)}
+            ORDER BY n.published_at DESC NULLS LAST
+            LIMIT %s""", tuple(args))
+        items = [{"url": r["url"], "headline": r["headline"], "domain": r["domain"],
+                  "language": r["language"],
+                  "publishedAt": r["published_at"].isoformat() if r["published_at"] else None,
+                  "companyUid": r["company_uid"], "ticker": r["ticker"],
+                  "market": r["exchange_mic"].strip(), "company": r["common_name"]}
+                 for r in c.fetchall()]
+        c.execute("""SELECT count(*) AS headlines,
+                            count(DISTINCT entity_id) AS companies
+                     FROM company_news""")
+        t = c.fetchone()
+        c.execute("SELECT max(last_fetched) AS checked FROM company_news_cursor")
+        k = c.fetchone()
+    return {"items": items, "source": "GDELT",
+            "totals": {"headlines": t["headlines"], "companies": t["companies"]},
+            "lastCheckedUtc": k["checked"].isoformat() if k and k["checked"] else None}
+
+
 @app.get("/v1/graph")
 def graph(limit: int = Query(5000, ge=1, le=20000)):
     """The whole dependency graph, flat, small enough to reason over in a browser.

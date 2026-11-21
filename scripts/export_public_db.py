@@ -115,6 +115,13 @@ TABLES = [
     # Signals come last: they reference asset, event and dependency_edge.
     ("asset_signal", "*",
      "edge_id IS NULL OR edge_id IN (SELECT id FROM dependency_edge)"),
+
+    # Headlines and filings. Both are a title and a link - never an article
+    # body - so publishing them is the same act as publishing a bibliography,
+    # and each link sends the reader to the publisher or to EDGAR. Scoped to
+    # the companies in the extract so no row points at an entity we withheld.
+    ("company_news",        "*", f"entity_id {IN_SCOPE}"),
+    ("company_news_cursor", "*", f"entity_id {IN_SCOPE}"),
 ]
 
 # api_key holds credential hashes and alias_decision is an internal review

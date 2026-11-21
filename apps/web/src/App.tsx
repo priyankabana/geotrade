@@ -4,6 +4,7 @@ import Timeline from './components/Timeline'
 import { CountryList, SectorList, CompanyList, ExposureList, Empty } from './components/Panels'
 import * as api from './client'
 import SignalsBoard from './components/SignalsBoard'
+import Newsroom from './components/Newsroom'
 import { tvSymbol } from './components/StockPanel'
 import CompanyPage from './components/CompanyPage'
 import Search from './components/Search'
@@ -15,7 +16,7 @@ const PRODUCT = import.meta.env.VITE_PRODUCT_NAME ?? 'Atlas'
 
 // 'signals' is the analysis surface. The globe answers where; it answers
 // what now, and it is a board rather than a map because ranking is reading.
-type Surface = 'live' | 'signals' | 'replay' | 'simulate'
+type Surface = 'live' | 'signals' | 'news' | 'replay' | 'simulate'
 type View =
   | { k: 'home' }
   | { k: 'country'; iso2: string }
@@ -129,11 +130,12 @@ export default function App() {
       <header className="topbar">
         <span className="brand">{PRODUCT}</span>
         <nav className="surfaces">
-          {(['live', 'signals', 'replay', 'simulate'] as Surface[]).map(s => (
+          {(['live', 'signals', 'news', 'replay', 'simulate'] as Surface[]).map(s => (
             <button key={s} aria-selected={surface === s}
                     onClick={() => {
                       setSurface(s)
-                      setView(s === 'live' || s === 'signals' ? { k: 'home' } : { k: 'event' })
+                      setView(s === 'live' || s === 'signals' || s === 'news'
+                               ? { k: 'home' } : { k: 'event' })
                     }}>
               {s}
             </button>
@@ -155,6 +157,11 @@ export default function App() {
       </header>
 
       {surface === 'signals' ? <SignalsBoard />
+       : surface === 'news' && view.k !== 'company' ? (
+         /* `go` resets the surface, so opening a company from the newsroom
+            lands on the company page rather than staying on the feed. */
+         <Newsroom onOpenCompany={uid => go({ k: 'company', uid, back: { k: 'home' } })} />
+       )
        : surface === 'simulate' ? (
          <Simulator onOpenCompany={uid =>
            setView({ k: 'company', uid, back: { k: 'home' } })} />
