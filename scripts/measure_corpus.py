@@ -70,7 +70,7 @@ HEADINGS = [("1", r"business"), ("1A", r"risk\s+factors"), ("1B", r"unresolved")
 def segment(text):
     pos = {}
     for it, head in HEADINGS:
-        pat = rf"(?is)\bitem\s*{it}\s*[\.\:\-—]?\s*{head}"
+        pat = rf"(?is)\bitem\s*{it}\s*[\.\:\--]?\s*{head}"
         pos[it] = [m.start() for m in re.finditer(pat, text)]
     chosen, limit = {}, len(text)
     for it, _ in reversed(HEADINGS):

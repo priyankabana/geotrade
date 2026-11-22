@@ -919,3 +919,40 @@ body { font-size: 15px; line-height: 1.5; }
 /* The panel's own chrome, now that it is a card. */
 .main .panel .panel-head { border-radius: 14px 14px 0 0; }
 .main .panel .panel-body { scrollbar-width: thin; }
+
+/* The subject bar: what every surface is currently talking about.
+   It sits under the floating nav so the connection between the two is on
+   screen rather than implied. */
+.subject {
+  position: absolute; z-index: 5;
+  left: 50%; transform: translateX(-50%);
+  top: calc(var(--topbar-h, 52px) + 72px);
+  display: flex; align-items: center; gap: .7rem;
+  padding: .4rem .5rem .4rem .9rem;
+  border: 1px solid var(--hairline); border-radius: 999px;
+  background: var(--paper); font-size: .9rem;
+}
+.subject-k { font-size: 9px; letter-spacing: .2em; text-transform: uppercase; opacity: .5; }
+.subject strong { font-weight: 500; }
+.subject button {
+  border: 0; background: var(--accent-dim); color: var(--ink);
+  border-radius: 999px; padding: .3rem .7rem; cursor: pointer;
+  font-family: var(--font-num); font-size: 9.5px; letter-spacing: .14em;
+  text-transform: uppercase; transition: background .2s var(--ease);
+}
+.subject button:hover { background: var(--ink); color: var(--paper); }
+/* When a subject is showing, the panel and page start below it. */
+.subject ~ .main .panel { top: calc(var(--topbar-h, 52px) + 126px); }
+
+/* The nav floats over the globe on purpose, but on every other surface it is
+   floating over a page that starts at the top - it was sitting on the
+   simulator's first stat card. Those surfaces get enough headroom to clear
+   it; the globe keeps none, because there the overlap is the design. */
+.board, .news-room, .cpage { padding-top: 76px; }
+.subject ~ .board,
+.subject ~ .news-room,
+.subject ~ .cpage { padding-top: 132px; }
+@media (max-width: 900px) {
+  .board, .news-room, .cpage { padding-top: 64px; }
+  .subject ~ .board, .subject ~ .news-room, .subject ~ .cpage { padding-top: 116px; }
+}

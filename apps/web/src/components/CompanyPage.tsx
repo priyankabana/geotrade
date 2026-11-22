@@ -63,7 +63,7 @@ export default function CompanyPage({
         <div className="cpage-id">
           <h1>{detail.commonName}</h1>
           <span className="num ticker">
-            {primary ? `${primary.exchangeMic}:${primary.ticker}` : '—'}
+            {primary ? `${primary.exchangeMic}:${primary.ticker}` : '-'}
           </span>
         </div>
 
@@ -71,8 +71,8 @@ export default function CompanyPage({
 
         <dl className="cmeta">
           <div><dt>Legal name</dt><dd>{detail.legalName}</dd></div>
-          <div><dt>Sector</dt><dd>{detail.atlasSectorName ?? detail.atlasSector ?? '—'}</dd></div>
-          <div><dt>Headquarters</dt><dd>{detail.hq.city ?? '—'}{detail.countryHq ? `, ${detail.countryHq}` : ''}</dd></div>
+          <div><dt>Sector</dt><dd>{detail.atlasSectorName ?? detail.atlasSector ?? '-'}</dd></div>
+          <div><dt>Headquarters</dt><dd>{detail.hq.city ?? '-'}{detail.countryHq ? `, ${detail.countryHq}` : ''}</dd></div>
           <div><dt>Filings held</dt><dd className="num">{detail.documentCount}</dd></div>
           <div><dt>Cited dependencies</dt><dd className="num">{upN} out · {downN} in</dd></div>
           {/* Every venue, not just the primary. A reader checking a ticker
@@ -81,10 +81,10 @@ export default function CompanyPage({
             <dd className="num">
               {detail.listings.length
                 ? detail.listings.map(l => `${l.exchangeMic}:${l.ticker}`).join(' · ')
-                : '—'}
+                : '-'}
             </dd></div>
           <div className="wide"><dt>Identifiers</dt>
-            <dd className="num">{detail.identifiers.map(i => `${i.scheme} ${i.value}`).join(' · ') || '—'}</dd></div>
+            <dd className="num">{detail.identifiers.map(i => `${i.scheme} ${i.value}`).join(' · ') || '-'}</dd></div>
         </dl>
 
         <nav className="ctabs">
@@ -119,7 +119,7 @@ export default function CompanyPage({
           downN
             ? <EdgeList edges={detail.dependedOnBy} label="Depended on by" />
             : <Empty title="Nobody has named this company"
-                     body="No filing we hold discloses a dependency on this company. It may still be depended upon — only that nobody has had to say so in a document we have read." />
+                     body="No filing we hold discloses a dependency on this company. It may still be depended upon - only that nobody has had to say so in a document we have read." />
         )}
       </div>
     </div>

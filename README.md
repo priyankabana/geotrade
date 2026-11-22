@@ -1,7 +1,7 @@
-# Atlas *(working codename — the real name is chosen at the end)*
+# Atlas *(working codename - the real name is chosen at the end)*
 
-When something happens in the world — a port closes, a factory burns down, a country bans
-an export — some companies are obviously affected and everyone already knows who they are.
+When something happens in the world - a port closes, a factory burns down, a country bans
+an export - some companies are obviously affected and everyone already knows who they are.
 The companies affected *next*, because they quietly buy something from the companies that
 were hit, are much harder to find. Nobody has a list of them.
 
@@ -9,7 +9,7 @@ Atlas builds that list. Companies are required to tell the public certain things
 themselves, and buried in those documents are sentences like "two customers accounted for
 41% of our revenue." We read thousands of those documents, work out who depends on whom,
 and draw it on a map. When something happens, we show you the companies you would never
-have thought to check — and for every single one, the exact sentence in the exact document
+have thought to check - and for every single one, the exact sentence in the exact document
 that proves the connection.
 
 If we can't show you the sentence, we don't make the claim.
@@ -66,14 +66,14 @@ reprints the graph figures; `eval/README.md` says how the quality ones were meas
 | **Measured attribution** | **Every displayed percentage (21 of 21) is the right number for the right company.** 7 further relationships are shown without a figure because the sentence does not permit safe attribution |
 | **Measured recall** | Of 60 disclosure-shaped sentences read by hand, 5 name a company in our markets and we captured all 5. **48 of the 60 name nobody at all** - the ceiling on the whole method, and the reason the graph is small |
 | **Events & exposure** | 26 real disruptions seeded · bounded 3-hop deterministic walk (the seed is hop 1, so two dependency edges are traversed) · **434 precomputed exposure rows** across a **26-event benchmark**, 54 of them more than one hop from the event |
-| **Demo** | [`demo/atlas-demo.mp4`](demo/atlas-demo.mp4) — 3 minutes, recorded against the real app and database |
-| **Not yet** | Stage two of extraction is deterministic rules, not an LLM — the interface is ready for one, and `eval/README.md` names the failures that need it. No customer conversations. See [docs/ROADMAP.md](docs/ROADMAP.md) for everything still open, named rather than quietly dropped |
+| **Demo** | [`demo/atlas-demo.mp4`](demo/atlas-demo.mp4) - 3 minutes, recorded against the real app and database |
+| **Not yet** | Stage two of extraction is deterministic rules, not an LLM - the interface is ready for one, and `eval/README.md` names the failures that need it. No customer conversations. See [docs/ROADMAP.md](docs/ROADMAP.md) for everything still open, named rather than quietly dropped |
 
 ### What the audit changed
 
 Reading the cited sentences by hand took the graph from **62.5% precision to the
 numbers above**, and it did so mostly by *removing* edges: 803 down to 207
-distinct relationships. The worst defect it found was percentage attribution —
+distinct relationships. The worst defect it found was percentage attribution -
 "our top five customers collectively accounted for 57%" was being copied onto
 every company named in that sentence. Only 20 of 36 displayed percentages were
 right. That was invisible until somebody read the filings.
@@ -87,8 +87,8 @@ right. That was invisible until somebody read the filings.
 | [RUNNING.md](RUNNING.md) | URLs, ports, DB credentials, how to demo it |
 | [docs/PROBLEM-STATEMENT.md](docs/PROBLEM-STATEMENT.md) | What we build, for whom, and the inversion the whole thing rests on |
 | [docs/data-model.md](docs/data-model.md) | Every column we collect and why |
-| [TEAM/demo-script.md](TEAM/demo-script.md) | The demo, narrated — 90 seconds, five minutes, and what to say when it breaks |
-| [docs/coverage-universe.md](docs/coverage-universe.md) | Which companies, which market, which year — and why |
+| [TEAM/demo-script.md](TEAM/demo-script.md) | The demo, narrated - 90 seconds, five minutes, and what to say when it breaks |
+| [docs/coverage-universe.md](docs/coverage-universe.md) | Which companies, which market, which year - and why |
 | [eval/README.md](eval/README.md) | **How good the extraction is, how we measured it, and what is still wrong** |
 | [docs/RUNBOOK.md](docs/RUNBOOK.md) | The three alerts, what each means, and what to do when one fires |
 | [TEAM/faq.md](TEAM/faq.md) | Every question we expect at the viva, and the honest answer |
@@ -116,11 +116,11 @@ right. That was invisible until somebody read the filings.
 
 Contains data from [GeoNames](https://www.geonames.org/), CC BY 4.0.
 Globe textures from [three-globe](https://github.com/vasturiano/three-globe) (MIT); imagery
-NASA Visible Earth (public domain) — see [apps/web/public/textures/SOURCE.md](apps/web/public/textures/SOURCE.md).
+NASA Visible Earth (public domain) - see [apps/web/public/textures/SOURCE.md](apps/web/public/textures/SOURCE.md).
 Company reference data from [SEC EDGAR](https://www.sec.gov/edgar), public domain.
 US city coordinates from [US-Cities-Database](https://github.com/kelvins/US-Cities-Database), MIT.
 
 ## A note on `../reference/`
 
-A captured copy of a third-party product studied before starting. Nothing from it ships —
+A captured copy of a third-party product studied before starting. Nothing from it ships -
 see [`../reference/DO-NOT-SHIP.md`](../reference/DO-NOT-SHIP.md).

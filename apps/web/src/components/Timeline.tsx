@@ -48,7 +48,7 @@ export default function Timeline({ events, idx, onPick, earliestFiling }:
         <span className="tl-sub">{cur.name}</span>
         <span className="tl-asof num">graph as of {cur.becamePublicUtc.slice(0, 10)}</span>
         {beforeBoundary && (
-          <span className="tl-warn">before our first filing — the graph is empty here</span>
+          <span className="tl-warn">before our first filing - the graph is empty here</span>
         )}
       </div>
       <div className="tl-track">
@@ -72,7 +72,7 @@ export default function Timeline({ events, idx, onPick, earliestFiling }:
             <button key={e.eventId} className={`tl-pip${i === idx ? ' on' : ''}`}
                     style={{ left: `${pos(e.becamePublicUtc)}%` } as CSSProperties}
                     onClick={() => onPick(i)}
-                    title={`${e.becamePublicUtc.slice(0, 10)} — ${e.name} · ${e.totalExposed} exposed`}>
+                    title={`${e.becamePublicUtc.slice(0, 10)} - ${e.name} · ${e.totalExposed} exposed`}>
               <span className="tl-dot" />
               <span className="tl-year num">{labelled.has(i) || i === idx ? yr : ''}</span>
             </button>

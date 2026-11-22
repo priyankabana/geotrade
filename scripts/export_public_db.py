@@ -40,7 +40,22 @@ DST = SRC.rsplit("/", 1)[0] + "/" + DST_DB
 # Entities that carry evidence. A company nobody cited, whose filings we never
 # read and that propagation never reached, adds a vendor row to the extract and
 # tells a reader nothing.
-SCOPE = """
+# The countries the project set out to cover, and how many companies each
+# should carry even where no filing has named one yet. Without this the extract
+# only contains companies some filing already touched, so India showed four and
+# the globe looked like a map of where we had read rather than where we track.
+# A company published this way still reports zero cited edges, which is the
+# honest number: the list says what we cover, the edge count says what we can
+# prove.
+COVERED = ['US', 'IN', 'CA', 'AU', 'GB', 'DE', 'JP', 'CN', 'FR', 'HK']
+QUOTA_DEFAULT = 12
+QUOTA = {'IN': 20}
+
+_quota_sql = ' '.join(
+    f"WHEN '{c}' THEN {QUOTA.get(c, QUOTA_DEFAULT)}" for c in COVERED)
+_covered_sql = ', '.join(f"'{c}'" for c in COVERED)
+
+SCOPE = f"""
     SELECT from_entity_id FROM dependency_edge
     UNION SELECT to_entity_id FROM dependency_edge
     UNION SELECT subject_entity_id FROM dependency_claim
@@ -48,6 +63,26 @@ SCOPE = """
            WHERE counterparty_entity_id IS NOT NULL
     UNION SELECT entity_id FROM exposure_precompute
     UNION SELECT entity_id FROM document WHERE entity_id IS NOT NULL
+    UNION SELECT id FROM (
+        SELECT e.id, e.country_hq,
+               row_number() OVER (
+                 PARTITION BY e.country_hq
+                 -- Companies we have actually read something about come
+                 -- first, then ones we could read next because they file
+                 -- with the SEC, then alphabetically so the list is stable
+                 -- between builds.
+                 ORDER BY EXISTS (SELECT 1 FROM document d
+                                   WHERE d.entity_id = e.id) DESC,
+                          EXISTS (SELECT 1 FROM entity_identifier i
+                                   WHERE i.entity_id = e.id
+                                     AND i.scheme = 'CIK') DESC,
+                          e.common_name
+               ) AS rn
+        FROM entity e
+        JOIN entity_listing l ON l.entity_id = e.id AND l.is_primary
+        WHERE e.status = 'active' AND e.country_hq IN ({_covered_sql})
+    ) q
+    WHERE q.rn <= CASE q.country_hq {_quota_sql} ELSE 0 END
 """
 
 IN_SCOPE = f"IN (SELECT * FROM ({SCOPE}) s)"

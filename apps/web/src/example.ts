@@ -10,7 +10,7 @@
 import type { Citation, EdgeSummary, ExposureResponse } from '@shared/api'
 
 export const AS_OF = '2026-01-01T00:00:00Z'
-const Q = '[extraction has not run — the cited sentence appears here]'
+const Q = '[extraction has not run - the cited sentence appears here]'
 
 const EDGAR = (cik: string) =>
   `https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=${cik}&type=10-K`
@@ -98,7 +98,7 @@ export const EXPOSURE: ExposureResponse = {
 /** Replay timeline. Dates and events are real; the exposure counts are illustrative. */
 export const TIMELINE = [
   { t: '2019-07-01', label: 'Japan restricts 3 materials to Korea', n: 4 },
-  { t: '2021-02-15', label: 'Texas storm Uri — Austin fabs down', n: 6 },
+  { t: '2021-02-15', label: 'Texas storm Uri - Austin fabs down', n: 6 },
   { t: '2021-03-19', label: 'Renesas Naka fab fire', n: 9 },
   { t: '2021-03-23', label: 'Ever Given blocks Suez', n: 7 },
   { t: '2023-08-01', label: 'China gallium & germanium controls', n: 11 },

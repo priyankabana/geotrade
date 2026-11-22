@@ -75,13 +75,13 @@ def check_companies(rows, rep):
             if v:
                 if not pat.match(v): rep.err(n, f"{col}={v!r} is malformed")
                 elif store is not None:
-                    if v in store: rep.err(n, f"duplicate {col} {v} — two rows claim one company "
+                    if v in store: rep.err(n, f"duplicate {col} {v} - two rows claim one company "
                                               f"(first seen line {store[v]}). If dual-listed that is "
                                               f"correct; otherwise one of them is a guess.")
                     else: store[v] = n
 
         if not opt(r, "lei"):
-            rep.warn(n, "no LEI — this is the key that joins markets, chase it before settling")
+            rep.warn(n, "no LEI - this is the key that joins markets, chase it before settling")
 
         # A gap you have marked is a known limitation. A gap you have not marked is a
         # silent one, and silent gaps are what make a map lie.
@@ -89,14 +89,14 @@ def check_companies(rows, rep):
             v = opt(r, col)
             if not v:
                 (rep.warn if acknowledged else rep.err)(
-                    n, f"{col} empty — company will not render on the globe"
+                    n, f"{col} empty - company will not render on the globe"
                     + ("" if acknowledged else "; geocode it or mark notes UNGEOCODED"))
             else:
                 try:
                     f = float(v)
                     lim = 90 if col == "hq_lat" else 180
                     if abs(f) > lim: rep.err(n, f"{col}={v} out of range")
-                    if abs(f) < 0.001: rep.warn(n, f"{col} is ~0 — null island, probably a failed geocode")
+                    if abs(f) < 0.001: rep.warn(n, f"{col} is ~0 - null island, probably a failed geocode")
                 except ValueError: rep.err(n, f"{col}={v!r} is not a number")
 
         fy = opt(r, "fiscal_year_end")
@@ -106,7 +106,7 @@ def check_companies(rows, rep):
         if status in ("delisted", "acquired", "merged") and not opt(r, "delisting_date"):
             rep.err(n, f"status={status} but delisting_date is empty")
         if status in ("acquired", "merged") and not opt(r, "successor_uid"):
-            rep.warn(n, f"status={status} with no successor_uid — edges cannot follow the acquisition")
+            rep.warn(n, f"status={status} with no successor_uid - edges cannot follow the acquisition")
         if opt(r, "delisting_date") and status == "active":
             rep.err(n, "has delisting_date but status=active")
 
@@ -115,11 +115,11 @@ def check_companies(rows, rep):
             rep.err(n, f"{cs} is licensed (MSCI/S&P, FTSE) and cannot ship. "
                        f"Use SIC/NAICS/NIC/ANZSIC/NACE/WZ and map to atlas_sector.")
         if not opt(r, "description"):
-            rep.warn(n, "no description — take it from the company's own words, not a model")
+            rep.warn(n, "no description - take it from the company's own words, not a model")
 
     actives = sum(1 for r in rows if opt(r, "status") == "active")
     if rows and actives == len(rows):
-        rep.warn(0, f"all {len(rows)} companies are active — this universe has survivorship "
+        rep.warn(0, f"all {len(rows)} companies are active - this universe has survivorship "
                     f"bias. SEC's current ticker file lists only live filers, so delisted and "
                     f"acquired companies are absent. Any backtest using it must state "
                     f"'universe as of <collected_on>'. See docs/data-model.md warning 1.")
@@ -144,9 +144,9 @@ def check_aliases(rows, rep):
                 rep.err(n, f"alias {alias!r} is an ordinary English word but is_ambiguous=no. "
                            f"This is how OPERA matched inside OPERATIONS.")
             if len(alias) < 3 and flag != "yes":
-                rep.warn(n, f"alias {alias!r} is very short — almost certainly ambiguous")
+                rep.warn(n, f"alias {alias!r} is very short - almost certainly ambiguous")
             if opt(r, "alias_type") == "former" and not opt(r, "valid_to"):
-                rep.warn(n, "alias_type=former with no valid_to — when did it stop being true?")
+                rep.warn(n, "alias_type=former with no valid_to - when did it stop being true?")
     for uid, c in per_company.items():
         if c < 3:
             rep.warn(0, f"{uid} has only {c} alias(es). Aim for 3-8: legal, common, ticker, "
@@ -162,7 +162,7 @@ def main(path):
     header = ",".join(list(rows[0].keys())[:2])
     fn = CHECKS.get(header)
     if not fn:
-        print(f"{path}: unrecognised header starting {header!r} — no validator for this file yet")
+        print(f"{path}: unrecognised header starting {header!r} - no validator for this file yet")
         return 1
     rep = Report(); fn(rows, rep)
     for n, m in rep.errors:   print(f"ERROR   line {n}: {m}" if n else f"ERROR   {m}")

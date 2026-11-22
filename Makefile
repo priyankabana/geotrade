@@ -4,7 +4,7 @@ help:
 	@grep -E '^[a-z-]+:.*##' $(MAKEFILE_LIST) | sed 's/:.*## /\t/' | expand -t22
 
 dev: db migrate load   ## Bring up the stack, migrate, load the universe
-	@echo "db ready on :5432 — now run 'make web'"
+	@echo "db ready on :5432 - now run 'make web'"
 
 up:                    ## Bring everything back after a restart: db, API, web
 	@open -a Docker 2>/dev/null || true

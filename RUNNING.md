@@ -1,4 +1,4 @@
-# Running it — URLs, ports, credentials
+# Running it - URLs, ports, credentials
 
 Everything runs on your own machine. There is no deployed URL yet; `make deploy` is a
 Phase 0 task that has not been done.
@@ -24,11 +24,11 @@ make web         # frontend   -> http://localhost:5173    (new terminal)
 |---|---|---|
 | **Website** | **http://localhost:5173** | This is the one to show. Open it in Chrome. |
 | API health | http://localhost:8000/v1/health | Should say `{"ok":true,"entities":23020}` |
-| API docs (auto-generated) | http://localhost:8000/docs | FastAPI's interactive explorer — good for a viva |
+| API docs (auto-generated) | http://localhost:8000/docs | FastAPI's interactive explorer - good for a viva |
 | OpenAPI schema | http://localhost:8000/openapi.json | |
 | **Database viewer** | **http://localhost:8081** | Browse tables and run SQL in a browser. No client needed. |
 | Postgres (direct) | `postgresql://atlas:atlas@localhost:5432/atlas` | for TablePlus / DBeaver / pgAdmin |
-| Redis | `redis://localhost:6379/0` | not used yet — Phase 3 |
+| Redis | `redis://localhost:6379/0` | not used yet - Phase 3 |
 
 Ports: **5173** web · **8000** API · **8081** db viewer · **5432** Postgres · **6379** Redis.
 
@@ -43,7 +43,7 @@ docker compose -f infra/docker-compose.yml ps        # db + redis health
 ## Look inside the database
 
 **`psql` is not installed on this Mac.** Any command that starts with `psql …` will say
-"command not found". That is not a database problem — the database is running fine. Use
+"command not found". That is not a database problem - the database is running fine. Use
 one of these instead.
 
 ### Easiest: the browser
@@ -54,7 +54,7 @@ make db-ui          # starts the viewer and opens it
 → **http://localhost:8081**
 
 Click a table on the left to browse its rows. The **Query** tab runs SQL. Results export
-as CSV, JSON or XML. Nothing to install — it runs in Docker alongside Postgres.
+as CSV, JSON or XML. Nothing to install - it runs in Docker alongside Postgres.
 
 ### One-off queries from the terminal
 
@@ -93,7 +93,7 @@ TablePlus, DBeaver or pgAdmin all work. Connection details:
 | password | `atlas` |
 | SSL | off / disable |
 
-Ready-made queries live in [docs/queries.sql](docs/queries.sql) — country counts, the
+Ready-made queries live in [docs/queries.sql](docs/queries.sql) - country counts, the
 country → sector → company drill-down, and the gazetteer. Paste any of them into psql or
 into the Query tab at http://localhost:8081.
 
@@ -125,7 +125,7 @@ make db                                          # start it
 /Users/priyanka/Desktop/Final year project/
 ├── data/                          your seven raw market CSVs (29,442 rows)
 └── atlas/
-    ├── data/companies/*.csv       normalised, 23,020 companies — what gets loaded
+    ├── data/companies/*.csv       normalised, 23,020 companies - what gets loaded
     ├── data/aliases/*.csv         82,756 name variants
     ├── data/reference/            sectors, gazetteer
     ├── infra/migrations/          the schema
@@ -141,7 +141,7 @@ make db                                          # start it
 1. `make db && make api` in one terminal, `make web` in another.
 2. Open **http://localhost:5173** in Chrome. Full screen it.
 3. Drag the globe. Pick a country. Pick a sector. Click a company. Then hit **Replay**.
-4. If anything breaks, play `demo/atlas-demo.mp4` — keep it on the desktop.
+4. If anything breaks, play `demo/atlas-demo.mp4` - keep it on the desktop.
 
 **Over a network** (showing it on someone else's laptop on the same wifi):
 
@@ -165,4 +165,4 @@ pkill -f "vite"              # stops the frontend
 
 There is no public URL, no login, and no deployment. The stack is designed for Vercel
 (web) · Fly.io (API) · Neon (Postgres), all on free tiers, and that is a Phase 0 item
-still open — see `docs/ROADMAP.md`. Until then "live" means localhost on your machine.
+still open - see `docs/ROADMAP.md`. Until then "live" means localhost on your machine.

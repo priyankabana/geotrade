@@ -27,8 +27,8 @@ NARRATION = [
   "Atlas. A map of which public companies depend on which others, built only from what "
   "those companies have already said in public."),
  ("problem", "problem",
-  "When something happens in the world — a port closes, a plant burns, a country restricts "
-  "an export — the companies hit first are obvious. Any analyst already has those names."),
+  "When something happens in the world - a port closes, a plant burns, a country restricts "
+  "an export - the companies hit first are obvious. Any analyst already has those names."),
  ("hidden", "hidden",
   "The companies hit third are not obvious. They buy from the companies that got hit, and "
   "nobody keeps a list of them. That gap is the whole product."),
@@ -63,7 +63,7 @@ NARRATION = [
  ("sectors", None,
   "Pick a country and the sectors are counted from the database, not read from a hardcoded list."),
  ("companies", None,
-  "Semiconductors — the sector where small suppliers name their large customers. "
+  "Semiconductors - the sector where small suppliers name their large customers. "
   "Real companies, with real identifiers behind each one."),
  ("company", None,
   "Legal name, sector, headquarters, identifiers, former names. Former names matter, because "
@@ -71,7 +71,7 @@ NARRATION = [
  ("replay", None,
   "Now the part that matters. Replay a real disruption."),
  ("arcs", None,
-  "An event in the Taiwan Strait. The arcs are the dependency chain reaching outward — across "
+  "An event in the Taiwan Strait. The arcs are the dependency chain reaching outward - across "
   "the Pacific, and down into India."),
  ("surprise", None,
   "The marked names are the ones you would not have listed yourself. Five of the seven here "
@@ -91,7 +91,7 @@ NARRATION = [
  # ---- closing slides ----
  ("where", "where",
   "Twenty weeks, six phases, each ending in something that runs. This is the end of the data "
-  "layer. Week three is a validation experiment before any pipeline is built on top of it — "
+  "layer. Week three is a validation experiment before any pipeline is built on top of it - "
   "forty documents, two annotators each, with the decision rules written down before anybody "
   "reads one."),
  ("close", "close",
@@ -158,7 +158,7 @@ def main():
         print(f"  narration: {len(spoken)} lines, "
               f"{sum(x['duration'] for x in spoken.values()):.0f}s of speech")
     else:
-        print("  narration: none — run scripts/narrate.py first for voice-over")
+        print("  narration: none - run scripts/narrate.py first for voice-over")
 
     with sync_playwright() as p:
         browser = p.chromium.launch(args=[
@@ -179,7 +179,7 @@ def main():
 
         def beat(s=1.0):
             """Wait the written beat, or until the narration for the current line has
-            finished — whichever is longer. The video paces itself to the voice."""
+            finished - whichever is longer. The video paces itself to the voice."""
             target = max(now() + s, hold[0])
             while True:
                 left = target - now()

@@ -149,7 +149,7 @@ export default function Globe({
                   style={{ fill: fill(iso2) }}
                   onClick={() => iso2 && onSelect(iso2 === selected ? null : iso2)}>
               <title>{f.properties?.name ?? ''}{iso2 && byIso.get(iso2)
-                ? ` — ${byIso.get(iso2)!.companyCount} companies`
+                ? ` - ${byIso.get(iso2)!.companyCount} companies`
                 : ''}</title>
             </path>
           )

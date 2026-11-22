@@ -32,9 +32,9 @@ is the clearest statement in the repo of why we sit where we sit.
 ### What would change if we crossed the line
 
 Printing a price target, or a rating, or "reduce exposure to this name," would likely put
-us inside SEBI's Research Analyst regulations — registration, qualifications, compliance
+us inside SEBI's Research Analyst regulations - registration, qualifications, compliance
 officer, record-keeping, disclosure of interest. `[verify: SEBI (Research Analysts)
-Regulations 2014 and subsequent amendments — read the actual text before relying on this.
+Regulations 2014 and subsequent amendments - read the actual text before relying on this.
 Owner: product and discovery. Due: week 4.]`
 
 The practical rule for the team: **if a sentence in the UI could be read as advice about
@@ -52,7 +52,7 @@ government gazettes, open reference data.
 
 **We never touch material non-public information.** No expert networks, no channel checks,
 no paying people for what their employer knows, no alternative data whose provenance we
-cannot explain. This is not caution about a grey area — it is a category we stay out of
+cannot explain. This is not caution about a grey area - it is a category we stay out of
 entirely.
 
 This is a feature we advertise rather than a limitation we apologise for. A procurement
@@ -67,7 +67,7 @@ take on trust; it is visible in every row of output.
 
 We were offered a route to licensed earnings-call transcripts and turned it down.
 
-Not on price — we would have declined at ₹0. The redistribution terms on licensed
+Not on price - we would have declined at ₹0. The redistribution terms on licensed
 transcript feeds would have let us *read* the transcript and not *show* the sentence.
 For us that is worse than having no transcripts at all, because it would mean asserting
 edges we could not evidence, in a product whose entire argument is that every edge is
@@ -126,10 +126,10 @@ removing them would break the citation. What we do not store: contact details, a
 inferred about a person, any profile of an individual assembled across documents.
 
 We never build a person-node in the graph. Nodes are companies, places and commodities.
-This is a deliberate design constraint and not an accident of scope — the moment a person
+This is a deliberate design constraint and not an accident of scope - the moment a person
 becomes an entity with edges, we are in a different regulatory world.
 
-`[verify: India's Digital Personal Data Protection Act 2023 — what obligations attach to
+`[verify: India's Digital Personal Data Protection Act 2023 - what obligations attach to
 processing personal data that is already lawfully published, whether our use qualifies for
 any publicly-available-data provision, and what retention and deletion duties apply.
 Owner: platform. Due: week 6. Do not rely on this section until that is done.]`
@@ -155,12 +155,12 @@ table appears without one.
 ## 7. If we are wrong about a company
 
 We will assert, in public, that Company A depends on Company B. Sometimes we will be wrong
-— a misparsed sentence, a bad entity merge, a supplier relationship that ended two years
+- a misparsed sentence, a bad entity merge, a supplier relationship that ended two years
 ago. Somebody might make a decision on it.
 
 **Why the citation is a legal shield as well as a product feature.** We do not assert
 "A depends on B" as our own opinion. We assert "on 2025-02-21, in this filing, at these
-character offsets, A said this sentence" — and we show the sentence. That is a statement
+character offsets, A said this sentence" - and we show the sentence. That is a statement
 about a public document, verifiable by the reader, which is a very different kind of claim
 from an opinion we formed. When the underlying sentence says what we say it says, the
 worst case is that the *company* was wrong, and the reader can see exactly what they said.
@@ -181,4 +181,4 @@ words. A span is theirs.
 
 Every user-facing exposure claim carries the same line: *this reflects what companies have
 publicly disclosed, may be incomplete, and is not investment advice.* Not buried in a
-footer — next to the number.
+footer - next to the number.

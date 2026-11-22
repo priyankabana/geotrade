@@ -7,11 +7,26 @@ const BAND: Record<string, string> = {
 
 /* Coverage by country. The globe shows where the data is; this says how much, and
    gives a target you can hit without aiming at a moving sphere. */
+/** The ten countries the project set out to cover.
+ *
+ *  They sit at the top of the list whatever their company count, because the
+ *  list answers "where do we cover" before it answers "where is the data
+ *  thickest". Sorting purely by count buried India below Lithuania, which
+ *  says nothing about either country and quite a lot about our filing feed.
+ */
+const COVERED = ['US', 'IN', 'CA', 'AU', 'GB', 'DE', 'JP', 'CN', 'FR', 'HK']
+
 export function CountryList({ tiles, onPick }:
   { tiles: CountryTile[]; onPick: (iso2: string) => void }) {
   if (!tiles.length) return <Empty title="No coverage loaded" body="Start the API and reload." />
   const max = Math.max(...tiles.map(t => t.companyCount))
-  return <>{tiles.map(t => (
+  const rank = (c: string) => {
+    const i = COVERED.indexOf(c)
+    return i === -1 ? COVERED.length : i
+  }
+  const ordered = [...tiles].sort((a, b) =>
+    rank(a.country) - rank(b.country) || b.companyCount - a.companyCount)
+  return <>{ordered.map(t => (
     <button key={t.country} className="row row-country" onClick={() => onPick(t.country)}>
       <span className="iso num">{t.country}</span>
       <span>{t.name}</span>
@@ -32,7 +47,7 @@ export function SectorList({ sectors, onPick }:
         <span className="num muted">{s.companyCount} cos</span>
         <span className="num">{s.exposedCompanyCount > 0
           ? <span className="hazard">{s.exposedCompanyCount} exposed</span>
-          : <span className="muted">—</span>}</span>
+          : <span className="muted">-</span>}</span>
       </button>
     ))}
     <PriceNote />
@@ -65,7 +80,7 @@ export function CompanyList({ companies, onPick }:
 
 export function EdgeList({ edges, label }: { edges: EdgeSummary[]; label: string }) {
   if (!edges.length) return <div className="empty"><h3>{label}: none cited</h3>
-    <p className="sub">An absence here means we found no sentence naming a counterparty — not
+    <p className="sub">An absence here means we found no sentence naming a counterparty - not
       that none exists. The 10% disclosure threshold hides smaller relationships entirely.</p></div>
   return <div style={{ padding: '10px 16px' }}>
     <div className="crumbs">{label}</div>
@@ -104,7 +119,7 @@ export function ExposureList({ data, onPick }:
       <dt>Event</dt><dd>{data.event.name}</dd>
       <dt>Became public</dt><dd className="num">{data.event.becamePublicUtc.slice(0, 16).replace('T', ' ')}Z</dd>
       <dt>Confirmation</dt><dd>{data.event.confirmationLevel === 'unconfirmed'
-        ? <span className="hazard">unconfirmed — not shown to users in production</span>
+        ? <span className="hazard">unconfirmed - not shown to users in production</span>
         : data.event.confirmationLevel}</dd>
       <dt>Graph as of</dt><dd className="num">{data.asOf.slice(0, 10)}</dd>
       <dt>Exposed</dt><dd className="num">{data.totalExposed} companies,{' '}

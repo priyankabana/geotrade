@@ -36,7 +36,13 @@ const CLASS_LABEL: Record<string, string> = {
 
 const fmt = (n: number) => (n * 100).toFixed(0)
 
-export default function SignalsBoard() {
+export default function SignalsBoard({ focusUid, focusName, onOpenCompany }: {
+  /** The company carried in from another surface. Signals already carry a
+   *  companyUid, so narrowing to one is a filter rather than a new request. */
+  focusUid?: string | null
+  focusName?: string | null
+  onOpenCompany?: (uid: string) => void
+} = {}) {
   const [all, setAll] = useState<Signal[] | null>(null)
   const [sum, setSum] = useState<SignalSummary | null>(null)
   const [cls, setCls] = useState('')
@@ -57,8 +63,13 @@ export default function SignalsBoard() {
     return all.filter(s =>
       (!cls   || s.assetClass === cls) &&
       (!dir   || s.direction  === dir) &&
-      (!basis || s.basis      === basis))
-  }, [all, cls, dir, basis])
+      (!basis || s.basis      === basis) &&
+      (!focusUid || s.companyUid === focusUid))
+  }, [all, cls, dir, basis, focusUid])
+
+  // Said plainly, because an empty board under a filter the reader did not
+  // set here looks like no data rather than a narrow question.
+  const narrowed = Boolean(focusUid)
 
   // Chart data: one row per asset class, split by direction. Computed from the
   // summary rather than from the filtered rows, so changing a filter does not
@@ -141,7 +152,11 @@ export default function SignalsBoard() {
       {rows === null && <p className="small dim">loading…</p>}
       {rows?.length === 0 && (
         <p className="small dim">
-          No signal matches that filter.
+          {narrowed
+            ? `No signal reaches ${focusName ?? 'this company'}. It is in the `
+              + `graph, but no event we hold propagates to it - which is a `
+              + `finding about the company, not a gap in the board.`
+            : 'No signal matches that filter.'}
         </p>
       )}
 
@@ -157,7 +172,7 @@ export default function SignalsBoard() {
                 <span className="aname">{s.assetName}</span>
                 <span className="cls">{CLASS_LABEL[s.assetClass] ?? s.assetClass}</span>
                 <span className={`dir ${s.direction}`}>
-                  {s.direction === 'up' ? '▲' : s.direction === 'down' ? '▼' : '—'}
+                  {s.direction === 'up' ? '▲' : s.direction === 'down' ? '▼' : '-'}
                 </span>
                 <span className="mag">
                   <i style={{ width: `${Math.min(100, s.magnitude * 100)}%` }} />
@@ -185,7 +200,7 @@ export default function SignalsBoard() {
                        not something a reader can be expected to decode. The
                        sentence above already says what the rule claims; the
                        slug stays in the API for anyone auditing it. */
-                    <p className="small dim">Our own rule — no company filed this.</p>
+                    <p className="small dim">Our own rule - no company filed this.</p>
                   )}
                   <p className="small dim">
                     {FEED_LABEL[s.event.feed] ?? s.event.feed} · {s.asOf.slice(0, 10)}

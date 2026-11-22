@@ -2,8 +2,8 @@
 # Getting this working in week 1 pays for itself ten times over.
 #
 # Every port below is bound to 127.0.0.1 on purpose. Docker's default,
-# "5432:5432", publishes on 0.0.0.0, which means anyone on the same network —
-# college wifi, a cafe, a shared hostel connection — can reach these. The
+# "5432:5432", publishes on 0.0.0.0, which means anyone on the same network -
+# college wifi, a cafe, a shared hostel connection - can reach these. The
 # password is "atlas" and pgweb has no login at all, so that default put a
 # browser SQL console over the whole dataset on the open network. Binding to
 # 127.0.0.1 keeps them reachable from this machine and nowhere else.

@@ -7,7 +7,7 @@
 
 Uses macOS's built-in speech synthesis, so it costs nothing and needs no account.
 These are system voices: clear and clearly synthetic. For the final submission,
-recording your own voice over the same script will sound better than any of them —
+recording your own voice over the same script will sound better than any of them -
 the script is in TEAM/demo-script.md and the lines below are the same text.
 
 Writes demo/narration/<key>.wav plus script.json, which record_demo.py reads to pace

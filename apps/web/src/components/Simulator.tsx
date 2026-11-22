@@ -58,12 +58,18 @@ function walk(g: Graph, seed: string, severity: number): Hit[] {
   return [...best.values()].filter(h => h.uid !== seed).sort((a, b) => b.score - a.score)
 }
 
-export default function Simulator({ onOpenCompany }: { onOpenCompany: (uid: string) => void }) {
+export default function Simulator({ onOpenCompany, seedUid }: {
+  onOpenCompany: (uid: string) => void
+  /** Break the company you arrived with, rather than making the reader find
+   *  it again in a list of several hundred. */
+  seedUid?: string | null
+}) {
   const [g, setG] = useState<Graph | null>(null)
-  const [seed, setSeed] = useState<string>('')
+  const [seed, setSeed] = useState<string>(seedUid ?? '')
   const [severity, setSeverity] = useState(0.8)
   const [q, setQ] = useState('')
 
+  useEffect(() => { if (seedUid) setSeed(seedUid) }, [seedUid])
   useEffect(() => { api.getGraph().then(g => {
     setG(g)
     // Exposed so the parity check in tests/test_simulator.py can run the
@@ -182,7 +188,7 @@ export default function Simulator({ onOpenCompany }: { onOpenCompany: (uid: stri
         </div>
       )}
       <p className="disclaimer">
-        Hypothetical. Nothing here has happened — it is what the filings say would be felt if it did.
+        Hypothetical. Nothing here has happened - it is what the filings say would be felt if it did.
       </p>
     </div>
   )

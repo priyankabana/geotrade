@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Load the collection CSVs into Postgres. Idempotent — safe to re-run.
+"""Load the collection CSVs into Postgres. Idempotent - safe to re-run.
 
     make load          # or: python3 -I scripts/load_csv.py
 

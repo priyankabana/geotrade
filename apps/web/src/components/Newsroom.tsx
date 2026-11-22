@@ -34,15 +34,24 @@ function ago(iso: string | null): string {
 const publisher = (d: string | null) =>
   d === 'sec.gov' ? 'SEC filing' : (d || '').replace(/^www\./, '')
 
-export default function Newsroom({ onOpenCompany }: {
+export default function Newsroom({ onOpenCompany, focusName }: {
   onOpenCompany: (uid: string) => void
+  /** The company carried in from another surface. The feed already filters on
+   *  a free-text query, so arriving with a subject just means starting with
+   *  that query filled in - and leaving it editable, so the reader can widen
+   *  it without going back somewhere else first. */
+  focusName?: string | null
 }) {
   const [feed, setFeed] = useState<Feed | null>(null)
   const [loaded, setLoaded] = useState(false)
   const [market, setMarket] = useState('')
-  const [q, setQ] = useState('')
+  const [q, setQ] = useState(focusName ?? '')
 
   useEffect(() => { api.getNewsroom().then(f => { setFeed(f); setLoaded(true) }) }, [])
+  // The subject can change while this surface is open - from the search box,
+  // or by following a link - so the query follows it rather than sticking on
+  // whichever company happened to be current when the feed first mounted.
+  useEffect(() => { if (focusName) setQ(focusName) }, [focusName])
 
   // Filtering in the browser, not in the request: the published build reads
   // static files addressed by path and cannot vary on a query string, so one

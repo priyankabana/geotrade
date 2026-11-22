@@ -163,6 +163,23 @@ export default function App() {
   // landing and never reaches this branch.
   const atWorld = view.k === 'globe' || view.k === 'home'
 
+  // The company currently under discussion, whatever surface is showing it.
+  const focusUid = view.k === 'company' ? view.uid : null
+  const focusName = detail && detail.companyUid === focusUid ? detail.commonName : null
+
+  /** Where a surface switch should land.
+   *
+   *  Keeping the company is the whole point: ask the newsroom about the firm
+   *  you were just reading rather than being sent back to the world. Replay
+   *  is the exception - it reads the graph at a past date and needs an event
+   *  selected, which a company does not supply.
+   */
+  const nextRouteFor = (s: Surface): Route => {
+    if (s === 'replay') return { k: 'event' }
+    if (focusUid) return { k: 'company', uid: focusUid }
+    return s === 'simulate' ? { k: 'event' } : { k: 'globe' }
+  }
+
   const totalCompanies = countries.reduce((a, c) => a + c.companyCount, 0)
 
   return (
@@ -175,7 +192,7 @@ export default function App() {
         <div className="mockstrip">
           {typeof window !== 'undefined' && window.location.protocol === 'https:'
             ? 'No data loaded. If you are running this locally, start the API with: make up'
-            : 'API offline — start it with: make up'}
+            : 'API offline - start it with: make up'}
         </div>
       )}
 
@@ -192,7 +209,10 @@ export default function App() {
         {/* The as-of date only means something while the graph is being read
             at a past date. On the live view it said "as of today", which is
             four words to tell the reader that now is now. */}
-        {showEvent && current && (
+        {/* Only replay actually reads the graph at a past date. showEvent is
+            true for every non-live surface, so keying off it put a date on
+            the newsroom, where it describes nothing. */}
+        {(surface === 'replay' || view.k === 'event') && current && (
           <span className="asof num">as of {current.becamePublicUtc.slice(0, 10)}</span>
         )}
       </header>
@@ -203,22 +223,42 @@ export default function App() {
       <nav className="surfaces">
         {(['live', 'signals', 'news', 'replay', 'simulate'] as Surface[]).map(s => (
           <button key={s} aria-selected={surface === s}
-                  onClick={() => goTo(
-                    s === 'live' || s === 'signals' || s === 'news'
-                      ? { k: 'home' } : { k: 'event' }, s)}>
+                  onClick={() => goTo(nextRouteFor(s), s)}>
             <span className="s-label">{s}</span>
           </button>
         ))}
       </nav>
 
-      {surface === 'signals' ? <SignalsBoard />
-       : surface === 'news' && view.k !== 'company' ? (
-         /* `go` resets the surface, so opening a company from the newsroom
-            lands on the company page rather than staying on the feed. */
-         <Newsroom onOpenCompany={uid => goTo({ k: 'company', uid })} />
+      {/* The subject travels with you. Switching surface used to throw the
+          company away and return to the world, so the five tabs behaved like
+          five separate apps: you could reach a company from the newsroom but
+          never ask the newsroom about the company you were reading. */}
+      {focusUid && surface !== 'live' && (
+        <div className="subject">
+          <span className="subject-k num">subject</span>
+          <strong>{focusName ?? focusUid}</strong>
+          {/* Two ways out, because they are different intentions: read this
+              company in full, or stop narrowing and see the whole surface. */}
+          <button onClick={() => goTo({ k: 'company', uid: focusUid }, 'live')}>
+            open
+          </button>
+          <button onClick={() => goTo({ k: 'globe' })} title="Stop narrowing to this company">
+            clear ✕
+          </button>
+        </div>
+      )}
+
+      {surface === 'signals' ? (
+         <SignalsBoard focusUid={focusUid} focusName={focusName}
+                       onOpenCompany={uid => goTo({ k: 'company', uid }, 'live')} />
+       )
+       : surface === 'news' ? (
+         <Newsroom focusName={focusName}
+                   onOpenCompany={uid => goTo({ k: 'company', uid }, 'live')} />
        )
        : surface === 'simulate' ? (
-         <Simulator onOpenCompany={uid => goTo({ k: 'company', uid })} />
+         <Simulator seedUid={focusUid}
+                    onOpenCompany={uid => goTo({ k: 'company', uid }, 'live')} />
        )
        /* A company gets the whole width. It used to share a 430px column with
           the globe, which made the chart unreadable and kept a map on screen
