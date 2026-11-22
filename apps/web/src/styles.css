@@ -617,3 +617,305 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .news-card .more:hover { color: var(--accent); }
 .news-foot { margin: 22px 0 0; font-size: 11px; }
 .news-card .src.filed { color: var(--accent); }
+
+/* ===================================================================== *
+ *  Display layer
+ *
+ *  The layout underneath was sound and the type was too quiet to carry it:
+ *  a 14px serif at a uniform size across a full-bleed globe reads as a
+ *  settings screen rather than a product. This layer changes scale, warmth
+ *  and motion, and touches no structure.
+ *
+ *  The reference was Delta Cafes (Burocratik), whose highest sub-score was
+ *  animation. Three things of theirs survive the trip to a data product:
+ *  oversized display type with one italic word per headline, numbered
+ *  chapters, and movement that explains a change rather than decorating it.
+ *  Their photography and scroll-chapter storytelling do not - a reader here
+ *  is answering a question, not being told a story.
+ * ===================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap');
+
+:root {
+  /* Delta's espresso, used as the ink rather than the ground: on a page that
+     is read for numbers, a dark field all over costs legibility for mood. */
+  --espresso:   #35221A;
+  --font-display: 'Instrument Serif', ui-serif, 'Iowan Old Style', Palatino, Georgia, serif;
+
+  /* A ramp, so headings relate to each other instead of each picking a size.
+     clamp() lets the hero fill a projector at the viva without a media query. */
+  --t-hero: clamp(2.6rem, 6.2vw, 5.4rem);
+  --t-page: clamp(1.9rem, 3.4vw, 3.1rem);
+  --t-sect: 1.05rem;
+
+  --ease: cubic-bezier(.22, 1, .36, 1);
+}
+
+/* Warm the neutrals towards the reference without losing contrast. */
+:root { --paper: #f4efe4; --paper-2: #efe8d9; --ink: var(--espresso); --hairline: #c4b8a4; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #14100c; --paper-2: #1b1611; --ink: #f0e7d7; --ink-2: #b4a894;
+    --hairline: #3a3026;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #14100c; --paper-2: #1b1611; --ink: #f0e7d7; --ink-2: #b4a894;
+  --hairline: #3a3026;
+}
+
+body { font-size: 15px; line-height: 1.5; }
+
+/* ---- the hero over the globe -------------------------------------- */
+/* One italic word per headline is the reference's signature. It works here
+   because the sentence already has a pivot: the question is *whom*. */
+.stage-caption { max-width: min(64ch, 52vw); }
+.stage-caption h1 {
+  font-family: var(--font-display);
+  font-size: var(--t-hero);
+  line-height: .95;
+  letter-spacing: -.02em;
+  margin: 0 0 .5rem;
+  text-wrap: balance;
+}
+.stage-caption h1 em,
+.stage-caption h1 i { font-style: italic; }
+.stage-caption p { font-size: 1.02rem; max-width: 46ch; line-height: 1.55; opacity: .88; }
+
+/* A numbered chapter marker, as on the reference's hero slides. */
+.stage-caption::before {
+  content: '01';
+  display: block;
+  font-family: var(--font-num);
+  font-size: 11px; letter-spacing: .3em;
+  opacity: .5; margin-bottom: 1.1rem;
+}
+
+/* ---- the company page --------------------------------------------- */
+.cpage-id h1 {
+  font-family: var(--font-display);
+  font-size: var(--t-page);
+  line-height: 1;
+  letter-spacing: -.015em;
+  margin: 0;
+}
+.cpage-head { padding-block: clamp(1.2rem, 3vw, 2.4rem); }
+.cmeta { margin-top: 1.4rem; }
+.cmeta dt {
+  font-family: var(--font-num); font-size: 10px;
+  letter-spacing: .16em; text-transform: uppercase; opacity: .62;
+}
+.cmeta dd { font-size: .98rem; margin-top: .2rem; }
+
+/* ---- rows have to look like doors --------------------------------- */
+/* Every row here opens something, and a flat row with a faint hover does not
+   say so. A reader who cannot tell a row is clickable reports the links as
+   broken, which is exactly what happened. */
+.row {
+  position: relative;
+  transition: background .18s var(--ease), padding-left .18s var(--ease);
+}
+.row::after {
+  content: '→';
+  position: absolute; right: 14px; top: 50%;
+  transform: translateY(-50%) translateX(-4px);
+  opacity: 0; transition: opacity .18s var(--ease), transform .18s var(--ease);
+  font-size: 13px; color: var(--accent);
+}
+.row:hover::after,
+.row:focus-visible::after { opacity: 1; transform: translateY(-50%) translateX(0); }
+.row:hover { padding-left: 22px; }
+.row:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+/* ---- motion that explains rather than decorates -------------------- */
+/* Transform only, and no opacity. Animating page content from opacity 0 with
+   a `both` fill means the text is genuinely invisible until the animation
+   runs and partly transparent while it does - a flash of nothing on every
+   navigation, and an unreadable page if the animation is ever interrupted.
+   Movement alone reads as arrival and costs nothing when it fails. */
+@keyframes rise { from { transform: translateY(12px); } to { transform: none; } }
+.cpage, .panel-body > *, .stage-caption { animation: rise .45s var(--ease) both; }
+.panel-body > * { animation-delay: .04s; }
+
+.surfaces button { transition: color .18s var(--ease), border-color .18s var(--ease); }
+.brand { font-family: var(--font-display); letter-spacing: .18em; }
+
+/* The reference scored lowest on accessibility, which is the part worth not
+   copying. Everything above is decoration over a layout that already works,
+   so it can all be switched off without losing a single affordance. */
+@media (prefers-reduced-motion: reduce) {
+  .cpage, .panel-body > *, .stage-caption { animation: none; }
+  .row, .row::after { transition: none; }
+  .row:hover { padding-left: inherit; }
+}
+
+/* The crumb trail is navigation, so the segment you are already on is not a
+   link and should not look like one. */
+.crumbs .here { opacity: .55; }
+
+/* The lead sentence: wide measure is the enemy of a paragraph, so it is held
+   to a readable line length even on a 1440px page. */
+.clead {
+  font-size: 1.12rem; line-height: 1.55;
+  max-width: 68ch; margin: 1.1rem 0 0;
+  color: var(--ink); opacity: .82;
+}
+/* Numbered tabs, after the reference's chapter markers. The number is a label,
+   not a control, so it never takes the selected colour. */
+.ctabs button { display: inline-flex; align-items: baseline; gap: .5rem; }
+.ctabs .tn { font-size: 9.5px; letter-spacing: .18em; opacity: .45; }
+
+
+/* ===================================================================== *
+ *  The globe is the page
+ *
+ *  It used to share the screen with a 430px column, which is what made this
+ *  read as a dashboard: two panes of equal weight, neither of them the
+ *  product. The globe now takes the whole viewport and the list floats over
+ *  it, so the first thing on screen is the thing the project is.
+ * ===================================================================== */
+.main { display: block; position: relative; }
+.main .stage { position: absolute; inset: 0; }
+
+.main .panel {
+  /* A card that floats on the globe, not a wall bolted to the edge. Inset on
+     every side so the planet runs behind and past it, which is the whole
+     reason the globe is full-bleed. */
+  position: absolute;
+  top: calc(var(--topbar-h, 52px) + 72px);
+  right: clamp(.75rem, 2vw, 1.75rem);
+  bottom: clamp(.75rem, 2.5vh, 1.75rem);
+  width: min(400px, 32vw);
+  border: 1px solid var(--hairline);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 18px 50px -12px rgb(0 0 0 / .45);
+  /* Nearly opaque, and deliberately not blurred. A full-height backdrop
+     filter sits over a canvas that is animating every frame, which forces a
+     readback of that whole region on each one - the blur was costing more
+     than it bought over a list of small text. The pill above is small enough
+     that the same effect is cheap there, so it keeps it. */
+  background: color-mix(in srgb, var(--paper-2) 94%, transparent);
+}
+@supports not (color-mix(in srgb, red 50%, transparent)) {
+  .main .panel { background: var(--paper-2); }
+}
+@media (max-width: 900px) {
+  .main .panel { inset: auto .6rem .6rem .6rem; width: auto; height: 50%; }
+}
+
+/* The caption sits low-left, clear of the planet and of the panel. */
+.stage-caption {
+  position: absolute; left: clamp(1.5rem, 5vw, 4.5rem);
+  bottom: clamp(2rem, 7vh, 5rem); right: auto;
+  max-width: min(50ch, 46vw); z-index: 2;
+}
+.stage-caption h1 { font-size: clamp(2.4rem, 5.4vw, 5rem); }
+
+/* ===================================================================== *
+ *  Monochrome
+ *
+ *  One hue, and hierarchy carried by weight, size and opacity instead of
+ *  colour. The globe's own palette comes down with it: a warm-lit planet
+ *  under a grey interface reads as two designs sharing a screen.
+ *
+ *  The single exception is the state dot. Green and red there are not
+ *  decoration - they are the only thing on screen reporting whether the data
+ *  is live, and greying them out would lose the one signal worth a colour.
+ * ===================================================================== */
+:root {
+  --paper: #ffffff; --paper-2: #f4f4f4;
+  --ink: #0b0b0b; --ink-2: #6b6b6b;
+  --hairline: #d8d8d8;
+  --accent: #0b0b0b; --accent-dim: #0b0b0b0f;
+  --surprise: #0b0b0b;
+  --sea: #e9e9e9; --land: #ffffff; --land-has: #dcdcdc; --land-sel: #bdbdbd;
+  --coast: rgba(0,0,0,.35); --atmo: #9a9a9a;
+  --arc-hot: #ffffff; --arc-dim: #8a8a8a; --ring: #ffffff;
+  --pt-hot: #ffffff; --hex-top: #bdbdbd; --hex-hot: #ffffff; --hex-side: #6b6b6b;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #050505; --paper-2: #0e0e0e;
+    --ink: #f2f2f2; --ink-2: #8e8e8e;
+    --hairline: #242424;
+    --accent: #ffffff; --accent-dim: #ffffff14;
+    --surprise: #ffffff;
+    --sea: #0a0a0a; --land: #1a1a1a; --land-has: #2e2e2e; --land-sel: #4a4a4a;
+    --coast: rgba(255,255,255,.3); --atmo: #3a3a3a;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #050505; --paper-2: #0e0e0e; --ink: #f2f2f2; --ink-2: #8e8e8e;
+  --hairline: #242424; --accent: #ffffff; --accent-dim: #ffffff14;
+  --sea: #0a0a0a; --land: #1a1a1a; --land-has: #2e2e2e; --land-sel: #4a4a4a;
+  --coast: rgba(255,255,255,.3); --atmo: #3a3a3a;
+}
+.stage { background: var(--paper); }
+
+/* ---- the floating surface bar ------------------------------------- */
+.surfaces {
+  position: absolute; z-index: 5;
+  left: 50%; transform: translateX(-50%);
+  top: calc(var(--topbar-h, 52px) + 18px);
+  display: flex; gap: 2px; margin: 0; padding: 4px;
+  border: 1px solid var(--hairline); border-radius: 999px;
+  /* Solid rather than blurred. A backdrop filter sitting directly over the
+     spinning globe makes the compositor re-read that region every frame, and
+     in a one-hue theme it buys almost nothing over a flat tint. */
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+}
+@supports not (color-mix(in srgb, red 50%, transparent)) {
+  .surfaces { background: var(--paper); }
+}
+
+.surfaces button {
+  position: relative; border: 0; background: none; cursor: pointer;
+  padding: .55rem 1.1rem; border-radius: 999px;
+  font-family: var(--font-num); font-size: 10.5px;
+  letter-spacing: .18em; text-transform: uppercase;
+  color: var(--ink-2); overflow: hidden;
+  transition: color .28s var(--ease);
+}
+/* The hover the reference is built on: a filled pill wipes up from the
+   bottom edge under the label, rather than the colour simply changing. */
+.surfaces button::before {
+  content: ''; position: absolute; inset: 0; z-index: 0;
+  background: var(--ink); border-radius: 999px;
+  transform: translateY(101%);
+  transition: transform .34s var(--ease);
+}
+.surfaces button:hover::before,
+.surfaces button[aria-selected="true"]::before { transform: translateY(0); }
+.surfaces button:hover,
+.surfaces button[aria-selected="true"] { color: var(--paper); }
+.surfaces .s-label { position: relative; z-index: 1; }
+.surfaces button:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) {
+  .surfaces button::before { transition: none; }
+}
+
+/* ---- the same wipe on every row ----------------------------------- */
+/* A row is a door, and this is what makes it read as one: the fill arrives
+   from the edge you are travelling towards. */
+.row { overflow: hidden; }
+.row::before {
+  content: ''; position: absolute; inset: 0; z-index: 0;
+  background: var(--accent-dim);
+  transform: translateX(-101%);
+  transition: transform .34s var(--ease);
+}
+.row:hover::before, .row:focus-visible::before { transform: translateX(0); }
+.row > * { position: relative; z-index: 1; }
+.row::after { z-index: 2; }
+@media (prefers-reduced-motion: reduce) { .row::before { transition: none; } }
+
+/* ---- header ------------------------------------------------------- */
+.topbar { --topbar-h: 52px; }
+.asof { opacity: .5; }
+.status i.ok  { background: #2f9e44; }
+.status i.bad { background: #c92a2a; }
+
+/* The panel's own chrome, now that it is a card. */
+.main .panel .panel-head { border-radius: 14px 14px 0 0; }
+.main .panel .panel-body { scrollbar-width: thin; }

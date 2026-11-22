@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import Globe3D, { type ArcSpec, type Pt } from './components/Globe3D'
 import Timeline from './components/Timeline'
 import { CountryList, SectorList, CompanyList, ExposureList, Empty } from './components/Panels'
@@ -11,14 +11,16 @@ import Search from './components/Search'
 import SectorQuotes from './components/SectorQuotes'
 import Simulator from './components/Simulator'
 import type { CompanyDetail, CompanyRow, CountryTile, ExposureResponse, SectorMove } from '@shared/api'
+import { format, parentOf, parse, type Route } from './route'
 
 const PRODUCT = import.meta.env.VITE_PRODUCT_NAME ?? 'Atlas'
 
 // 'signals' is the analysis surface. The globe answers where; it answers
 // what now, and it is a board rather than a map because ranking is reading.
-type Surface = 'live' | 'signals' | 'news' | 'replay' | 'simulate'
+import type { Surface } from './route'
 type View =
   | { k: 'home' }
+  | { k: 'globe' }
   | { k: 'country'; iso2: string }
   | { k: 'sector'; iso2: string; sector: SectorMove }
   | { k: 'company'; uid: string; back: View }
@@ -26,9 +28,35 @@ type View =
 
 export default function App() {
   const [mode, setMode] = useState<api.Mode>('checking')
-  const [surface, setSurface] = useState<Surface>('live')
-  const [view, setView] = useState<View>({ k: 'home' })
   const [tab, setTab] = useState<'up' | 'down' | 'market'>('up')
+
+  // Where you are lives in the address bar, not in state, so a company can be
+  // linked, bookmarked and reached with the back button. See route.ts.
+  const [loc, setLoc] = useState(() =>
+    parse(typeof window === 'undefined' ? '' : window.location.hash))
+  useEffect(() => {
+    const onHash = () => setLoc(parse(window.location.hash))
+    window.addEventListener('hashchange', onHash)
+    return () => window.removeEventListener('hashchange', onHash)
+  }, [])
+  const surface = loc.surface
+  const route = loc.route
+
+  // Whether this session has navigated at all. A reader who followed a link
+  // straight to a company has no history to step back through, so the back
+  // button has to land somewhere sensible rather than leave the site.
+  const moved = useRef(false)
+
+  const goTo = (r: Route, s: Surface = r.k === 'event' ? surface : 'live') => {
+    const next = format({ surface: s, route: r })
+    moved.current = true
+    if (window.location.hash !== next) window.location.hash = next
+    else setLoc(parse(next))
+  }
+  const goBack = () => {
+    if (moved.current && window.history.length > 1) window.history.back()
+    else goTo(parentOf(route))
+  }
 
   const [countries, setCountries] = useState<CountryTile[]>([])
   const [points, setPoints] = useState<Pt[]>([])
@@ -40,6 +68,27 @@ export default function App() {
   const [evIdx, setEvIdx] = useState(0)
   const [exposure, setExposure] = useState<ExposureResponse | null>(null)
   const [metrics, setMetrics] = useState<api.Metrics | null>(null)
+
+  // The rest of this file still thinks in terms of View, so the route is
+  // translated back into one. A sector arrives from the URL as a bare code and
+  // is matched against the loaded list; until that list lands, the code stands
+  // in for the name so a deep link renders immediately rather than blanking.
+  const view: View = useMemo(() => {
+    switch (route.k) {
+      case 'country': return { k: 'country', iso2: route.iso2 }
+      case 'sector': {
+        const found = (sectors ?? []).find(x => x.atlasSector === route.sectorCode)
+        return { k: 'sector', iso2: route.iso2,
+                 sector: found ?? { atlasSector: route.sectorCode,
+                                    name: route.sectorCode,
+                                    companyCount: 0 } as SectorMove }
+      }
+      case 'company': return { k: 'company', uid: route.uid, back: { k: 'home' } }
+      case 'globe':   return { k: 'globe' }
+      case 'event':   return { k: 'event' }
+      default:        return { k: 'home' }
+    }
+  }, [route, sectors])
 
   useEffect(() => { api.probe().then(setMode) }, [])
   useEffect(() => {
@@ -110,7 +159,10 @@ export default function App() {
   }, [showEvent, exposure, evLoc, byUid])
 
   const tvSym = detail ? tvSymbol(detail.listings) : null
-  const go = (v: View) => { setView(v); if (v.k !== 'event') setSurface('live') }
+  // Inside the two-pane tool, the world view is 'globe'. 'home' is the
+  // landing and never reaches this branch.
+  const atWorld = view.k === 'globe' || view.k === 'home'
+
   const totalCompanies = countries.reduce((a, c) => a + c.companyCount, 0)
 
   return (
@@ -129,42 +181,44 @@ export default function App() {
 
       <header className="topbar">
         <span className="brand">{PRODUCT}</span>
-        <nav className="surfaces">
-          {(['live', 'signals', 'news', 'replay', 'simulate'] as Surface[]).map(s => (
-            <button key={s} aria-selected={surface === s}
-                    onClick={() => {
-                      setSurface(s)
-                      setView(s === 'live' || s === 'signals' || s === 'news'
-                               ? { k: 'home' } : { k: 'event' })
-                    }}>
-              {s}
-            </button>
-          ))}
-        </nav>
-        <Search points={points}
-                onPick={uid => setView({ k: 'company', uid, back: view })} />
+        <Search points={points} onPick={uid => goTo({ k: 'company', uid })} />
         <span className="status">
           <i className={mode === 'live' || mode === 'snapshot' ? 'ok' : 'bad'} />
           {mode === 'live' || mode === 'snapshot'
             ? `${totalCompanies.toLocaleString()} companies · ${countries.length} countries`
               + (metrics ? ` · ${metrics.graph.relationships} cited relationships` : '')
-              + (mode === 'snapshot' ? ' · snapshot' : '')
             : mode === 'checking' ? 'connecting…' : 'API offline'}
         </span>
-        <span className="asof num">
-          as of {(showEvent && current ? current.becamePublicUtc.slice(0, 10) : 'today')}
-        </span>
+        {/* The as-of date only means something while the graph is being read
+            at a past date. On the live view it said "as of today", which is
+            four words to tell the reader that now is now. */}
+        {showEvent && current && (
+          <span className="asof num">as of {current.becamePublicUtc.slice(0, 10)}</span>
+        )}
       </header>
+
+      {/* The surfaces float over the globe rather than sitting in the chrome:
+          they are the main thing you do here, and a centred bar reads as a
+          control for the thing behind it instead of a row of tabs. */}
+      <nav className="surfaces">
+        {(['live', 'signals', 'news', 'replay', 'simulate'] as Surface[]).map(s => (
+          <button key={s} aria-selected={surface === s}
+                  onClick={() => goTo(
+                    s === 'live' || s === 'signals' || s === 'news'
+                      ? { k: 'home' } : { k: 'event' }, s)}>
+            <span className="s-label">{s}</span>
+          </button>
+        ))}
+      </nav>
 
       {surface === 'signals' ? <SignalsBoard />
        : surface === 'news' && view.k !== 'company' ? (
          /* `go` resets the surface, so opening a company from the newsroom
             lands on the company page rather than staying on the feed. */
-         <Newsroom onOpenCompany={uid => go({ k: 'company', uid, back: { k: 'home' } })} />
+         <Newsroom onOpenCompany={uid => goTo({ k: 'company', uid })} />
        )
        : surface === 'simulate' ? (
-         <Simulator onOpenCompany={uid =>
-           setView({ k: 'company', uid, back: { k: 'home' } })} />
+         <Simulator onOpenCompany={uid => goTo({ k: 'company', uid })} />
        )
        /* A company gets the whole width. It used to share a 430px column with
           the globe, which made the chart unreadable and kept a map on screen
@@ -172,7 +226,7 @@ export default function App() {
        : view.k === 'company' ? (
          detail
            ? <CompanyPage detail={detail} tab={tab} setTab={setTab} tvSym={tvSym}
-                          onBack={() => go(view.back)} />
+                          onBack={goBack} />
            : <div className="cpage"><div className="cpage-body">
                <Empty title="Loading…" body="" /></div></div>
        ) : (
@@ -180,14 +234,14 @@ export default function App() {
         <div className="stage">
           <Globe3D
             points={points} selected={iso}
-            onSelectCountry={c => go(c ? { k: 'country', iso2: c } : { k: 'home' })}
+            onSelectCountry={c => goTo(c ? { k: 'country', iso2: c } : { k: 'home' })}
             focus={focus} highlight={highlight} arcs={arcs}
             rings={showEvent && evLoc ? [{ lat: evLoc.lat, lng: evLoc.lon }] : []}
-            mode={view.k === 'home' && !showEvent ? 'coverage' : 'detail'}
+            mode={atWorld && !showEvent ? 'coverage' : 'detail'}
           />
-          {view.k === 'home' && !showEvent && (
+          {atWorld && !showEvent && (
             <div className="stage-caption">
-              <h1>Who depends on whom</h1>
+              <h1>Who depends on <em>whom</em></h1>
               <p>Built from what companies have already said in public.
                  Every edge carries the sentence that proves it.</p>
             </div>
@@ -199,18 +253,20 @@ export default function App() {
         <aside className="panel">
           <div className="panel-head">
             <div className="crumbs">
-              {view.k !== 'home' && <><button onClick={() => go({ k: 'home' })}>World</button><span> / </span></>}
-              {view.k === 'sector' && <><button onClick={() => go({ k: 'country', iso2: view.iso2 })}>{view.iso2}</button><span> / </span></>}
-              {view.k === 'home' && 'Coverage by country'}
+              {!atWorld && <><button onClick={() => goTo({ k: 'globe' })}>World</button><span> / </span></>}
+              {view.k === 'sector' && <><button onClick={() => goTo({ k: 'country', iso2: view.iso2 })}>{view.iso2}</button><span> / </span></>}
+              {/* The root has no trail. It used to repeat the title verbatim,
+                  so the panel opened by saying the same four words twice. */}
+              {view.k === 'country' && <span className="here">{view.iso2}</span>}
             </div>
             <div className="title">
-              {view.k === 'home' ? 'Coverage by country'
+              {atWorld ? 'Coverage by country'
                 : view.k === 'country' ? (countries.find(c => c.country === view.iso2)?.name ?? view.iso2)
                 : view.k === 'sector' ? view.sector.name
                 : (current?.name ?? 'Exposure')}
             </div>
             <div className="sub">
-              {view.k === 'home' ? `${points.length.toLocaleString()} headquarters on the globe`
+              {atWorld ? `${points.length.toLocaleString()} headquarters on the globe`
                 : view.k === 'country' ? `${countries.find(c => c.country === view.iso2)?.companyCount ?? 0} companies · ${countries.find(c => c.country === view.iso2)?.mappedCompanyCount ?? 0} with cited edges`
                 : view.k === 'sector' ? `${view.sector.companyCount} companies`
                 : 'Ranked by disclosed dependence'}
@@ -233,19 +289,21 @@ export default function App() {
                 </>
               ) : (
                 <ExposureList data={exposure}
-                  onPick={uid => setView({ k: 'company', uid, back: { k: 'event' } })} />
+                  onPick={uid => goTo({ k: 'company', uid })} />
               )
-            ) : view.k === 'home' ? (
-              <CountryList tiles={countries} onPick={c => go({ k: 'country', iso2: c })} />
+            ) : atWorld ? (
+              <CountryList tiles={countries} onPick={c => goTo({ k: 'country', iso2: c })} />
             ) : view.k === 'country' ? (
               sectors === null ? <Empty title="Loading…" body="" />
-                : <SectorList sectors={sectors} onPick={s => go({ k: 'sector', iso2: view.iso2, sector: s })} />
+                : <SectorList sectors={sectors}
+                               onPick={s => goTo({ k: 'sector', iso2: view.iso2,
+                                                   sectorCode: s.atlasSector })} />
             ) : (
               companies === null ? <Empty title="Loading…" body="" /> : (
                 <>
                   <SectorQuotes companies={companies} sectorName={view.sector.name} />
                   <CompanyList companies={companies}
-                               onPick={c => setView({ k: 'company', uid: c.companyUid, back: view })} />
+                               onPick={c => goTo({ k: 'company', uid: c.companyUid })} />
                 </>
               )
             )}
