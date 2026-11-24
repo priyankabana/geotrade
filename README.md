@@ -1,4 +1,10 @@
-# Atlas *(working codename - the real name is chosen at the end)*
+# GeoTrade Atlas
+
+> Who depends on whom, read from company filings - and when something breaks, who it reaches next.
+
+**Live:** https://geotrade-atlas.vercel.app &nbsp;·&nbsp; **Team:** Group G27, Department of Computer Engineering, Vishwakarma University, Pune
+
+![GeoTrade Atlas](apps/web/public/og.png)
 
 When something happens in the world - a port closes, a factory burns down, a country bans
 an export - some companies are obviously affected and everyone already knows who they are.
@@ -16,6 +22,61 @@ If we can't show you the sentence, we don't make the claim.
 
 **We are not a trading product.** We tell you who is exposed and show you the evidence. We
 never tell you what to buy or sell. [Why that matters](COMPLIANCE.md).
+
+---
+
+## Architecture
+
+The pipeline reads primary documents, turns sentences into a cited graph, scores text against
+a reviewable word list, and freezes the answers to static JSON the web app can serve with no
+live backend.
+
+```mermaid
+flowchart LR
+  EDGAR[SEC EDGAR<br/>filings]      --> EXTRACT[extract.py<br/>cited dependency edges]
+  GDELT[GDELT<br/>news]             --> SCORE[lexicon.py<br/>sentiment scoring]
+  TIKR[TIKR<br/>earnings calls]     --> SCORE
+  EXTRACT --> GRAPH[(dependency graph<br/>every edge cites a sentence)]
+  GRAPH   --> PROP[propagate.py<br/>point-in-time walk, decay by hop]
+  SCORE   --> DECIDE[decide.py<br/>confidence-weighted direction]
+  PROP    --> DECIDE
+  DECIDE  --> API[FastAPI<br/>multi-tenant, row-level security]
+  API     --> SNAP[snapshot_api.py<br/>freeze responses to JSON]
+  SNAP    --> WEB[React + three.js globe<br/>static on Vercel]
+```
+
+The deployed site is a frozen snapshot: an HTTPS page cannot call `http://localhost`, so the
+build calls the real API and writes its answers to `/data/v1/*.json`. The published site can
+therefore never disagree with the one on a developer's machine. The cost is that data is
+as-of the last build, not real-time.
+
+## Tech stack, and why
+
+| Layer | Choice | Why |
+|---|---|---|
+| Globe / UI | React 18 + TypeScript + Vite, `react-globe.gl` (three.js) | typed components; a 3D globe is the one view where "where" is the question |
+| Sentiment | A hand-built finance lexicon, not an LLM | finance inverts ordinary sentiment ("beat", "charge"); a table is reproducible and has no prompt-injection surface |
+| Extraction | Python regex + gazetteer over filing text | every edge must trace to a quotable sentence; a black box could not |
+| API | FastAPI + psycopg | async, typed query params, easy row-level-security integration |
+| Store | PostgreSQL + PostGIS | relational point-in-time reads (`valid_from`/`valid_to`) and geography for the globe |
+| Hosting | Vercel static + frozen JSON | no server to cold-start or secure; the snapshot is the deploy artifact |
+| CI | GitHub Actions + ephemeral Postgres | proves migrations idempotent and gates on "every edge cites a sentence" |
+
+## Data sources
+
+| Source | Used for | Link |
+|---|---|---|
+| SEC EDGAR | 10-K / 20-F filings, the dependency sentences | https://www.sec.gov/edgar |
+| GDELT | streaming world news, matched to companies locally | https://www.gdeltproject.org |
+| TIKR earnings-call transcripts | management commentary, scored like filings | provided for academic use by BuySellTips; not redistributed |
+
+## Limitations and future work
+
+- The buy/sell **direction is not validated against market returns** - only the graph's reach
+  is backtested, honestly, as a regression over real events. Next: a directional hit-rate vs a
+  baseline, joined to a licensed price feed.
+- The globe (three.js) ships in the main bundle (~1.9 MB); lazy-loading it is the top perf win.
+- Coverage is ten countries today; the extraction pipeline generalises but the universe is seeded.
 
 ---
 
