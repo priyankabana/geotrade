@@ -99,7 +99,11 @@ def main():
                                     atlas_sector,fiscal_year_end,status,website,ir_url,description)
                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id
             """, (r["legal_name"], r["common_name"],
-                  nn(r["country_incorporation"]) or "US", nn(r["country_hq"]),
+                  # A missing country is unknown, not American. ZZ is the ISO
+                  # 3166 "unknown" code, which joins to no country on the globe,
+                  # so a company with no filed country is left off the map
+                  # rather than silently counted as US coverage.
+                  nn(r["country_incorporation"]) or "ZZ", nn(r["country_hq"]),
                   nn(r["atlas_sector"]), nn(r["fiscal_year_end"]),
                   nn(r["status"]) or "active", nn(r["website"]), nn(r["ir_url"]),
                   nn(r["description"])))
@@ -132,7 +136,7 @@ def main():
                     (entity_id,role,address,city,state,country,geom,source_id)
                     VALUES (%s,'hq',%s,%s,%s,%s,ST_SetSRID(ST_MakePoint(%s,%s),4326)::geography,%s)""",
                     (eid, nn(r["hq_address"]), nn(r["hq_city"]), nn(r["hq_state"]),
-                     nn(r["hq_country"]) or "US", lon, lat, r["source_id"]))
+                     nn(r["hq_country"]) or "ZZ", lon, lat, r["source_id"]))
 
             if num(r.get("market_cap_usd")) is not None or nn(r.get("market_cap_band")):
                 cur.execute("""INSERT INTO entity_metric
