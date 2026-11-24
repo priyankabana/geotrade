@@ -142,7 +142,9 @@ def main():
                 cur.execute("""INSERT INTO entity_metric
                     (entity_id,metric,value,currency,as_of,band,source_id,collected_on)
                     VALUES (%s,'market_cap_usd',%s,'USD',%s,%s,%s,%s)""",
-                    (eid, num(r.get("market_cap_usd")) or 0, r["market_cap_as_of"],
+                    # A band-only row leaves the number genuinely absent rather
+                    # than fabricating a zero-dollar market cap (0010 migration).
+                    (eid, num(r.get("market_cap_usd")), r["market_cap_as_of"],
                      nn(r["market_cap_band"]), r["source_id"], r["collected_on"]))
             n += 1
             if n % 500 == 0:
