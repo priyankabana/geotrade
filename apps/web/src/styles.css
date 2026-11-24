@@ -390,6 +390,18 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .sig .badge.rule  { background: none; color: var(--ink-2); border: 1px solid var(--hairline); }
 .sig .ev { font-size: 11.5px; color: var(--ink-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
+/* On a phone the eight-column signals grid is about 625px wide and forced the
+   whole page to scroll sideways. Below 620px it reflows: a compact top row of
+   rank, symbol, direction, magnitude and badge, with the company name and the
+   event each on their own full-width line, and the asset-class label dropped. */
+@media (max-width: 620px) {
+  .sig-head { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+  .sig .cls { display: none; }
+  .sig .aname { flex: 1 1 100%; order: 5; white-space: normal; }
+  .sig .ev { flex: 1 1 100%; order: 6; white-space: normal; }
+  .sig .mag { flex: 1 1 110px; }
+}
+
 .sig-body { padding: 4px 4px 16px 38px; max-width: 86ch; }
 .sig-body .why { margin: 0 0 10px; color: var(--ink-2); font-size: 13.5px; }
 .sig-body blockquote {
