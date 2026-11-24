@@ -3,10 +3,38 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Atlas</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <title>GeoTrade Atlas - who depends on whom, read from filings</title>
+    <meta name="description" content="A world map of corporate dependencies read from company filings. Every edge cites the sentence a company actually filed. Direction and evidence only, not investment advice." />
+    <meta name="theme-color" content="#0d0d0f" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="GeoTrade Atlas" />
+    <meta property="og:title" content="GeoTrade Atlas - who depends on whom, read from filings" />
+    <meta property="og:description" content="A world map of corporate dependencies read from company filings. Every edge cites the sentence a company filed." />
+    <meta property="og:url" content="https://geotrade-atlas.vercel.app/" />
+    <meta property="og:image" content="https://geotrade-atlas.vercel.app/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="GeoTrade Atlas" />
+    <meta name="twitter:description" content="Who depends on whom, read from company filings. Every edge cites a filed sentence." />
+    <meta name="twitter:image" content="https://geotrade-atlas.vercel.app/og.png" />
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <div style="max-width:40rem;margin:14vh auto;padding:0 1.5rem;font:16px/1.6 -apple-system,Segoe UI,Roboto,sans-serif;color:#e8e1d0;background:#0d0d0f">
+        <h1 style="font-weight:600">GeoTrade Atlas</h1>
+        <p>This is an interactive map of corporate dependencies read from company filings, and it needs JavaScript to draw the globe and load the data.</p>
+        <p>Please enable JavaScript, or read the project overview at
+          <a style="color:#6fb2c7" href="/about">/about</a>.</p>
+      </div>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
