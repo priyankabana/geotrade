@@ -208,6 +208,10 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 @media (max-width: 980px) { .main { grid-template-columns: 1fr; } }
 
 .stage { position: relative; overflow: hidden; background: #05070c; }
+/* Shown while the globe chunk (three.js) streams in on first load. */
+.globe-loading { position: absolute; inset: 0; display: flex; align-items: center;
+                 justify-content: center; color: #a79f8c; font-size: 13px;
+                 letter-spacing: .04em; background: #05070c; }
 .stage .stage-caption h1 { color: #f3ecdc; }
 .stage .stage-caption p  { color: #a79f8c; }
 .stage-caption {

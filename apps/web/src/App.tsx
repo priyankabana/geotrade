@@ -1,5 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
-import Globe3D, { type ArcSpec, type Pt } from './components/Globe3D'
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
+import type { ArcSpec, Pt } from './components/Globe3D'
+
+// The globe pulls in three.js and react-globe.gl, by far the heaviest part of
+// the bundle. Loading it on demand keeps three.js out of the initial chunk, so
+// the shell and the data panels paint before the WebGL library has downloaded.
+const Globe3D = lazy(() => import('./components/Globe3D'))
 import Timeline from './components/Timeline'
 import { CountryList, SectorList, CompanyList, ExposureList, Empty } from './components/Panels'
 import * as api from './client'
@@ -283,13 +288,15 @@ export default function App() {
        ) : (
       <div className={`main${surface === 'replay' ? ' with-timeline' : ''}`}>
         <div className="stage">
-          <Globe3D
-            points={points} selected={iso}
-            onSelectCountry={c => goTo(c ? { k: 'country', iso2: c } : { k: 'home' })}
-            focus={focus} highlight={highlight} arcs={arcs}
-            rings={showEvent && evLoc ? [{ lat: evLoc.lat, lng: evLoc.lon }] : []}
-            mode={atWorld && !showEvent ? 'coverage' : 'detail'}
-          />
+          <Suspense fallback={<div className="globe-loading">loading the globe…</div>}>
+            <Globe3D
+              points={points} selected={iso}
+              onSelectCountry={c => goTo(c ? { k: 'country', iso2: c } : { k: 'home' })}
+              focus={focus} highlight={highlight} arcs={arcs}
+              rings={showEvent && evLoc ? [{ lat: evLoc.lat, lng: evLoc.lon }] : []}
+              mode={atWorld && !showEvent ? 'coverage' : 'detail'}
+            />
+          </Suspense>
           {atWorld && !showEvent && (
             <div className="stage-caption">
               <h1>Who depends on <em>whom</em></h1>
