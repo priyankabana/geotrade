@@ -68,6 +68,8 @@ export default function App() {
   const [events, setEvents] = useState<api.EventRow[]>([])
   const [evIdx, setEvIdx] = useState(0)
   const [exposure, setExposure] = useState<ExposureResponse | null>(null)
+  const [exposureFailed, setExposureFailed] = useState(false)
+  const [detailFailed, setDetailFailed] = useState(false)
   const [metrics, setMetrics] = useState<api.Metrics | null>(null)
 
   // The rest of this file still thinks in terms of View, so the route is
@@ -110,8 +112,8 @@ export default function App() {
   const current = events[evIdx]
   useEffect(() => {
     if (!current) return
-    setExposure(null)
-    api.getExposure(current.key).then(setExposure)
+    setExposure(null); setExposureFailed(false)
+    api.getExposure(current.key).then(setExposure).catch(() => setExposureFailed(true))
   }, [current?.key])
 
   const iso = view.k === 'country' || view.k === 'sector' ? view.iso2 : null
@@ -122,7 +124,8 @@ export default function App() {
   }, [view.k === 'sector' ? view.sector.atlasSector + view.iso2 : null])
   useEffect(() => {
     if (view.k !== 'company') return
-    setDetail(null); api.getCompany(view.uid).then(setDetail)
+    setDetail(null); setDetailFailed(false)
+    api.getCompany(view.uid).then(setDetail).catch(() => setDetailFailed(true))
   }, [view.k === 'company' ? view.uid : null])
 
   const byUid = useMemo(() => new Map(points.map(p => [p.uid, p])), [points])
@@ -273,7 +276,10 @@ export default function App() {
            ? <CompanyPage detail={detail} tab={tab} setTab={setTab} tvSym={tvSym}
                           onBack={goBack} />
            : <div className="cpage"><div className="cpage-body">
-               <Empty title="Loading…" body="" /></div></div>
+               {detailFailed
+                 ? <Empty title="Could not load this company"
+                          body="The data did not load. Check your connection and try again." />
+                 : <Empty title="Loading…" body="" />}</div></div>
        ) : (
       <div className={`main${surface === 'replay' ? ' with-timeline' : ''}`}>
         <div className="stage">
@@ -320,7 +326,9 @@ export default function App() {
 
           <div className="panel-body">
             {showEvent ? (
-              exposure === null ? <Empty title="Walking the graph…" body="" />
+              exposureFailed ? <Empty title="Could not load the graph"
+                     body="The exposure data did not load. Check your connection and try again." />
+              : exposure === null ? <Empty title="Walking the graph…" body="" />
               : exposure.rows.length === 0 ? (
                 <>
                   <div className="notice">

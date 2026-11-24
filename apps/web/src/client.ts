@@ -102,11 +102,15 @@ export type Metrics = {
 export const getMetrics = () => safe<Metrics | null>('/v1/metrics', null)
 
 export const getEvents = () => safe<EventRow[]>('/v1/events', [])
+// getExposure and getCompany reject on failure rather than swallowing it to
+// null, because their callers use null as the "still loading" sentinel: a
+// swallowed failure there shows a spinner that never resolves. The caller
+// catches the rejection and renders a real error state instead.
 export const getExposure = (key: string) =>
-  safe<ExposureResponse | null>(`/v1/events/${encodeURIComponent(key)}/exposure?limit=40`, null)
+  j<ExposureResponse | null>(`/v1/events/${encodeURIComponent(key)}/exposure?limit=40`)
 
 export const getCompany   = (uid: string) =>
-  safe<CompanyDetail | null>(`/v1/companies/${encodeURIComponent(uid)}`, null)
+  j<CompanyDetail | null>(`/v1/companies/${encodeURIComponent(uid)}`)
 
 // --- signals ----------------------------------------------------------------
 export type Signal = {
