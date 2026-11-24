@@ -17,6 +17,8 @@
   --accent:     #b8372a;   /* hazard red. three times per screen, maximum. */
   --accent-dim: #b8372a22;
   --surprise:   #1d4e5f;   /* the non-obvious names. the product's whole argument. */
+  --buy:        #1f7a4d;   /* up. the only green on the page, and only on a direction. */
+  --sell:       #b8372a;   /* down. shares the hazard red; nothing else is this colour. */
 
   /* 3D globe. Deep ink sea, warm paper land - the chart at night. */
   --sea3d:      #16221f;   /* deep ink-teal. Navy is banned (DESIGN.md) and reads generic. */
@@ -44,7 +46,7 @@
     --paper: #16150f; --paper-2: #1d1c15; --ink: #e8e1d0; --ink-2: #b5ae9c;
     --ink-3: #7d7768; --hairline: #3d3a30; --hairline-2: #2a2821;
     --sea: #10100b; --land: #22211a; --accent: #d4564a; --accent-dim: #d4564a22;
-    --surprise: #6fb2c7;
+    --surprise: #6fb2c7; --buy: #43b97f; --sell: #d4564a;
   }
 }
 :root[data-theme="dark"] {
@@ -52,6 +54,7 @@
   --ink-3: #7d7768; --hairline: #3d3a30; --hairline-2: #2a2821;
   --sea: #0c0c08; --land: #2b2a21; --land-has: #38362a; --land-sel: #4a4736;
   --accent: #d4564a; --accent-dim: #d4564a22; --surprise: #6fb2c7;
+  --buy: #43b97f; --sell: #d4564a;
 }
 
 * { box-sizing: border-box; }
@@ -334,8 +337,8 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   color: var(--ink-3); margin-bottom: 10px; display: flex; justify-content: space-between;
 }
 .legend i { display: inline-block; width: 9px; height: 9px; margin: 0 4px 0 10px; }
-.legend i.up, .bar-track i.up, .sig .mag i { background: var(--surprise); }
-.legend i.down, .bar-track i.down { background: var(--accent); }
+.legend i.up, .bar-track i.up { background: var(--buy); }
+.legend i.down, .bar-track i.down { background: var(--sell); }
 .bar-row { display: grid; grid-template-columns: 120px 1fr 42px; align-items: center; gap: 10px; margin: 3px 0; }
 .bar-label { font-size: 12px; color: var(--ink-2); }
 .bar-track { display: flex; height: 13px; background: #0000000a; }
@@ -363,17 +366,28 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .sig .sym { font-weight: 600; letter-spacing: .02em; }
 .sig .aname { color: var(--ink-2); font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .sig .cls { font-size: 10px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-3); }
-.sig .dir.up { color: var(--surprise); }
-.sig .dir.down { color: var(--accent); }
+/* On the signals board the direction is a bare arrow in a narrow column, not
+   a pill. The base .dir padding, border and letter-spacing overflow the 18px
+   cell and push the glyph off-centre, so they are reset here and the arrow is
+   centred in its column. */
+.sig .dir { padding: 0; border: 0; border-radius: 0; letter-spacing: 0;
+            font-size: 11px; line-height: 1; display: flex;
+            align-items: center; justify-content: center; }
+.sig .dir.up { color: var(--buy); }
+.sig .dir.down { color: var(--sell); }
 .sig .mag { display: flex; align-items: center; gap: 7px; }
 .sig .mag i { display: block; height: 7px; background: var(--ink-3); min-width: 2px; }
-.sig.down .mag i { background: var(--accent); }
-.sig.up .mag i { background: var(--surprise); }
+.sig.down .mag i { background: var(--sell); }
+.sig.up .mag i { background: var(--buy); }
 .sig .mag b { font-size: 11px; color: var(--ink-3); }
 .sig .badge { font-size: 9.5px; letter-spacing: .06em; padding: 2px 5px; text-align: center; }
 /* The only two values that matter, and they must not look alike. */
-.sig .badge.cited { background: var(--surprise); color: #fff; }
-.sig .badge.rule  { background: none; color: var(--ink-3); border: 1px solid var(--hairline); }
+/* FILED is the badge that matters - this signal is backed by a sentence a
+   company actually filed. It must read clearly in both themes, so it uses a
+   fixed dark-teal chip with white text rather than the theme variable, which
+   turned pale in dark mode and left white text on a near-white box. */
+.sig .badge.cited { background: #1d4e5f; color: #fff; border: 1px solid #1d4e5f; }
+.sig .badge.rule  { background: none; color: var(--ink-2); border: 1px solid var(--hairline); }
 .sig .ev { font-size: 11.5px; color: var(--ink-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .sig-body { padding: 4px 4px 16px 38px; max-width: 86ch; }
@@ -441,7 +455,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .cmeta .wide { flex: 1 1 320px; min-width: 0; }
 .cmeta .wide dd { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-.ctabs { display: flex; gap: 2px; }
+.ctabs { display: flex; gap: 2px; flex-wrap: wrap; }
 .ctabs button {
   font: inherit; font-size: 13px; background: none; border: 0; cursor: pointer;
   padding: 9px 15px; color: var(--ink-3); border-bottom: 2px solid transparent;
@@ -956,3 +970,90 @@ body { font-size: 15px; line-height: 1.5; }
   .board, .news-room, .cpage { padding-top: 64px; }
   .subject ~ .board, .subject ~ .news-room, .subject ~ .cpage { padding-top: 116px; }
 }
+
+/* The globe's stand-in when WebGL is unavailable. */
+.globe-off { display: grid; place-items: center; height: 100%; padding: 2rem; }
+.globe-off-note { max-width: 46ch; text-align: left; opacity: .85; }
+.globe-off-note strong { display: block; font-size: 1.05rem; margin-bottom: .6rem; }
+.globe-off-note p { margin: 0; font-size: .95rem; line-height: 1.55; color: var(--ink-2); }
+
+/* ---- the stories surface ------------------------------------------ */
+.board-h { font-family: var(--font-display); font-size: clamp(1.9rem,3.4vw,3rem);
+           line-height: 1; margin: 0 0 .7rem; }
+.board-sub { max-width: 70ch; opacity: .78; line-height: 1.55; margin: 0 0 2rem; }
+.figures.sm { gap: 1.4rem 2.4rem; margin-bottom: 2.2rem; }
+.figures.sm dd { font-size: clamp(1.4rem, 2.2vw, 2rem); }
+
+.story-grid { display: grid; gap: 2px;
+              grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+.story-card { background: var(--paper-2); padding: 1.1rem 1.2rem 1rem;
+              display: flex; flex-direction: column; gap: .6rem;
+              border: 1px solid transparent; transition: border-color .2s var(--ease); }
+.story-card:hover { border-color: var(--hairline); }
+.story-card header { display: flex; justify-content: space-between;
+                     font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+                     opacity: .55; }
+.story-card h3 { margin: 0; font-size: 1.02rem; line-height: 1.35; font-weight: 500; }
+.st-more { list-style: none; margin: 0; padding: 0; display: grid; gap: .35rem; }
+.st-more li { font-size: .85rem; line-height: 1.4; opacity: .72; }
+.story-card footer { display: flex; flex-wrap: wrap; gap: 4px; margin-top: auto; padding-top: .5rem; }
+.chip { border: 1px solid var(--hairline); background: none; color: inherit;
+        border-radius: 999px; padding: .25rem .6rem; font-size: .78rem; cursor: pointer;
+        transition: background .18s var(--ease), color .18s var(--ease); }
+.chip:hover { background: var(--ink); color: var(--paper); }
+.chip .num { opacity: .6; margin-left: .3rem; }
+
+.calls { display: grid; gap: 2px; }
+.call { background: var(--paper-2); padding: 1rem 1.2rem; }
+.call-head { display: flex; align-items: baseline; gap: .7rem; flex-wrap: wrap; }
+.call-head strong { font-weight: 500; }
+.dir { font-family: var(--font-num); font-size: 9.5px; letter-spacing: .18em;
+       text-transform: uppercase; padding: .22rem .55rem; border-radius: 999px;
+       border: 1px solid var(--hairline); }
+/* The one place colour is allowed to mean something: a solid green BUY, a
+   solid red SELL, the way a trading board reads at a glance. Scoped to the
+   calls board only - the signals board keeps its coloured arrow, and painting
+   a filled pill there hid the arrow under a same-coloured background. */
+.call .dir.up { background: var(--buy); color: #fff; border-color: transparent; }
+.call .dir.down { background: var(--sell); color: #fff; border-color: transparent; }
+.strength { margin-left: auto; opacity: .7; }
+.call-why { margin: .55rem 0 .4rem; font-size: .92rem; line-height: 1.55;
+            opacity: .82; max-width: 94ch; }
+.call-basis { font-size: 11px; opacity: .55; }
+
+/* A small outline tag for a fiscal period (Q3 2027) or a calendar label. */
+.tag { font-size: 10px; letter-spacing: .08em; padding: .1rem .4rem;
+       border: 1px solid var(--hairline); border-radius: 3px; opacity: .7; }
+
+/* The forward-looking calendar: a date on the left, the company beside it. */
+.cal { display: grid; gap: 2px; }
+.cal-row { display: grid; grid-template-columns: 96px 1fr auto; align-items: center;
+           gap: 1rem; text-align: left; font: inherit; cursor: pointer;
+           background: var(--paper-2); border: 0; padding: .7rem 1.1rem; }
+.cal-row:hover { background: var(--paper); }
+.cal-date { display: flex; flex-direction: column; line-height: 1.2; }
+.cal-date b { font-weight: 600; font-size: .95rem; }
+.cal-date i { font-style: normal; font-size: 10.5px; }
+.cal-co { font-size: .95rem; }
+.cal-co .num { margin-left: .4rem; }
+@media (max-width: 620px) {
+  .cal-row { grid-template-columns: 80px 1fr; }
+  .cal-row .tag { display: none; }
+}
+
+/* .figures was defined with the old landing page and went when that did. It
+   is still the right shape for a row of counts, so it lives here now. */
+.figures { display: grid; gap: 2rem 3rem;
+           grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); margin: 0; }
+.figures dt { font-family: var(--font-num); font-size: 10px; letter-spacing: .16em;
+              text-transform: uppercase; opacity: .6; }
+.figures dd { margin: .45rem 0 0; font-family: var(--font-display); line-height: 1;
+              font-size: clamp(1.8rem, 3vw, 2.6rem); }
+
+/* Links inside cards inherit the page ink. The browser default blue is both
+   off-palette and close to unreadable on the dark theme. */
+.stories a, .story-card a, .st-more a { color: inherit; text-decoration: none;
+                                        border-bottom: 1px solid var(--hairline); }
+.stories a:hover, .story-card a:hover, .st-more a:hover { border-bottom-color: var(--ink); }
+.st-more li .dim { opacity: .5; }
+.st-outlets { margin: 0; font-size: .85rem; line-height: 1.45; opacity: .72; }

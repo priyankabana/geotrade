@@ -15,7 +15,7 @@
  *  are mangled by enough chat clients and mail readers that a shared link
  *  arrives broken, so the wire form uses a dash and converts back on read.
  */
-export type Surface = 'live' | 'signals' | 'news' | 'replay' | 'simulate'
+export type Surface = 'live' | 'stories' | 'signals' | 'news' | 'replay' | 'simulate'
 
 export type Route =
   | { k: 'home' }
@@ -27,7 +27,7 @@ export type Route =
 
 export type Loc = { surface: Surface; route: Route }
 
-const SURFACES: Surface[] = ['live', 'signals', 'news', 'replay', 'simulate']
+const SURFACES: Surface[] = ['live', 'stories', 'signals', 'news', 'replay', 'simulate']
 
 /** XNAS:AMD <-> XNAS-AMD. Only the first dash is a colon: tickers such as
  *  BRK-B carry their own, and turning those back into colons would ask the

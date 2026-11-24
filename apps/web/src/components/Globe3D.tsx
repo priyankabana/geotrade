@@ -23,6 +23,23 @@ const NUM_TO_ISO2: Record<number, string> = {
   380:'IT',616:'PL',578:'NO',208:'DK',246:'FI',40:'AT',56:'BE',792:'TR',682:'SA',784:'AE',
 }
 
+/** Whether this browser can draw the globe at all.
+ *
+ *  Without WebGL the globe threw during mount and took the whole page down
+ *  with it, so a locked-down machine - a lab PC, a projector laptop with
+ *  hardware acceleration off - showed nothing whatsoever rather than showing
+ *  the data with no planet behind it. The test runs once and is cheap.
+ */
+function webglWorks(): boolean {
+  if (typeof document === 'undefined') return false
+  try {
+    const c = document.createElement('canvas')
+    return Boolean(c.getContext('webgl2') || c.getContext('webgl'))
+  } catch {
+    return false
+  }
+}
+
 export default function Globe3D({
   points, selected, onSelectCountry, focus, highlight, arcs, rings, mode,
 }: {
@@ -40,6 +57,9 @@ export default function Globe3D({
   const [polys, setPolys] = useState<Poly[]>([])
   const [dim, setDim] = useState({ w: 900, h: 900 })
   const [ready, setReady] = useState(false)
+  // Probed once. A browser either has WebGL for the whole session or it does
+  // not, so there is nothing to react to later.
+  const [canDraw] = useState(webglWorks)
 
   useEffect(() => {
     import('world-atlas/countries-110m.json').then(m => {
@@ -102,6 +122,26 @@ export default function Globe3D({
   const stopSpin = () => {
     const g = ref.current
     if (g) (g.controls() as { autoRotate: boolean }).autoRotate = false
+  }
+
+  if (!canDraw) {
+    // Everything else on the page works without a planet behind it: the
+    // country list, the companies, the filings and their citations are all
+    // still there. Saying so is better than a blank screen that looks like
+    // the site is broken.
+    return (
+      <div className="globe3d globe-off">
+        <div className="globe-off-note">
+          <strong>The globe needs WebGL, and this browser has it switched off.</strong>
+          <p>
+            Everything else still works. Use the list beside this panel, or the
+            search box above, to reach a country or a company. To bring the
+            globe back, turn on hardware acceleration in your browser settings
+            and reload.
+          </p>
+        </div>
+      </div>
+    )
   }
 
   return (

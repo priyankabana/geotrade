@@ -40,6 +40,17 @@ curl -s --max-time 3 "localhost:$PORT/v1/health" >/dev/null \
 echo "==> snapshot (api pid $(lsof -ti :$PORT | head -1))"
 python3 -I scripts/snapshot_api.py --api "http://localhost:$PORT"
 
+# The newsroom pipeline keeps its own database and writes its results as one
+# file. snapshot_api.py clears the data directory before it writes, so this
+# has to run after it and before the frontend build copies public/ into dist/.
+echo "==> stories from the news pipeline"
+if [ -f ../newsflow/export_for_site.py ]; then
+  ( cd ../newsflow && set -a && . ./.env 2>/dev/null && set +a
+    python3 export_for_site.py ) || echo "  (skipped: newsflow database not reachable)"
+else
+  echo "  (skipped: newsflow not present)"
+fi
+
 echo "==> frontend"
 ( cd apps/web && npm run build >/dev/null )
 

@@ -10,6 +10,7 @@ import CompanyPage from './components/CompanyPage'
 import Search from './components/Search'
 import SectorQuotes from './components/SectorQuotes'
 import Simulator from './components/Simulator'
+import Stories from './components/Stories'
 import type { CompanyDetail, CompanyRow, CountryTile, ExposureResponse, SectorMove } from '@shared/api'
 import { format, parentOf, parse, type Route } from './route'
 
@@ -176,6 +177,7 @@ export default function App() {
    */
   const nextRouteFor = (s: Surface): Route => {
     if (s === 'replay') return { k: 'event' }
+    if (s === 'stories') return { k: 'home' }
     if (focusUid) return { k: 'company', uid: focusUid }
     return s === 'simulate' ? { k: 'event' } : { k: 'globe' }
   }
@@ -221,7 +223,7 @@ export default function App() {
           they are the main thing you do here, and a centred bar reads as a
           control for the thing behind it instead of a row of tabs. */}
       <nav className="surfaces">
-        {(['live', 'signals', 'news', 'replay', 'simulate'] as Surface[]).map(s => (
+        {(['live', 'stories', 'signals', 'news', 'replay', 'simulate'] as Surface[]).map(s => (
           <button key={s} aria-selected={surface === s}
                   onClick={() => goTo(nextRouteFor(s), s)}>
             <span className="s-label">{s}</span>
@@ -248,7 +250,10 @@ export default function App() {
         </div>
       )}
 
-      {surface === 'signals' ? (
+      {surface === 'stories' ? (
+         <Stories onOpenCompany={t => goTo({ k: 'company', uid: t }, 'live')} />
+       )
+       : surface === 'signals' ? (
          <SignalsBoard focusUid={focusUid} focusName={focusName}
                        onOpenCompany={uid => goTo({ k: 'company', uid }, 'live')} />
        )
