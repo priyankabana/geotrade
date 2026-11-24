@@ -72,9 +72,11 @@ as-of the last build, not real-time.
 
 ## Limitations and future work
 
-- The buy/sell **direction is not validated against market returns** - only the graph's reach
-  is backtested, honestly, as a regression over real events. Next: a directional hit-rate vs a
-  baseline, joined to a licensed price feed.
+- The buy/sell **direction is not yet validated against market returns** - only the graph's
+  reach is backtested, honestly, as a regression over real events. The evaluation harness is
+  written (`newsflow/evaluate_direction.py`): it grades the directional hit-rate against an
+  always-up and a coin-flip baseline and runs the moment a `price_observation` feed is loaded.
+  No price feed is licensed here, so it prints what it needs and exits until then.
 - The globe (three.js) ships in the main bundle (~1.9 MB); lazy-loading it is the top perf win.
 - Coverage is ten countries today; the extraction pipeline generalises but the universe is seeded.
 
