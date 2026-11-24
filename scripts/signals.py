@@ -26,6 +26,15 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 DSN = os.environ.get("DATABASE_URL", "postgresql://atlas:atlas@localhost:5432/atlas")
 SIGNAL_VERSION = "signals-1.0"
 
+# Tier-one signals model exposure to a disruption. Every event this pipeline
+# ingests is a negative shock - a fire, a port closure, a ransomware outage -
+# so a company that depends on the disrupted party is pressed downward. The
+# direction is therefore a constant of the model, not something derived from
+# the event, and it is named here so the assumption is visible and can be
+# argued with rather than buried as a string literal in the insert. A pipeline
+# that one day ingests a positive event would have to revisit this.
+DISRUPTION_DIRECTION = "down"
+
 # A rule fires when the event carries any of `chokepoints`, `commodities` or
 # `types` listed. `weight` scales the event's own severity - it never invents a
 # level of its own, so a quiet event cannot produce a loud signal.
@@ -162,9 +171,10 @@ def main():
             cur.execute("""
                 INSERT INTO asset_signal (event_id, asset_id, direction, basis,
                     magnitude, hops, edge_id, rationale, as_of, scorer_version)
-                VALUES (%s,%s,'down','cited_dependency',%s,%s,%s,%s,%s,%s)
+                VALUES (%s,%s,%s,'cited_dependency',%s,%s,%s,%s,%s,%s)
                 ON CONFLICT DO NOTHING""",
-                (eid, asset_id, round(float(score), 3), hops, edge_id,
+                (eid, asset_id, DISRUPTION_DIRECTION,
+                 round(float(score), 3), hops, edge_id,
                  # The quote is rendered directly beneath this line on the
                  # board, so repeating it here printed the sentence twice.
                  (f"Disclosed dependence on {counterparty}"
