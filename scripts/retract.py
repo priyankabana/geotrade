@@ -13,15 +13,52 @@ It never adds anything - a loosened rule needs a re-extraction, not this.
     python3 -I scripts/retract.py            # report only
     python3 -I scripts/retract.py --apply    # remove them
 """
-import os, pathlib, sys
+import os, pathlib, re, sys
 import psycopg
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
-from extract import BIO, CITATION_LIST, EXTRACTOR_VERSION, NOISE
+from extract import (BIO, CITATION_LIST, COMPETITOR, CONFERRED,
+                     EXTRACTOR_VERSION, NOISE, PERSON_ROLE)
 
 DSN = os.environ.get("DATABASE_URL", "postgresql://atlas:atlas@localhost:5432/atlas")
 
-FILTERS = [("citation list", CITATION_LIST), ("noise", NOISE), ("biography", BIO)]
+# Whole-sentence filters: if the quote matches, the claim goes.
+FILTERS = [("citation list", CITATION_LIST), ("noise", NOISE), ("biography", BIO),
+           # Added with rules-3.4, after a rival ended up on a company page as
+           # one of its customers.
+           ("rival, not a counterparty", COMPETITOR)]
+
+
+def positional_reject(quote, counterparty):
+    """The two rules that depend on where the name sits, not just whether a
+    phrase appears somewhere in the sentence.
+
+    Applied as whole-sentence filters these were worse than useless: they
+    flagged CF Industries' genuine supply relationship with Mitsui, because
+    the sentence says Mitsui *was certified* rather than that Mitsui did the
+    certifying, and DEFSEC's agreement with Microsoft, because a job title
+    appeared 236 characters away. extract.py tests position, so this has to
+    as well or the two disagree about the same sentence.
+    """
+    if not quote or not counterparty:
+        return None
+    word = counterparty.split()[0]
+    i = quote.lower().find(word.lower())
+    if i < 0:
+        return None
+    j = i + len(word)
+
+    # A job title has to be beside the name, not merely in the paragraph.
+    if PERSON_ROLE.search(quote[max(0, i - 70):min(len(quote), j + 70)]):
+        return "a person, not a company"
+
+    # "... as a Tier 1 Supplier by S&P Global": only the name that follows
+    # "by" is conferring the title. A company named before the phrase is the
+    # one receiving it.
+    conf = CONFERRED.search(quote)
+    if conf and conf.end() < i and re.search(r"(?i)\bby\s*$", quote[max(0, i - 10):i]):
+        return "a title conferred, not a trade"
+    return None
 
 
 def main():
@@ -29,15 +66,20 @@ def main():
     conn = psycopg.connect(DSN)
     cur = conn.cursor()
     cur.execute("""SELECT dc.id, dc.quote, e.common_name,
-                          (SELECT count(*) FROM dependency_edge de WHERE de.claim_id = dc.id)
+                          (SELECT count(*) FROM dependency_edge de WHERE de.claim_id = dc.id),
+                          dc.counterparty_text
                    FROM dependency_claim dc
                    JOIN entity e ON e.id = dc.subject_entity_id""")
     doomed = []
-    for cid, quote, who, edges in cur.fetchall():
+    for cid, quote, who, edges, counterparty in cur.fetchall():
+        hit = None
         for label, rx in FILTERS:
             if quote and rx.search(quote):
-                doomed.append((cid, label, who, edges, quote))
+                hit = label
                 break
+        hit = hit or positional_reject(quote, counterparty)
+        if hit:
+            doomed.append((cid, hit, who, edges, quote))
 
     if not doomed:
         print(f"  nothing to retract; every stored claim still passes {EXTRACTOR_VERSION}")

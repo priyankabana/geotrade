@@ -21,7 +21,7 @@ from collections import defaultdict
 import psycopg
 
 DSN = os.environ.get("DATABASE_URL", "postgresql://atlas:atlas@localhost:5432/atlas")
-EXTRACTOR_VERSION = "rules-3.3"
+EXTRACTOR_VERSION = "rules-3.4"
 SCORER_VERSION    = "deterministic-1.0"
 
 # ---------------------------------------------------------------- lexicon
@@ -42,7 +42,40 @@ CONCENTRATION = re.compile(r"""(?ix)(
   | \d{1,3}(?:\.\d+)?\s*%\s+of\s+(?:our\s+|net\s+|total\s+|consolidated\s+)*(?:revenue|sales|net\s+sales)
   | major\s+customers? | significant\s+customers? | concentrations?\s+of\s+credit\s+risk )""")
 
-COMPETITOR = re.compile(r"(?i)\b(compet\w+|rival|peer\s+group)\b")
+# A rival is not a dependency. The first three terms catch a sentence that
+# says so outright; the rest catch the ones that do not. AMD's competition
+# risk factors read "Intel Corporation uses its microprocessor market position
+# to price its products aggressively and target our customers", which names no
+# competitor word at all and so was filed as a customer relationship, putting
+# Intel on AMD's page as a buyer of its chips.
+COMPETITOR = re.compile(r"""(?ix)\b(
+    compet\w+ | rival | peer\s+group
+  | target(?:s|ing)?\s+our\s+(?:customers|clients|channel)
+  | against\s+us\b
+  | (?:its|their)\s+(?:market|dominant)\s+position
+  | price\s+\w+\s+products\s+aggressively
+  | influences?\s+customers\s+who\s+do\s+business\s+with\s+us )""")
+
+# Somebody's surname is not a company. ASML's annual report names "Nils
+# Andersen, Chair of the Supervisory Board" and the gazetteer resolved
+# Andersen to Andersen Group, which then appeared as a dependency.
+# The closing \b matters more than it looks: without it "coo" matched the
+# front of "cooperation" and put a job title in the middle of a sentence
+# about a commercial agreement.
+PERSON_ROLE = re.compile(r"""(?ix)\b(
+    chair(?:man|woman|person)?
+  | chief\s+\w+\s+officer | ceo | cfo | coo | cto
+  | president | director | supervisory\s+board | board\s+of\s+directors
+  | mr\.| mrs\.| ms\.| dr\.
+  | appointed | resigned | retired | succeeds? )\b""")
+
+# A judge is not a trading partner. Canadian Solar was "recognized as a Tier 1
+# Battery Energy Storage System Supplier by S&P Global", which made S&P Global
+# one of its suppliers. What matters is what was conferred: a sub-contract
+# awarded by Thales is business, a title awarded by a research house is an
+# opinion.
+CONFERRED = re.compile(r"""(?ix)\b(?:recognized|recognised|rated|ranked|certified
+  |accredited|named|designated|honou?red|selected)\s+as\b""")
 PARTNER    = re.compile(r"(?i)\b(joint\s+ventures?|partnership|collaborat\w+|alliance|licens\w+\s+agreement)\b")
 FORMER     = re.compile(r"(?i)\b(former\w*|previously|no\s+longer|until\s+(?:fiscal\s+)?\d{4}|discontinued)\b")
 FORWARD    = re.compile(r"(?i)\b(expects?|anticipat\w+|intends?|plans?|believes?|will|may|could|would|estimate\w*)\b")
@@ -342,6 +375,18 @@ def extract_sentence(sent, filer_tokens, gaz):
 
         if SELF_REF.match(sent[b:b + 28]):
             continue              # "Metro(r) vehicles", "our Hopewell plant"
+
+        # A name sitting beside a job title is a person, not a counterparty.
+        # The window is tight on purpose: a filing that names a director and a
+        # real supplier in one sentence should keep the supplier.
+        if PERSON_ROLE.search(sent[max(0, a - 70):min(len(sent), b + 70)]):
+            continue
+
+        # "... as a Tier 1 Supplier by S&P Global": the name after "by" is
+        # the body conferring the title, not a party to any trade.
+        conf = CONFERRED.search(sent)
+        if conf and conf.end() < a and re.search(r"(?i)\bby\s*$", sent[max(0, a - 10):a]):
+            continue
 
         lo, hi = max(0, a - 160), min(len(sent), b + 160)
         if ACQUISITION.search(sent[lo:hi]):
