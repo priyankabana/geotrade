@@ -98,8 +98,10 @@ export default function Newsroom({ onOpenCompany, focusName }: {
         </div>
         <div className="news-filters">
           <input value={q} onChange={e => setQ(e.target.value)}
+                 aria-label="Filter news by company, ticker or headline"
                  placeholder="Filter by company, ticker or headline" />
-          <select value={market} onChange={e => setMarket(e.target.value)}>
+          <select value={market} aria-label="Filter news by market"
+                  onChange={e => setMarket(e.target.value)}>
             {MARKETS.map(([v, label]) => <option key={v} value={v}>{label}</option>)}
           </select>
         </div>

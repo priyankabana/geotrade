@@ -129,6 +129,7 @@ export default function Simulator({ onOpenCompany, seedUid }: {
         <div className="sim-pick">
           <label>Company</label>
           <input value={q} placeholder={chosen?.name ?? 'Filter…'}
+                 aria-label="Filter companies"
                  onChange={e => setQ(e.target.value)} />
           <div className="sim-list">
             {shown.map(t => (

@@ -68,6 +68,7 @@ export default function Search({ points, onPick }: {
   return (
     <div className="search" ref={box}>
       <input
+        aria-label="Search company or ticker"
         value={q} placeholder="Search company or ticker"
         onChange={e => { setQ(e.target.value); setOpen(true) }}
         onFocus={() => setOpen(true)}

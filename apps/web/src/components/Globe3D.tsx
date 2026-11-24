@@ -106,15 +106,21 @@ export default function Globe3D({
       .map(p => ({ lat: p.lat, lng: p.lon, name: p.name, uid: p.uid }))
   }, [points, highlight])
 
+  // Resolve themed colours from a single getComputedStyle snapshot taken once
+  // per render, not once per hex bin, arc, ring tick and point. The expensive
+  // part is the getComputedStyle call itself - it forces a style recalculation -
+  // and the globe calls these accessors thousands of times a redraw. The hex
+  // ramp reads two cached strings so its hot path touches no DOM at all.
+  const rootCss = getComputedStyle(document.documentElement)
+  const css = (v: string, fallback = '#888') =>
+    rootCss.getPropertyValue(v).trim() || fallback
+  const hexTop = css('--hex-top', '#3f8fa6')
+  const hexHot = css('--hex-hot', '#3f8fa6')
   function ramp(n: number) {
     const t = Math.min(1, Math.log1p(n) / Math.log1p(90))
     const a = Math.round(90 + t * 150).toString(16).padStart(2, '0')
-    return `${getComputedStyle(document.documentElement)
-      .getPropertyValue(t > 0.55 ? '--hex-hot' : '--hex-top').trim() || '#3f8fa6'}${a}`
+    return `${t > 0.55 ? hexHot : hexTop}${a}`
   }
-
-  const css = (v: string) =>
-    getComputedStyle(document.documentElement).getPropertyValue(v).trim() || '#888'
 
 
   /* Stop the idle spin the moment someone touches the globe. A target that drifts

@@ -73,7 +73,10 @@ export default function Stories({ onOpenCompany }: {
     'stories' | 'calls' | 'earnings' | 'calendar' | 'reached'>('stories')
 
   useEffect(() => {
-    fetch('data/v1/stories.json')
+    // Absolute path and an 8s timeout, to match the rest of the client: the
+    // relative path only worked because routing is hash-based, and without a
+    // timeout a stalled request hangs on the loading state forever.
+    fetch('/data/v1/stories.json', { signal: AbortSignal.timeout(8000) })
       .then(r => (r.ok ? r.json() : Promise.reject(r.status)))
       .then(setData)
       .catch(() => setFailed(true))

@@ -119,11 +119,16 @@ export default function SignalsBoard({ focusUid, focusName, onOpenCompany }: {
           {chart.map(c => (
             <div className="bar-row" key={c.k}>
               <span className="bar-label">{CLASSES.find(x => x[0] === c.k)?.[1] ?? c.k}</span>
-              <span className="bar-track">
+              <span className="bar-track" role="img"
+                    aria-label={`${c.up} pushing up, ${c.down} pushing down`}>
                 <i className="up"   style={{ width: `${(c.up / c.max) * 100}%` }} />
                 <i className="down" style={{ width: `${(c.down / c.max) * 100}%` }} />
               </span>
-              <span className="bar-n num">{c.total}</span>
+              {/* Arrows carry the split as well as colour, so the breakdown is
+                  readable without relying on green versus red. */}
+              <span className="bar-n num" title={`${c.up} up, ${c.down} down`}>
+                <span className="up-n">▲{c.up}</span> <span className="down-n">▼{c.down}</span>
+              </span>
             </div>
           ))}
         </div>

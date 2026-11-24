@@ -343,11 +343,13 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .legend i { display: inline-block; width: 9px; height: 9px; margin: 0 4px 0 10px; }
 .legend i.up, .bar-track i.up { background: var(--buy); }
 .legend i.down, .bar-track i.down { background: var(--sell); }
-.bar-row { display: grid; grid-template-columns: 120px 1fr 42px; align-items: center; gap: 10px; margin: 3px 0; }
+.bar-row { display: grid; grid-template-columns: 120px 1fr 84px; align-items: center; gap: 10px; margin: 3px 0; }
 .bar-label { font-size: 12px; color: var(--ink-2); }
 .bar-track { display: flex; height: 13px; background: #0000000a; }
 .bar-track i { display: block; height: 100%; }
-.bar-n { font-size: 12px; text-align: right; color: var(--ink-3); }
+.bar-n { font-size: 12px; text-align: right; color: var(--ink-3); white-space: nowrap; }
+.bar-n .up-n { color: var(--buy); }
+.bar-n .down-n { color: var(--sell); }
 
 .filters { display: flex; gap: 18px; flex-wrap: wrap; border-bottom: 1px solid var(--hairline-2); padding-bottom: 12px; }
 .fgroup { display: flex; gap: 2px; flex-wrap: wrap; }
@@ -502,7 +504,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   border: 1px solid var(--hairline-2); border-radius: 2px;
 }
 .search input::placeholder { color: var(--ink-3); }
-.search input:focus { outline: none; border-color: var(--hairline); }
+.search input:focus-visible { outline: 2px solid var(--surprise); outline-offset: 1px; border-color: var(--hairline); }
 .search-drop {
   position: absolute; top: calc(100% + 4px); left: 0; z-index: 40;
   width: 340px; max-width: 70vw; background: var(--paper-2);
@@ -552,7 +554,7 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   font: inherit; font-size: 13px; width: 100%; max-width: 320px; padding: 6px 10px;
   background: transparent; color: var(--ink); border: 1px solid var(--hairline-2);
 }
-.sim-pick input:focus { outline: none; border-color: var(--hairline); }
+.sim-pick input:focus-visible { outline: 2px solid var(--surprise); outline-offset: 1px; border-color: var(--hairline); }
 .sim-list {
   display: flex; flex-wrap: wrap; gap: 4px; margin-top: 10px;
   max-height: 124px; overflow-y: auto;
